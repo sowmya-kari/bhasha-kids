@@ -1,0 +1,37 @@
+/* Stable action cards with one simple click-to-flip transition. */
+.action-card-inner {
+  min-height: 330px;
+  height: 100%;
+  border-radius: 24px;
+  -webkit-transform-style: preserve-3d;
+  transition: transform 0.45s ease;
+}
+
+.action-card {
+  height: 330px;
+}
+
+.action-front,
+.action-back {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.action-back {
+  -webkit-transform: rotateY(180deg);
+}
+
+.action-card.flipped .action-card-inner {
+  -webkit-transform: rotateY(180deg);
+}
+
+.action-translation em {
+  display: inline-flex;
+  align-items: center;
+  min-height: 25px;
+  border: 1px dashed currentColor;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .action-card-inner { transition: transform 0.01ms; }
+}
