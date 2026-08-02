@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Animated Red Panda Eating Bamboo</title>
+<style>
+  :root{
+    --night:#082b35;
+    --teal:#0d4852;
+    --teal-light:#1c6f73;
+    --fur:#ef6d2f;
+    --fur-dark:#c94d1b;
+    --cream:#fff0d8;
+    --brown:#34231f;
+    --brown-soft:#50352c;
+    --green:#68bd45;
+    --green-dark:#397e35;
+    --gold:#ffd766;
+  }
+
+  *{box-sizing:border-box}
+
+  body{
+    margin:0;
+    min-height:100vh;
+    display:grid;
+    place-items:center;
+    overflow:hidden;
+    font-family:Nunito, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background:
+      radial-gradient(circle at 50% 20%, #14616c 0%, var(--night) 65%);
+  }
+
+  .scene{
+    position:relative;
+    width:min(92vw,700px);
+    aspect-ratio:1/1;
+    border-radius:50%;
+    overflow:hidden;
+    border:10px solid rgba(75,205,209,.48);
+    box-shadow:
+      0 25px 80px rgba(0,0,0,.45),
+      inset 0 0 80px rgba(255,255,255,.06);
+    background:
+      radial-gradient(circle at 50% 38%, rgba(82,180,156,.55), transparent 45%),
+      linear-gradient(180deg, #176875 0%, #0f474f 58%, #123a32 100%);
+  }
+
+  .moon-glow{
+    position:absolute;
+    inset:8% 10% auto;
+    height:38%;
+    border-radius:50%;
+    background:radial-gradient(circle, rgba(255,244,174,.18), transparent 65%);
+    filter:blur(8px);
+  }
+
+  .bamboo-bg{
+    position:absolute;
+    inset:0;
+    opacity:.42;
+  }
+
+  .bamboo-bg span{
+    position:absolute;
+    bottom:-4%;
+    width:18px;
+    height:85%;
+    border-radius:10px;
+    background:linear-gradient(90deg,#2a6a3e,#5d9e56,#2d7444);
+    transform-origin:bottom center;
+    animation:sway 4s ease-in-out infinite alternate;
+  }
+
+  .bamboo-bg span:nth-child(1){left:7%;height:80%}
+  .bamboo-bg span:nth-child(2){left:18%;height:65%;animation-delay:.5s}
+  .bamboo-bg span:nth-child(3){right:14%;height:73%;animation-delay:1s}
+  .bamboo-bg span:nth-child(4){right:4%;height:86%;animation-delay:1.5s}
+
+  .bamboo-bg span::before,
+  .bamboo-bg span::after{
+    content:"";
+    position:absolute;
+    width:55px;
+    height:23px;
+    border-radius:100% 0 100% 0;
+    background:#5ca84d;
+  }
+
+  .bamboo-bg span::before{top:26%;left:-46px;transform:rotate(24deg)}
+  .bamboo-bg span::after{top:44%;left:13px;transform:rotate(-22deg) scaleX(-1)}
+
+  @keyframes sway{
+    from{transform:rotate(-2deg)}
+    to{transform:rotate(3deg)}
+  }
+
+  .ground{
+    position:absolute;
+    left:0;right:0;bottom:-3%;
+    height:30%;
+    border-radius:50% 50% 0 0;
+    background:
+      radial-gradient(ellipse at center, #70a943 0%, #3f7d35 58%, #245e32 100%);
+  }
+
+  .rock{
+    position:absolute;
+    bottom:16%;
+    width:13%;
+    aspect-ratio:1.4;
+    border-radius:55% 45% 50% 40%;
+    background:linear-gradient(145deg,#89907b,#4c5b50);
+    box-shadow:inset 8px 7px 12px rgba(255,255,255,.13);
+  }
+  .rock.left{left:8%;transform:rotate(-7deg)}
+  .rock.right{right:8%;transform:rotate(9deg) scale(.85)}
+
+  .panda-wrap{
+    position:absolute;
+    left:50%;
+    bottom:8%;
+    width:69%;
+    transform:translateX(-50%);
+    animation:bodyBounce 2.4s ease-in-out infinite;
+    transform-origin:bottom center;
+  }
+
+  @keyframes bodyBounce{
+    0%,100%{transform:translateX(-50%) translateY(0) scale(1)}
+    25%{transform:translateX(-50%) translateY(-7px) scale(.99,1.015)}
+    45%,70%{transform:translateX(-50%) translateY(3px) scale(1.015,.985)}
+  }
+
+  svg{width:100%;overflow:visible;display:block}
+
+  .tail{
+    transform-box:fill-box;
+    transform-origin:10% 35%;
+    animation:tailWag 1.2s ease-in-out infinite alternate;
+  }
+  @keyframes tailWag{
+    from{transform:rotate(-6deg)}
+    to{transform:rotate(8deg)}
+  }
+
+  .head{
+    transform-box:fill-box;
+    transform-origin:center 74%;
+    animation:chewHead .48s ease-in-out infinite alternate;
+  }
+  @keyframes chewHead{
+    from{transform:scale(1)}
+    to{transform:scale(1.025,.97) translateY(3px)}
+  }
+
+  .eye{
+    transform-box:fill-box;
+    transform-origin:center;
+    animation:blink 4.2s infinite;
+  }
+  .eye.right{animation-delay:.04s}
+  @keyframes blink{
+    0%,43%,47%,100%{transform:scaleY(1)}
+    44.5%,46%{transform:scaleY(.08)}
+  }
+
+  .mouth{
+    transform-box:fill-box;
+    transform-origin:center top;
+    animation:mouthChew .32s ease-in-out infinite alternate;
+  }
+  @keyframes mouthChew{
+    from{transform:scaleY(1) translateY(0)}
+    to{transform:scaleY(.55) translateY(2px)}
+  }
+
+  .bamboo-main{
+    transform-box:fill-box;
+    transform-origin:50% 100%;
+    animation:bambooNibble 2.4s ease-in-out infinite;
+  }
+  @keyframes bambooNibble{
+    0%,100%{transform:rotate(-2deg) translateY(0)}
+    28%,70%{transform:rotate(-7deg) translateY(7px)}
+    82%{transform:rotate(2deg) translateY(0)}
+  }
+
+  .leaf-mouth{
+    transform-box:fill-box;
+    transform-origin:left center;
+    animation:leafEat 2.4s ease-in-out infinite;
+  }
+  @keyframes leafEat{
+    0%,24%{opacity:1;transform:scale(1) rotate(0)}
+    35%,68%{opacity:.92;transform:translate(-9px,7px) scale(.68) rotate(-12deg)}
+    78%,100%{opacity:.12;transform:translate(-16px,10px) scale(.25) rotate(-20deg)}
+  }
+
+  .paw-left,.paw-right{
+    transform-box:fill-box;
+    transform-origin:center;
+    animation:pawGrip .6s ease-in-out infinite alternate;
+  }
+  .paw-right{animation-delay:.08s}
+  @keyframes pawGrip{
+    from{transform:translateY(0) scale(1)}
+    to{transform:translateY(-2px) scale(1.04,.96)}
+  }
+
+  .bubble{
+    position:absolute;
+    right:8%;
+    top:17%;
+    min-width:22%;
+    padding:14px 18px;
+    border-radius:50%;
+    text-align:center;
+    color:#6a371d;
+    background:#fff4d5;
+    box-shadow:0 10px 30px rgba(0,0,0,.2);
+    font-size:clamp(22px,5vw,44px);
+    font-weight:900;
+    transform-origin:20% 90%;
+    animation:bubblePop 2.4s ease-in-out infinite;
+  }
+
+  .bubble::after{
+    content:"";
+    position:absolute;
+    left:3%;
+    bottom:-13%;
+    width:24%;
+    height:27%;
+    background:#fff4d5;
+    clip-path:polygon(100% 0,0 45%,100% 100%);
+    transform:rotate(-18deg);
+  }
+
+  .bubble small{
+    display:block;
+    font-size:.42em;
+    color:#ff6262;
+    margin-top:-2px;
+  }
+
+  @keyframes bubblePop{
+    0%,22%,100%{opacity:0;transform:scale(.35) rotate(-8deg)}
+    30%,70%{opacity:1;transform:scale(1) rotate(0)}
+    76%{opacity:1;transform:scale(1.07)}
+    86%{opacity:0;transform:scale(.7)}
+  }
+
+  .sparkle{
+    position:absolute;
+    width:18px;
+    height:18px;
+    background:var(--gold);
+    clip-path:polygon(50% 0,60% 39%,100% 50%,60% 61%,50% 100%,40% 61%,0 50%,40% 39%);
+    filter:drop-shadow(0 0 8px #ffe48b);
+    animation:sparkle 1.8s ease-in-out infinite;
+  }
+
+  .sparkle.s1{left:14%;top:21%}
+  .sparkle.s2{left:24%;top:66%;animation-delay:.4s}
+  .sparkle.s3{right:18%;top:31%;animation-delay:.8s}
+  .sparkle.s4{right:26%;top:60%;animation-delay:1.1s}
+  .sparkle.s5{left:50%;top:8%;animation-delay:1.4s}
+
+  @keyframes sparkle{
+    0%,100%{opacity:.15;transform:scale(.35) rotate(0)}
+    50%{opacity:1;transform:scale(1.25) rotate(45deg)}
+  }
+
+  .dot{
+    position:absolute;
+    width:8px;height:8px;border-radius:50%;
+    background:#ffe174;
+    box-shadow:0 0 13px #ffe174;
+    animation:floatDot 3.4s ease-in-out infinite;
+  }
+  .dot.d1{left:18%;top:42%}
+  .dot.d2{right:24%;top:13%;animation-delay:.6s}
+  .dot.d3{right:13%;top:48%;animation-delay:1.2s}
+  .dot.d4{left:39%;top:16%;animation-delay:1.8s}
+
+  @keyframes floatDot{
+    0%,100%{transform:translateY(0);opacity:.25}
+    50%{transform:translateY(-18px);opacity:1}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important}
+  }
+</style>
+</head>
+<body>
+<div class="scene">
+  <div class="moon-glow"></div>
+  <div class="bamboo-bg">
+    <span></span><span></span><span></span><span></span>
+  </div>
+
+  <div class="sparkle s1"></div>
+  <div class="sparkle s2"></div>
+  <div class="sparkle s3"></div>
+  <div class="sparkle s4"></div>
+  <div class="sparkle s5"></div>
+
+  <div class="dot d1"></div>
+  <div class="dot d2"></div>
+  <div class="dot d3"></div>
+  <div class="dot d4"></div>
+
+  <div class="bubble">Yum!<small>♥</small></div>
+
+  <div class="ground"></div>
+  <div class="rock left"></div>
+  <div class="rock right"></div>
+
+  <div class="panda-wrap">
+    <svg viewBox="0 0 520 560" role="img" aria-label="Animated red panda holding and eating bamboo">
+      <defs>
+        <linearGradient id="furGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#ff8a3c"/>
+          <stop offset="1" stop-color="#d75520"/>
+        </linearGradient>
+        <linearGradient id="creamGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#fff9e9"/>
+          <stop offset="1" stop-color="#f5d9b9"/>
+        </linearGradient>
+        <linearGradient id="bambooGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#4b9836"/>
+          <stop offset=".48" stop-color="#86cf4f"/>
+          <stop offset="1" stop-color="#387b31"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Tail -->
+      <g class="tail">
+        <path d="M365 320 C470 300 510 370 480 455 C455 515 375 495 348 440 C330 403 330 350 365 320Z" fill="url(#furGrad)"/>
+        <path d="M397 323 C430 340 453 366 462 391" fill="none" stroke="#ffd9a8" stroke-width="27" stroke-linecap="round"/>
+        <path d="M374 373 C411 393 434 422 442 448" fill="none" stroke="#ffd9a8" stroke-width="28" stroke-linecap="round"/>
+        <path d="M364 430 C386 449 398 467 402 482" fill="none" stroke="#ffd9a8" stroke-width="24" stroke-linecap="round"/>
+      </g>
+
+      <!-- Body -->
+      <ellipse cx="265" cy="397" rx="132" ry="125" fill="url(#furGrad)"/>
+      <ellipse cx="265" cy="421" rx="84" ry="91" fill="url(#creamGrad)"/>
+
+      <!-- Feet -->
+      <ellipse cx="191" cy="483" rx="70" ry="57" fill="#382621"/>
+      <ellipse cx="339" cy="483" rx="70" ry="57" fill="#382621"/>
+      <ellipse cx="191" cy="492" rx="28" ry="23" fill="#9c5c3e"/>
+      <ellipse cx="339" cy="492" rx="28" ry="23" fill="#9c5c3e"/>
+
+      <!-- Bamboo behind paws -->
+      <g class="bamboo-main">
+        <rect x="252" y="210" width="34" height="300" rx="16" fill="url(#bambooGrad)"/>
+        <g stroke="#e4bf53" stroke-width="8">
+          <line x1="251" y1="290" x2="287" y2="290"/>
+          <line x1="251" y1="370" x2="287" y2="370"/>
+          <line x1="251" y1="450" x2="287" y2="450"/>
+        </g>
+        <path d="M270 235 C320 218 352 226 386 258 C344 248 307 247 270 254Z" fill="#80ca45"/>
+        <path class="leaf-mouth" d="M267 223 C225 198 195 202 162 235 C203 222 235 221 267 235Z" fill="#8fd34d"/>
+      </g>
+
+      <!-- Head -->
+      <g class="head">
+        <!-- ears -->
+        <circle cx="174" cy="156" r="65" fill="#3a251f"/>
+        <circle cx="356" cy="156" r="65" fill="#3a251f"/>
+        <circle cx="174" cy="156" r="43" fill="url(#creamGrad)"/>
+        <circle cx="356" cy="156" r="43" fill="url(#creamGrad)"/>
+        <circle cx="174" cy="159" r="26" fill="#6d3928"/>
+        <circle cx="356" cy="159" r="26" fill="#6d3928"/>
+
+        <!-- head -->
+        <path d="M116 212 C122 105 408 105 414 212 C423 327 355 374 265 374 C175 374 107 327 116 212Z" fill="url(#furGrad)"/>
+
+        <!-- face cream -->
+        <ellipse cx="190" cy="258" rx="74" ry="82" fill="url(#creamGrad)"/>
+        <ellipse cx="340" cy="258" rx="74" ry="82" fill="url(#creamGrad)"/>
+        <ellipse cx="265" cy="304" rx="91" ry="68" fill="url(#creamGrad)"/>
+
+        <!-- dark eye patches -->
+        <ellipse cx="205" cy="242" rx="44" ry="57" fill="#3a251f" transform="rotate(18 205 242)"/>
+        <ellipse cx="325" cy="242" rx="44" ry="57" fill="#3a251f" transform="rotate(-18 325 242)"/>
+
+        <!-- eyes -->
+        <g class="eye">
+          <ellipse cx="214" cy="238" rx="25" ry="32" fill="#fff"/>
+          <ellipse cx="218" cy="242" rx="15" ry="21" fill="#3a2018"/>
+          <circle cx="221" cy="235" r="6" fill="#fff"/>
+        </g>
+        <g class="eye right">
+          <ellipse cx="316" cy="238" rx="25" ry="32" fill="#fff"/>
+          <ellipse cx="312" cy="242" rx="15" ry="21" fill="#3a2018"/>
+          <circle cx="309" cy="235" r="6" fill="#fff"/>
+        </g>
+
+        <!-- brows -->
+        <path d="M174 190 Q207 170 234 190" fill="none" stroke="#fff0d8" stroke-width="16" stroke-linecap="round"/>
+        <path d="M296 190 Q324 170 356 190" fill="none" stroke="#fff0d8" stroke-width="16" stroke-linecap="round"/>
+
+        <!-- nose -->
+        <path d="M245 290 Q265 274 285 290 Q282 312 265 314 Q248 312 245 290Z" fill="#2b201d"/>
+
+        <!-- mouth -->
+        <g class="mouth">
+          <path d="M265 312 Q246 334 227 321" fill="none" stroke="#34231f" stroke-width="8" stroke-linecap="round"/>
+          <path d="M265 312 Q284 334 303 321" fill="none" stroke="#34231f" stroke-width="8" stroke-linecap="round"/>
+          <ellipse cx="265" cy="340" rx="29" ry="20" fill="#7c2525"/>
+          <ellipse cx="265" cy="348" rx="19" ry="10" fill="#f06f6f"/>
+          <path d="M248 326 L255 340" stroke="#fff" stroke-width="7" stroke-linecap="round"/>
+          <path d="M282 326 L275 340" stroke="#fff" stroke-width="7" stroke-linecap="round"/>
+        </g>
+      </g>
+
+      <!-- Arms -->
+      <ellipse cx="205" cy="386" rx="53" ry="84" fill="#382621" transform="rotate(-20 205 386)"/>
+      <ellipse cx="325" cy="386" rx="53" ry="84" fill="#382621" transform="rotate(20 325 386)"/>
+
+      <!-- Paws in front of bamboo -->
+      <g class="paw-left">
+        <ellipse cx="230" cy="363" rx="47" ry="42" fill="#382621"/>
+        <ellipse cx="240" cy="369" rx="13" ry="11" fill="#9c5c3e"/>
+      </g>
+      <g class="paw-right">
+        <ellipse cx="300" cy="363" rx="47" ry="42" fill="#382621"/>
+        <ellipse cx="290" cy="369" rx="13" ry="11" fill="#9c5c3e"/>
+      </g>
+    </svg>
+  </div>
+</div>
+</body>
+</html>
