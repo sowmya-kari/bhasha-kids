@@ -5,6 +5,7 @@ import StoryGarden from "./story-garden";
 import AksharaBuilder from "./akshara-builder";
 import MoreGames from "./more-games";
 import OpeningScreen from "./opening-screen";
+import MathCorner from "./math-corner";
 import "./story-garden.css";
 import "./akshara-builder.css";
 import "./more-games.css";
@@ -412,6 +413,8 @@ export default function Home() {
           <div className="sticker sticker-two"><span>🪄</span><b>Playful<br />practice</b></div>
         </div>
       </section>}
+
+      <MathCorner />
 
       <section className="features" id="features">
         <div className="section-title"><p className="kicker"><b>✦</b> A complete little learning world</p><h2>Built for <em>how children learn.</em></h2><p>See it. Trace it. Match it. Play with it. Meet it again tomorrow.</p></div>
