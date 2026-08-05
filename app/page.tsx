@@ -378,7 +378,7 @@ export default function Home() {
     <><main>
       <header className="nav-wrap">
         <a href="#top" className="logo"><span>🦚</span>Basha Kids</a>
-        <nav aria-label="Main navigation"><a href="#stories">Stories</a><a href="#lessons" onClick={(event) => { event.preventDefault(); openLearn(); }}>Letters</a><a href="#guninthalu">Guninthalu</a><a href="#games">Games</a></nav>
+        <nav aria-label="Main navigation"><a href="#stories">Stories</a><a href="#lessons" onClick={(event) => { event.preventDefault(); openLearn(); }}>Letters</a><a href="#guninthalu">Guninthalu</a><a href="#games">Games</a><a href="#math-corner">Math Corner</a></nav>
         <a href="#lessons" className="nav-button" onClick={(event) => { event.preventDefault(); openLearn(); }}>Try a lesson <b>→</b></a>
       </header>
 
@@ -390,6 +390,11 @@ export default function Home() {
           <p className="lead">Animated letters, warm stories, and playful practice - made for curious children ages 4-8.</p>
           <div className="hero-actions"><a href="#lessons" className="primary" onClick={(event) => { event.preventDefault(); openLearn(); }}>Start exploring <b>→</b></a><a href="#features" className="secondary"><i>✦</i> See what is inside</a></div>
           <div className="checks"><span>✓ Child-friendly</span><span>✓ Tablet-ready</span><span>✓ Parent-guided</span></div>
+          <div className="hero-roadmap" aria-label="Choose a learning path">
+            <a href="#lessons" onClick={(event) => { event.preventDefault(); openLearn(); }}><span>అ</span><b>Letters</b><small>Tap and trace</small></a>
+            <a href="#stories"><span>📖</span><b>Stories</b><small>Listen and learn</small></a>
+            <a href="#math-corner"><span>➕</span><b>Math Corner</b><small>Play with numbers</small></a>
+          </div>
         </div>
 
         <div className="hero-art" aria-label="Basha Kids app preview">
