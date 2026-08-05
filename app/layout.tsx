@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import MascotBuddies from "./mascot-buddies";
-import MathCorner from "./math-corner";
 import "./globals.css";
 import "./alphabet.css";
 
@@ -38,7 +37,6 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
-        <MathCorner />
         <MascotBuddies />
       </body>
     </html>
