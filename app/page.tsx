@@ -378,7 +378,7 @@ export default function Home() {
     <><main>
       <header className="nav-wrap">
         <a href="#top" className="logo"><span>🦚</span>Basha Kids</a>
-        <nav aria-label="Main navigation"><a href="#lessons" onClick={(event) => { event.preventDefault(); openLearn(); }}>Letters</a><a href="#stories">Stories</a><a href="#guninthalu">Guninthalu</a><a href="#games">Games</a></nav>
+        <nav aria-label="Main navigation"><a href="#lessons" onClick={(event) => { event.preventDefault(); openLearn(); }}>Letters</a><a href="#stories">Stories</a><a href="#guninthalu">Guninthalu</a><a href="#more-games">Games</a></nav>
         <a href="#lessons" className="nav-button" onClick={(event) => { event.preventDefault(); openLearn(); }}>Start learning <b>→</b></a>
       </header>
 
@@ -394,7 +394,7 @@ export default function Home() {
             <a href="#lessons" onClick={(event) => { event.preventDefault(); openLearn(); }}><span>అ</span><b>Letters</b><small>Tap, hear and trace</small></a>
             <a href="#stories"><span>📖</span><b>Story Garden</b><small>Read and learn</small></a>
             <a href="#guninthalu"><span>గు</span><b>Guninthalu</b><small>Build sounds and words</small></a>
-            <a href="#games"><span>🎮</span><b>Games</b><small>Play all practice games</small></a>
+            <a href="#more-games"><span>🎮</span><b>Games</b><small>Play all practice games</small></a>
           </div>
         </div>
 
@@ -420,7 +420,7 @@ export default function Home() {
           <button className="feature feature-button violet" onClick={openLearn}><small>01</small><span>✨</span><h3>Letters</h3><p>Open Telugu or Hindi vowels and consonants, hear the word, and trace the letter.</p><b>Open Letters →</b></button>
           <a className="feature coral" href="#stories"><small>02</small><span>📖</span><h3>Story Garden</h3><p>Explore the bilingual story collection and its kindness, honesty, friendship, courage, and other themes.</p><b>Open Story Garden →</b></a>
           <a className="feature mint" href="#guninthalu"><small>03</small><span>🔤</span><h3>Guninthalu</h3><p>Choose a language, consonant, and vowel, then practice how sounds combine into words.</p><b>Open Guninthalu →</b></a>
-          <a className="feature gold" href="#games"><small>04</small><span>🎮</span><h3>Games</h3><p>Jump into Bubble Pop, matching, sorting, word practice, Letter Rain, and the rest of the game collection.</p><b>Open Games →</b></a>
+          <a className="feature gold" href="#more-games"><small>04</small><span>🎮</span><h3>Games</h3><p>Jump into Bubble Pop, matching, sorting, word practice, Letter Rain, and the rest of the game collection.</p><b>Open Games →</b></a>
         </div>
       </section>
 
