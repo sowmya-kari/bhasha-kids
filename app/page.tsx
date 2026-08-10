@@ -5,7 +5,6 @@ import StoryGarden from "./story-garden";
 import AksharaBuilder from "./akshara-builder";
 import MoreGames from "./more-games";
 import OpeningScreen from "./opening-screen";
-import MathCorner from "./math-corner";
 import "./story-garden.css";
 import "./akshara-builder.css";
 import "./more-games.css";
@@ -379,22 +378,23 @@ export default function Home() {
     <><main>
       <header className="nav-wrap">
         <a href="#top" className="logo"><span>🦚</span>Basha Kids</a>
-        <nav aria-label="Main navigation"><a href="#stories">Stories</a><a href="#lessons" onClick={(event) => { event.preventDefault(); openLearn(); }}>Letters</a><a href="#guninthalu">Guninthalu</a><a href="#games">Games</a><a href="#math-corner">Math Corner</a></nav>
-        <a href="#lessons" className="nav-button" onClick={(event) => { event.preventDefault(); openLearn(); }}>Try a lesson <b>→</b></a>
+        <nav aria-label="Main navigation"><a href="#lessons" onClick={(event) => { event.preventDefault(); openLearn(); }}>Letters</a><a href="#stories">Stories</a><a href="#guninthalu">Guninthalu</a><a href="#games">Games</a></nav>
+        <a href="#lessons" className="nav-button" onClick={(event) => { event.preventDefault(); openLearn(); }}>Start learning <b>→</b></a>
       </header>
 
       {!started ? <OpeningScreen onEnter={(openingLanguage) => { setLanguage(openingLanguage); setStarted(true); window.scrollTo({ top: 0 }); }} /> : <section className="hero" id="top">
         <span className="float-letter fl-one">అ</span><span className="float-letter fl-two">क</span><span className="float-letter fl-three">ఆ</span><span className="float-letter fl-four">म</span>
         <div className="hero-copy">
-          <p className="kicker"><b>✦</b> Telugu + Hindi learning for little explorers</p>
-          <h1>Every word begins<br />with a little <em>wonder.</em></h1>
-          <p className="lead">Animated letters, warm stories, and playful practice - made for curious children ages 4-8.</p>
-          <div className="hero-actions"><a href="#lessons" className="primary" onClick={(event) => { event.preventDefault(); openLearn(); }}>Start exploring <b>→</b></a><a href="#features" className="secondary"><i>✦</i> See what is inside</a></div>
-          <div className="checks"><span>✓ Child-friendly</span><span>✓ Tablet-ready</span><span>✓ Parent-guided</span></div>
+          <p className="kicker"><b>✦</b> Learn Telugu + Hindi with Vageesh &amp; Vani</p>
+          <h1>Letters, stories &amp; games<br />for little <em>explorers.</em></h1>
+          <p className="lead">A playful bilingual learning home for children ages 4–8—built around the lessons, stories, Guninthalu, and games already inside Basha Kids.</p>
+          <div className="hero-actions"><a href="#lessons" className="primary" onClick={(event) => { event.preventDefault(); openLearn(); }}>Open Letters <b>→</b></a><a href="#stories" className="secondary"><i>📖</i> Open Story Garden</a></div>
+          <div className="checks"><span>✓ Telugu + Hindi</span><span>✓ Child-friendly</span><span>✓ Tablet-ready</span></div>
           <div className="hero-roadmap" aria-label="Choose a learning path">
-            <a href="#lessons" onClick={(event) => { event.preventDefault(); openLearn(); }}><span>అ</span><b>Letters</b><small>Tap and trace</small></a>
-            <a href="#stories"><span>📖</span><b>Stories</b><small>Listen and learn</small></a>
-            <a href="#math-corner"><span>➕</span><b>Math Corner</b><small>Play with numbers</small></a>
+            <a href="#lessons" onClick={(event) => { event.preventDefault(); openLearn(); }}><span>అ</span><b>Letters</b><small>Tap, hear and trace</small></a>
+            <a href="#stories"><span>📖</span><b>Story Garden</b><small>Read and learn</small></a>
+            <a href="#guninthalu"><span>గు</span><b>Guninthalu</b><small>Build sounds and words</small></a>
+            <a href="#games"><span>🎮</span><b>Games</b><small>Play all practice games</small></a>
           </div>
         </div>
 
@@ -409,17 +409,18 @@ export default function Home() {
             <div className="story"><span>🦁</span><div><small>STORY OF THE DAY</small><b>The Lion and the Mouse</b><i>3 min · Telugu + Hindi</i></div><button aria-label="Open story preview">→</button></div>
             <div className="phone-tabs"><span>⌂<small>Home</small></span><span>✦<small>Learn</small></span><span>♡<small>Stories</small></span><span>★<small>Rewards</small></span></div>
           </div>
-          <div className="sticker sticker-one"><span>🌟</span><b>Little wins,<br />every day</b></div>
-          <div className="sticker sticker-two"><span>🪄</span><b>Playful<br />practice</b></div>
+          <div className="sticker sticker-one"><span>🌟</span><b>Vageesh says:<br />You&apos;ve got this!</b></div>
+          <div className="sticker sticker-two"><span>📖</span><b>Vani says:<br />Choose a story!</b></div>
         </div>
       </section>}
 
-      <MathCorner />
-
       <section className="features" id="features">
-        <div className="section-title"><p className="kicker"><b>✦</b> A complete little learning world</p><h2>Built for <em>how children learn.</em></h2><p>See it. Trace it. Match it. Play with it. Meet it again tomorrow.</p></div>
-        <div className="feature-grid">
-          {features.map(([icon, title, copy, color], index) => index === 0 ? <button className={`feature feature-button ${color}`} key={title} onClick={openLearn}><small>0{index + 1}</small><span>{icon}</span><h3>{title}</h3><p>{copy}</p><b>Open letter lessons →</b></button> : <article className={`feature ${color}`} key={title}><small>0{index + 1}</small><span>{icon}</span><h3>{title}</h3><p>{copy}</p><b>Preview feature ↗</b></article>)}
+        <div className="section-title"><p className="kicker"><b>✦</b> Your Basha Kids learning home</p><h2>Choose where to <em>explore.</em></h2><p>Letters, Story Garden, Guninthalu, and Games each lead to the learning content already built into the site.</p></div>
+        <div className="feature-grid home-destination-grid">
+          <button className="feature feature-button violet" onClick={openLearn}><small>01</small><span>✨</span><h3>Letters</h3><p>Open Telugu or Hindi vowels and consonants, hear the word, and trace the letter.</p><b>Open Letters →</b></button>
+          <a className="feature coral" href="#stories"><small>02</small><span>📖</span><h3>Story Garden</h3><p>Explore the bilingual story collection and its kindness, honesty, friendship, courage, and other themes.</p><b>Open Story Garden →</b></a>
+          <a className="feature mint" href="#guninthalu"><small>03</small><span>🔤</span><h3>Guninthalu</h3><p>Choose a language, consonant, and vowel, then practice how sounds combine into words.</p><b>Open Guninthalu →</b></a>
+          <a className="feature gold" href="#games"><small>04</small><span>🎮</span><h3>Games</h3><p>Jump into Bubble Pop, matching, sorting, word practice, Letter Rain, and the rest of the game collection.</p><b>Open Games →</b></a>
         </div>
       </section>
 
