@@ -1,25 +1,3 @@
-/* Keep the learning overview at the top of the homepage, directly below navigation. */
-main {
-  display: flex;
-  flex-direction: column;
-}
-
-main > * {
-  order: 3;
-}
-
-main > .nav-wrap {
-  order: 0;
-}
-
-main > .features {
-  order: 1;
-}
-
-main > .hero {
-  order: 2;
-}
-
-main > footer {
-  order: 4;
-}
+/* M1 homepage follows the component order in app/page.tsx.
+   This file intentionally avoids reordering sections so navigation targets
+   and the visual reading order stay aligned. */
