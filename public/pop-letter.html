@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parrot Letter Balloon Pop</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background: #f5f4ef;
+    margin: 0;
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+  }
+  .wrap { width: 100%; max-width: 700px; }
+  .mode-row { text-align: center; margin-bottom: 12px; }
+  .mode-pills {
+    display: inline-flex;
+    gap: 8px;
+    background: #ece9df;
+    padding: 6px;
+    border-radius: 999px;
+  }
+  .mode-pills button {
+    border-radius: 999px;
+    padding: 6px 16px;
+    border: 0.5px solid #b4b2a9;
+    background: transparent;
+    color: #2c2c2a;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .mode-pills button.active {
+    background: #185fa5;
+    color: #ffffff;
+    border: none;
+  }
+  .stats-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    padding: 0 4px;
+    flex-wrap: wrap;
+    gap: 6px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #2c2c2a;
+  }
+  .stats-row .level { font-size: 13px; color: #5f5e5a; font-weight: 400; }
+  #game {
+    position: relative;
+    width: 100%;
+    height: 460px;
+    border-radius: 16px;
+    background: linear-gradient(180deg,#bfe3fc,#eaf6ff);
+    border: 0.5px solid #b4b2a9;
+    overflow: hidden;
+    touch-action: manipulation;
+  }
+  .hint {
+    text-align: center;
+    font-size: 13px;
+    color: #5f5e5a;
+    margin-top: 10px;
+  }
+  @keyframes bob { 0%,100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-6px) rotate(2deg); } }
+  @keyframes happyJump { 0% { transform: translateY(0) scale(1); } 30% { transform: translateY(-14px) scale(1.08); } 60% { transform: translateY(0) scale(1); } 100% { transform: translateY(0) scale(1); } }
+  @keyframes sadShake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+  .parrot-idle { animation: bob 1.8s ease-in-out infinite; }
+  .parrot-happy { animation: happyJump 0.5s ease-out; }
+  .parrot-sad { animation: sadShake 0.35s ease-out; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="mode-row">
+    <div class="mode-pills">
+      <button id="btn-te">తెలుగు</button>
+      <button id="btn-hi">हिंदी</button>
+      <button id="btn-both">Both</button>
+    </div>
+  </div>
+  <div class="stats-row">
+    <div>Score: <span id="score">0</span></div>
+    <div>Streak: <span id="streak">0</span> <span id="streak-fire" style="display:none;">🔥</span></div>
+    <div class="level">Level: <span id="level-name">Learning</span></div>
+  </div>
+  <div id="game"></div>
+  <p class="hint">Pop the balloon with the letter the parrot asks for! Build a streak to level up.</p>
+</div>
+
+<script>
+const teluguMap = {"అ":"a","ఆ":"aa","ఇ":"i","ఈ":"ii","ఉ":"u","ఊ":"uu","క":"ka","గ":"ga","చ":"cha","జ":"ja","త":"ta","ద":"da","న":"na","ప":"pa","బ":"ba","మ":"ma","య":"ya","ర":"ra","ల":"la","వ":"va"};
+const hindiMap = {"अ":"a","आ":"aa","इ":"i","ई":"ii","उ":"u","ऊ":"uu","क":"ka","ख":"kha","ग":"ga","घ":"gha","च":"cha","ज":"ja","त":"ta","द":"da","न":"na","प":"pa","ब":"ba","म":"ma","य":"ya","र":"ra"};
+const balloonColors = [
+  {main:"#E24B4A", dark:"#A32D2D"},
+  {main:"#378ADD", dark:"#185FA5"},
+  {main:"#1D9E75", dark:"#0F6E56"},
+  {main:"#EF9F27", dark:"#BA7517"},
+  {main:"#D4537E", dark:"#993556"},
+  {main:"#7F77DD", dark:"#534AB7"},
+  {main:"#D85A30", dark:"#993C1D"}
+];
+const levels = [
+  {name:"Learning",       minStreak:0,  targetChance:0.45, durMin:6200, durMax:9500, interval:1000},
+  {name:"Getting good",   minStreak:3,  targetChance:0.32, durMin:5200, durMax:8200, interval:900},
+  {name:"Sharp eyes",     minStreak:6,  targetChance:0.22, durMin:4300, durMax:7000, interval:800},
+  {name:"Letter master",  minStreak:10, targetChance:0.15, durMin:3600, durMax:6000, interval:700}
+];
+
+let mode = "both";
+let score = 0, streak = 0, bestStreak = 0;
+let target = null;
+let currentLevel = levels[0];
+let spawnTimer = null, cloudTimer = null;
+
+const game = document.getElementById('game');
+const scoreEl = document.getElementById('score');
+const streakEl = document.getElementById('streak');
+const streakFireEl = document.getElementById('streak-fire');
+const levelNameEl = document.getElementById('level-name');
+const btnTe = document.getElementById('btn-te');
+const btnHi = document.getElementById('btn-hi');
+const btnBoth = document.getElementById('btn-both');
+
+function pool(){
+  if(mode === 'te') return [{letters:Object.keys(teluguMap), map:teluguMap, lang:'te-IN'}];
+  if(mode === 'hi') return [{letters:Object.keys(hindiMap), map:hindiMap, lang:'hi-IN'}];
+  return [{letters:Object.keys(teluguMap), map:teluguMap, lang:'te-IN'},{letters:Object.keys(hindiMap), map:hindiMap, lang:'hi-IN'}];
+}
+
+function setMode(m){
+  mode = m;
+  [btnTe, btnHi, btnBoth].forEach(b => b.classList.remove('active'));
+  ({te: btnTe, hi: btnHi, both: btnBoth})[m].classList.add('active');
+  pickNewTarget();
+}
+btnTe.onclick = () => setMode('te');
+btnHi.onclick = () => setMode('hi');
+btnBoth.onclick = () => setMode('both');
+
+function pickLetter(){
+  const groups = pool();
+  const g = groups[Math.floor(Math.random()*groups.length)];
+  const letter = g.letters[Math.floor(Math.random()*g.letters.length)];
+  return {letter, sound: g.map[letter], lang: g.lang};
+}
+
+function pickNewTarget(){
+  target = pickLetter();
+  updateSpeechBubble();
+  setTimeout(() => speakLetter(target.letter, target.lang), 400);
+}
+
+function updateLevel(){
+  let lvl = levels[0];
+  for(const l of levels){ if(streak >= l.minStreak) lvl = l; }
+  const changed = lvl.name !== currentLevel.name;
+  currentLevel = lvl;
+  levelNameEl.textContent = lvl.name;
+  if(changed) restartSpawning();
+  updateCostume();
+}
+
+function restartSpawning(){
+  if(spawnTimer) clearInterval(spawnTimer);
+  spawnTimer = setInterval(spawnBalloon, currentLevel.interval);
+}
+
+function playPop(good){
+  try{
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = 'sine';
+    o.frequency.setValueAtTime(good ? 800 : 300, ctx.currentTime);
+    o.frequency.exponentialRampToValueAtTime(good ? 1100 : 150, ctx.currentTime + 0.15);
+    g.gain.setValueAtTime(0.2, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+    o.connect(g); g.connect(ctx.destination);
+    o.start(); o.stop(ctx.currentTime + 0.15);
+  }catch(e){}
+}
+
+function speakLetter(letter, lang){
+  try{
+    if(!window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(letter);
+    u.lang = lang;
+    u.rate = 0.8;
+    window.speechSynthesis.speak(u);
+  }catch(e){}
+}
+
+function spawnCloud(){
+  const y = 20 + Math.random()*80;
+  const scale = 0.6 + Math.random()*0.8;
+  const cloud = document.createElement('div');
+  cloud.style.position = 'absolute';
+  cloud.style.top = y + 'px';
+  cloud.style.left = (game.clientWidth) + 'px';
+  cloud.style.width = (90*scale) + 'px';
+  cloud.style.height = (36*scale) + 'px';
+  cloud.style.opacity = '0.7';
+  cloud.style.pointerEvents = 'none';
+  cloud.innerHTML = `
+    <div style="position:absolute; width:${55*scale}px; height:${28*scale}px; background:#ffffff; border-radius:50%; left:${18*scale}px; top:0;"></div>
+    <div style="position:absolute; width:${40*scale}px; height:${24*scale}px; background:#ffffff; border-radius:50%; left:0; top:${8*scale}px;"></div>
+    <div style="position:absolute; width:${45*scale}px; height:${22*scale}px; background:#ffffff; border-radius:50%; right:0; top:${10*scale}px;"></div>
+  `;
+  game.appendChild(cloud);
+  const duration = 18000 + Math.random()*8000;
+  const start = performance.now();
+  function animate(now){
+    const t = (now - start) / duration;
+    if(t >= 1 || !cloud.parentElement){ if(cloud.parentElement) cloud.remove(); return; }
+    cloud.style.left = (game.clientWidth - t*(game.clientWidth + 120)) + 'px';
+    requestAnimationFrame(animate);
+  }
+  requestAnimationFrame(animate);
+}
+
+function burstParticles(x, y, color){
+  for(let i=0;i<8;i++){
+    const p = document.createElement('div');
+    const size = 5 + Math.random()*4;
+    p.style.position = 'absolute';
+    p.style.width = size+'px';
+    p.style.height = size+'px';
+    p.style.borderRadius = '50%';
+    p.style.background = color;
+    p.style.left = x+'px';
+    p.style.top = y+'px';
+    p.style.pointerEvents = 'none';
+    game.appendChild(p);
+    const angle = (Math.PI*2*i)/8 + Math.random()*0.4;
+    const dist = 30 + Math.random()*25;
+    const dx = Math.cos(angle)*dist;
+    const dy = Math.sin(angle)*dist;
+    const start = performance.now();
+    const duration = 400 + Math.random()*150;
+    function animateParticle(now){
+      const t = (now-start)/duration;
+      if(t>=1){ p.remove(); return; }
+      p.style.left = (x + dx*t) + 'px';
+      p.style.top = (y + dy*t - 20*t*(1-t)*4) + 'px';
+      p.style.opacity = 1-t;
+      requestAnimationFrame(animateParticle);
+    }
+    requestAnimationFrame(animateParticle);
+  }
+}
+
+function floatLabel(x, y, text, color){
+  const label = document.createElement('div');
+  label.textContent = text;
+  label.style.position = 'absolute';
+  label.style.left = x+'px';
+  label.style.top = y+'px';
+  label.style.fontSize = '16px';
+  label.style.fontWeight = '500';
+  label.style.color = color || '#5F5E5A';
+  label.style.background = 'rgba(255,255,255,0.9)';
+  label.style.padding = '2px 10px';
+  label.style.borderRadius = '999px';
+  label.style.pointerEvents = 'none';
+  label.style.transition = 'transform 0.6s ease-out, opacity 0.6s ease-out';
+  game.appendChild(label);
+  requestAnimationFrame(() => {
+    label.style.transform = 'translateY(-40px)';
+    label.style.opacity = '0';
+  });
+  setTimeout(() => label.remove(), 650);
+}
+
+function buildParrot(){
+  const holder = document.createElement('div');
+  holder.style.position = 'absolute';
+  holder.style.left = '10px';
+  holder.style.top = '10px';
+  holder.style.zIndex = '5';
+  holder.style.display = 'flex';
+  holder.style.alignItems = 'flex-start';
+  holder.style.gap = '8px';
+
+  const parrotWrap = document.createElement('div');
+  parrotWrap.className = 'parrot-idle';
+  parrotWrap.style.width = '68px';
+  parrotWrap.style.height = '68px';
+  parrotWrap.style.position = 'relative';
+  parrotWrap.innerHTML = `
+    <svg width="68" height="68" viewBox="0 0 64 64">
+      <path d="M14 24 Q10 40 22 52 Q34 60 40 48 Q44 38 36 28 Q30 20 22 22 Z" fill="#1D9E75"/>
+      <path d="M18 30 Q10 34 12 44 Q16 50 24 46 Q28 40 24 32 Z" fill="#639922"/>
+      <ellipse cx="30" cy="38" rx="7" ry="12" fill="#EF9F27"/>
+      <path d="M40 46 Q48 50 46 58 Q40 60 36 54 Z" fill="#378ADD"/>
+      <path d="M8 20 Q2 22 6 28 Q12 30 16 24 Z" fill="#D85A30"/>
+      <ellipse cx="30" cy="20" rx="10" ry="9" fill="#1D9E75"/>
+      <g id="parrot-eye-idle">
+        <circle cx="24" cy="16" r="3.2" fill="#ffffff"/>
+        <circle cx="25" cy="16" r="1.6" fill="#2C2C2A"/>
+      </g>
+      <g id="parrot-eye-happy" style="display:none;">
+        <path d="M21 16 Q24 12 27 16" stroke="#2C2C2A" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+      </g>
+      <g id="parrot-eye-sad" style="display:none;">
+        <path d="M21 15 Q24 18 27 15" stroke="#2C2C2A" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+        <ellipse cx="21" cy="20" rx="1.4" ry="2" fill="#85B7EB"/>
+      </g>
+      <path d="M14 18 Q6 18 8 22 Q12 24 16 20 Z" fill="#EF9F27"/>
+      <g id="acc-hat" style="display:none;">
+        <path d="M22 10 L30 -2 L38 10 Z" fill="#D4537E"/>
+        <circle cx="30" cy="-2" r="2.4" fill="#FAC775"/>
+      </g>
+      <g id="acc-crown" style="display:none;">
+        <path d="M18 10 L21 1 L26 8 L30 -1 L34 8 L39 1 L42 10 Z" fill="#EF9F27" stroke="#BA7517" stroke-width="0.5"/>
+        <circle cx="30" cy="-1" r="1.8" fill="#993C1D"/>
+      </g>
+      <g id="acc-glasses" style="display:none;">
+        <rect x="19" y="13" width="10" height="6" rx="2" fill="#2C2C2A" opacity="0.85"/>
+        <rect x="29" y="14" width="4" height="2" fill="#2C2C2A" opacity="0.85"/>
+      </g>
+    </svg>
+  `;
+
+  const bubble = document.createElement('div');
+  bubble.style.background = '#ffffff';
+  bubble.style.border = '0.5px solid #d3d1c7';
+  bubble.style.borderRadius = '12px';
+  bubble.style.padding = '8px 12px';
+  bubble.style.maxWidth = '150px';
+  bubble.style.boxShadow = '0 1px 4px rgba(0,0,0,0.08)';
+  bubble.innerHTML = `
+    <div style="font-size:11px; color:#5F5E5A; margin-bottom:2px;" id="bubble-prompt">Find me:</div>
+    <div id="target-letter" style="font-size:28px; font-weight:500; color:#26215C; line-height:1;"></div>
+    <div id="target-sound" style="font-size:12px; color:#5F5E5A; margin-top:2px;"></div>
+  `;
+
+  holder.appendChild(parrotWrap);
+  holder.appendChild(bubble);
+  game.appendChild(holder);
+  window.__parrotWrap = parrotWrap;
+}
+
+function updateSpeechBubble(){
+  const letterDiv = document.getElementById('target-letter');
+  const soundDiv = document.getElementById('target-sound');
+  const promptDiv = document.getElementById('bubble-prompt');
+  if(letterDiv){
+    letterDiv.textContent = target.letter;
+    soundDiv.textContent = '"' + target.sound + '"';
+    if(promptDiv) promptDiv.textContent = 'Find me:';
+  }
+}
+
+function setEyeState(state){
+  document.getElementById('parrot-eye-idle').style.display = state === 'idle' ? 'block' : 'none';
+  document.getElementById('parrot-eye-happy').style.display = state === 'happy' ? 'block' : 'none';
+  document.getElementById('parrot-eye-sad').style.display = state === 'sad' ? 'block' : 'none';
+}
+
+function updateCostume(){
+  const hat = document.getElementById('acc-hat');
+  const crown = document.getElementById('acc-crown');
+  const glasses = document.getElementById('acc-glasses');
+  if(!hat) return;
+  hat.style.display = (streak >= 3 && streak < 10) ? 'block' : 'none';
+  crown.style.display = streak >= 10 ? 'block' : 'none';
+  glasses.style.display = streak >= 6 ? 'block' : 'none';
+  streakFireEl.style.display = streak >= 3 ? 'inline' : 'none';
+}
+
+function parrotReact(good){
+  const p = window.__parrotWrap;
+  if(!p) return;
+  p.classList.remove('parrot-idle','parrot-happy','parrot-sad');
+  void p.offsetWidth;
+  p.classList.add(good ? 'parrot-happy' : 'parrot-sad');
+  setEyeState(good ? 'happy' : 'sad');
+  setTimeout(() => {
+    p.classList.remove('parrot-happy','parrot-sad');
+    p.classList.add('parrot-idle');
+    setEyeState('idle');
+  }, 550);
+}
+
+function spawnBalloon(){
+  const w = 58 + Math.random()*20;
+  const h = w * 1.2;
+  const c = balloonColors[Math.floor(Math.random()*balloonColors.length)];
+  const useTarget = Math.random() < currentLevel.targetChance && target;
+  const {letter, sound, lang} = useTarget ? target : pickLetter();
+
+  const wrap = document.createElement('div');
+  wrap.style.position = 'absolute';
+  wrap.style.width = w + 'px';
+  wrap.style.left = Math.random()*(game.clientWidth - w) + 'px';
+  wrap.style.top = game.clientHeight + 'px';
+  wrap.style.cursor = 'pointer';
+  wrap.style.userSelect = 'none';
+  wrap.style.transition = 'transform 0.15s, opacity 0.15s';
+
+  const body = document.createElement('div');
+  body.style.position = 'relative';
+  body.style.width = w + 'px';
+  body.style.height = h + 'px';
+  body.style.borderRadius = '50% 50% 50% 50% / 58% 58% 42% 42%';
+  body.style.background = `radial-gradient(circle at 32% 28%, ${c.main} 0%, ${c.main} 45%, ${c.dark} 100%)`;
+  body.style.display = 'flex';
+  body.style.alignItems = 'center';
+  body.style.justifyContent = 'center';
+  body.style.fontSize = (w*0.4)+'px';
+  body.style.fontWeight = '500';
+  body.style.color = '#ffffff';
+  body.style.boxShadow = 'inset -4px -6px 10px rgba(0,0,0,0.15), inset 4px 6px 8px rgba(255,255,255,0.35)';
+
+  const highlight = document.createElement('div');
+  highlight.style.position = 'absolute';
+  highlight.style.width = (w*0.22)+'px';
+  highlight.style.height = (h*0.14)+'px';
+  highlight.style.borderRadius = '50%';
+  highlight.style.background = 'rgba(255,255,255,0.55)';
+  highlight.style.top = (h*0.16)+'px';
+  highlight.style.left = (w*0.22)+'px';
+  highlight.style.pointerEvents = 'none';
+
+  body.appendChild(highlight);
+  const textSpan = document.createElement('span');
+  textSpan.textContent = letter;
+  body.appendChild(textSpan);
+
+  const knot = document.createElement('div');
+  knot.style.width = '0';
+  knot.style.height = '0';
+  knot.style.margin = '0 auto';
+  knot.style.borderLeft = '5px solid transparent';
+  knot.style.borderRight = '5px solid transparent';
+  knot.style.borderTop = `7px solid ${c.dark}`;
+
+  const string = document.createElement('div');
+  string.style.width = '1px';
+  string.style.height = '26px';
+  string.style.margin = '0 auto';
+  string.style.background = 'rgba(90,80,70,0.5)';
+
+  wrap.appendChild(body);
+  wrap.appendChild(knot);
+  wrap.appendChild(string);
+  game.appendChild(wrap);
+
+  const duration = currentLevel.durMin + Math.random()*(currentLevel.durMax - currentLevel.durMin);
+  const start = performance.now();
+  const drift = (Math.random()-0.5)*50;
+  const startLeft = parseFloat(wrap.style.left);
+  const sway = Math.random()*2 + 1;
+
+  function animate(now){
+    const t = (now - start) / duration;
+    if(t >= 1 || !wrap.parentElement) { if(wrap.parentElement) wrap.remove(); return; }
+    const y = game.clientHeight - t*(game.clientHeight + h + 40);
+    const x = startLeft + drift*Math.sin(t*Math.PI*sway);
+    wrap.style.top = y + 'px';
+    wrap.style.left = x + 'px';
+    wrap.style.transform = `rotate(${Math.sin(t*Math.PI*sway)*6}deg)`;
+    requestAnimationFrame(animate);
+  }
+  requestAnimationFrame(animate);
+
+  wrap.addEventListener('click', () => {
+    if(wrap.dataset.popped) return;
+    wrap.dataset.popped = '1';
+    const px = parseFloat(wrap.style.left) + w/2;
+    const py = parseFloat(wrap.style.top) + h/2;
+    const isCorrect = target && letter === target.letter;
+
+    if(isCorrect){
+      playPop(true);
+      streak += 1;
+      bestStreak = Math.max(bestStreak, streak);
+      score += 20 + streak * 2;
+      scoreEl.textContent = score;
+      streakEl.textContent = streak;
+      burstParticles(px, py, c.main);
+      floatLabel(px - 20, py - 10, sound + ' \u2713', '#0F6E56');
+      parrotReact(true);
+      updateLevel();
+      setTimeout(pickNewTarget, 500);
+    } else {
+      playPop(false);
+      streak = 0;
+      streakEl.textContent = streak;
+      burstParticles(px, py, c.main);
+      floatLabel(px - 20, py - 10, sound, '#A32D2D');
+      parrotReact(false);
+      updateLevel();
+    }
+
+    wrap.style.transform = 'scale(1.5)';
+    wrap.style.opacity = '0';
+    setTimeout(() => wrap.remove(), 150);
+  });
+}
+
+buildParrot();
+setMode('both');
+updateLevel();
+restartSpawning();
+cloudTimer = setInterval(spawnCloud, 4500);
+for(let i=0;i<3;i++) setTimeout(spawnBalloon, i*350);
+for(let i=0;i<2;i++) setTimeout(spawnCloud, i*1500);
+</script>
+</body>
+</html>
