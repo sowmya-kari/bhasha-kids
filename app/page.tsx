@@ -243,72 +243,19 @@ function TracePad({ letter, roman }: { letter: string; roman: string }) {
   );
 }
 
-const gameLetters: Record<Language, string[]> = {
-  Telugu: ["క", "మ", "అ", "చ", "ప", "ఆ", "గ", "త"],
-  Hindi: ["अ", "क", "म", "ग", "आ", "प", "च", "त"],
-};
-
 function BubblePopGame() {
-  const [gameLanguage, setGameLanguage] = useState<Language>("Telugu");
-  const [round, setRound] = useState(0);
-  const [score, setScore] = useState(0);
-  const [popped, setPopped] = useState<string | null>(null);
-  const [wrong, setWrong] = useState<string | null>(null);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const letters = gameLetters[gameLanguage];
-  const target = letters[round % letters.length];
-  const bubbleOrders = [
-    [3, 0, 5, 1, 6], [1, 5, 0, 6, 3], [6, 3, 1, 0, 5], [5, 1, 6, 3, 0], [0, 6, 3, 5, 1],
-  ];
-  const bubbles = bubbleOrders[round % bubbleOrders.length].map((offset) => letters[(round + offset) % letters.length]);
-
-  useEffect(() => () => { if (timerRef.current) clearTimeout(timerRef.current); }, []);
-
-  function chooseLanguage(next: Language) {
-    if (timerRef.current) clearTimeout(timerRef.current);
-    setGameLanguage(next);
-    setRound(0);
-    setScore(0);
-    setPopped(null);
-    setWrong(null);
-  }
-
-  function popLetter(letter: string) {
-    if (popped) return;
-    if (letter !== target) {
-      setWrong(letter);
-      timerRef.current = setTimeout(() => setWrong(null), 450);
-      return;
-    }
-    setWrong(null);
-    setPopped(letter);
-    setScore((value) => value + 1);
-    timerRef.current = setTimeout(() => {
-      setPopped(null);
-      setRound((value) => value + 1);
-    }, 850);
-  }
-
   return (
-    <section className="games-section" id="games">
-      <div className="game-intro">
-        <p className="kicker"><b>✦</b> Game 3 · Bubble Pop Letters</p>
-        <h2>Find it. Tap it.<br /><em>Pop it!</em></h2>
-        <p>Letters float inside colorful bubbles. Children find the letter in the instruction and tap the correct bubble.</p>
-        <div className="game-language" role="group" aria-label="Choose game language">
-          <button className={gameLanguage === "Telugu" ? "active" : ""} onClick={() => chooseLanguage("Telugu")}>తెలుగు</button>
-          <button className={gameLanguage === "Hindi" ? "active" : ""} onClick={() => chooseLanguage("Hindi")}>हिन्दी</button>
-        </div>
-        <div className="game-score"><span>⭐</span><div><b>{score} correct</b><small>Keep popping!</small></div></div>
-      </div>
-      <div className="bubble-game" aria-label={`Pop ${target} game`}>
-        <div className="game-cloud cloud-one" /><div className="game-cloud cloud-two" />
-        <div className="game-prompt"><small>LOOK FOR THE LETTER</small><strong>Pop <b>{target}</b></strong></div>
-        <div className="bubble-field">
-          {bubbles.map((letter, index) => <button key={`${round}-${letter}-${index}`} className={`letter-bubble bubble-${index + 1} ${popped === letter ? "popped" : ""} ${wrong === letter ? "wrong" : ""}`} onClick={() => popLetter(letter)} disabled={Boolean(popped)} aria-label={`Bubble ${letter}`}><span>{letter}</span>{popped === letter && <i aria-hidden="true">✦ ✨ ✦</i>}</button>)}
-        </div>
-        <p className={`game-feedback ${popped ? "show" : ""}`} aria-live="polite">{popped ? `Wonderful! You popped ${target}!` : "Tap the matching bubble"}</p>
-      </div>
+    <section
+      id="games"
+      aria-label="Parrot Letter Balloon Pop"
+      style={{ maxWidth: "760px", margin: "0 auto", padding: "80px 24px" }}
+    >
+      <iframe
+        src="/pop-letter.html"
+        title="Parrot Letter Balloon Pop"
+        loading="lazy"
+        style={{ width: "100%", height: "620px", border: 0, borderRadius: "24px", background: "#f5f4ef" }}
+      />
     </section>
   );
 }
