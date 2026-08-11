@@ -80,7 +80,6 @@
     <div class="mode-pills">
       <button id="btn-te">తెలుగు</button>
       <button id="btn-hi">हिंदी</button>
-      <button id="btn-both">Both</button>
     </div>
   </div>
   <div class="stats-row">
@@ -111,7 +110,7 @@ const levels = [
   {name:"Letter master",  minStreak:10, targetChance:0.15, durMin:3600, durMax:6000, interval:700}
 ];
 
-let mode = "both";
+let mode = "te";
 let score = 0, streak = 0, bestStreak = 0;
 let target = null;
 let currentLevel = levels[0];
@@ -124,23 +123,21 @@ const streakFireEl = document.getElementById('streak-fire');
 const levelNameEl = document.getElementById('level-name');
 const btnTe = document.getElementById('btn-te');
 const btnHi = document.getElementById('btn-hi');
-const btnBoth = document.getElementById('btn-both');
 
 function pool(){
   if(mode === 'te') return [{letters:Object.keys(teluguMap), map:teluguMap, lang:'te-IN'}];
   if(mode === 'hi') return [{letters:Object.keys(hindiMap), map:hindiMap, lang:'hi-IN'}];
-  return [{letters:Object.keys(teluguMap), map:teluguMap, lang:'te-IN'},{letters:Object.keys(hindiMap), map:hindiMap, lang:'hi-IN'}];
+  return [{letters:Object.keys(teluguMap), map:teluguMap, lang:'te-IN'}];
 }
 
 function setMode(m){
   mode = m;
-  [btnTe, btnHi, btnBoth].forEach(b => b.classList.remove('active'));
-  ({te: btnTe, hi: btnHi, both: btnBoth})[m].classList.add('active');
+  [btnTe, btnHi].forEach(b => b.classList.remove('active'));
+  ({te: btnTe, hi: btnHi})[m].classList.add('active');
   pickNewTarget();
 }
 btnTe.onclick = () => setMode('te');
 btnHi.onclick = () => setMode('hi');
-btnBoth.onclick = () => setMode('both');
 
 function pickLetter(){
   const groups = pool();
@@ -506,7 +503,7 @@ function spawnBalloon(){
 }
 
 buildParrot();
-setMode('both');
+setMode('te');
 updateLevel();
 restartSpawning();
 cloudTimer = setInterval(spawnCloud, 4500);
