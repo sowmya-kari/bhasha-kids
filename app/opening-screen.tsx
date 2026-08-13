@@ -7,16 +7,16 @@ type IntroItem = { letter: string; joiner: string; word: string; image: string; 
 
 const lessons: Record<Language, IntroItem[]> = {
   Telugu: [
-    { letter: "అ", joiner: "అంటే", word: "అమ్మ", image: "/intro/mother.png", color: "#f46f61", wash: "#fff0e8" },
-    { letter: "ఆ", joiner: "అంటే", word: "ఆకులు", image: "/intro/leaves.png", color: "#14a98e", wash: "#e8faf3" },
-    { letter: "ఇ", joiner: "అంటే", word: "ఇల్లు", image: "/intro/house.png", color: "#6c5bd9", wash: "#f0edff" },
-    { letter: "ఈ", joiner: "అంటే", word: "ఈగ", image: "/intro/fly.png", color: "#8b62d7", wash: "#f5edff" },
+    { letter: "అ", joiner: "అంటే", word: "అమ్మ", image: "/assets/intro/mother.png", color: "#f46f61", wash: "#fff0e8" },
+    { letter: "ఆ", joiner: "అంటే", word: "ఆకులు", image: "/assets/intro/leaves.png", color: "#14a98e", wash: "#e8faf3" },
+    { letter: "ఇ", joiner: "అంటే", word: "ఇల్లు", image: "/assets/intro/house.png", color: "#6c5bd9", wash: "#f0edff" },
+    { letter: "ఈ", joiner: "అంటే", word: "ఈగ", image: "/assets/intro/fly.png", color: "#8b62d7", wash: "#f5edff" },
   ],
   Hindi: [
-    { letter: "अ", joiner: "से", word: "अनार", image: "/intro/pomegranate.png", color: "#ee594f", wash: "#fff0ec" },
-    { letter: "आ", joiner: "से", word: "आम", image: "/intro/mango.png", color: "#e2a21d", wash: "#fff8dc" },
-    { letter: "इ", joiner: "से", word: "इमली", image: "/intro/tamarind.png", color: "#9a633f", wash: "#fff3e9" },
-    { letter: "ई", joiner: "से", word: "ईख", image: "/intro/sugarcane.png", color: "#20a572", wash: "#eaf9ef" },
+    { letter: "अ", joiner: "से", word: "अनार", image: "/assets/intro/pomegranate.png", color: "#ee594f", wash: "#fff0ec" },
+    { letter: "आ", joiner: "से", word: "आम", image: "/assets/intro/mango.png", color: "#e2a21d", wash: "#fff8dc" },
+    { letter: "इ", joiner: "से", word: "इमली", image: "/assets/intro/tamarind.png", color: "#9a633f", wash: "#fff3e9" },
+    { letter: "ई", joiner: "से", word: "ईख", image: "/assets/intro/sugarcane.png", color: "#20a572", wash: "#eaf9ef" },
   ],
 };
 
