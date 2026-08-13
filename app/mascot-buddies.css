@@ -1,1 +1,22 @@
-.mascot-buddies{position:fixed;left:50%;bottom:18px;z-index:1200;display:grid;grid-template-columns:110px minmax(210px,320px) 110px;align-items:end;gap:8px;width:min(94vw,570px);padding:12px 18px;transform:translate(-50%,140%);opacity:0;border:2px solid #fff;border-radius:28px;background:linear-gradient(135deg,#fff,#fff8dc);box-shadow:0 18px 55px rgba(43,37,84,.22);transition:.7s}.mascot-buddies.is-open{transform:translate(-50%,0);opacity:1}.mascot-close{position:absolute;right:9px;top:7px;width:28px;height:28px;border:0;border-radius:50%;background:#fff;color:#4b4770;font-size:20px;cursor:pointer}.mascot-character{text-align:center;animation:mascotFloat 3.5s ease-in-out infinite}.mascot-character.vani{animation-delay:-1.4s}.mascot-character svg{display:block;width:110px;height:auto;margin-bottom:-8px}.mascot-character>b{display:inline-block;padding:5px 12px;border-radius:999px;color:#fff;font-size:13px}.vageesh>b{background:#168f91}.vani>b{background:#e64f7f}.mascot-message{text-align:center;padding:10px 6px}.mascot-message small{display:block;color:#6b6291;font-size:11px;font-weight:800;text-transform:uppercase}.mascot-message strong{display:block;margin:4px 0;color:#28215e;font-size:24px}.mascot-message span{display:block;color:#746d8e;font-size:12px;font-weight:700}.mascot-message button{margin-top:8px;padding:7px 16px;border:0;border-radius:999px;background:#5f49c7;color:#fff;font-weight:800;cursor:pointer}.mascot-sparkles{position:absolute;left:50%;top:-16px;transform:translateX(-50%);font-size:18px}.vg-thumb{transform-box:fill-box;transform-origin:70% 85%;animation:thumbBounce 1.8s ease-in-out infinite}.vn-wave{transform-box:fill-box;transform-origin:18% 86%;animation:handWave 1.25s ease-in-out infinite}@keyframes mascotFloat{50%{transform:translateY(-7px)}}@keyframes thumbBounce{50%{transform:rotate(-7deg) scale(1.05)}}@keyframes handWave{25%{transform:rotate(8deg)}70%{transform:rotate(-8deg)}}@media(max-width:640px){.mascot-buddies{grid-template-columns:78px 1fr 78px;bottom:8px;padding:9px 7px}.mascot-character svg{width:82px}.mascot-message strong{font-size:18px}.mascot-message span{font-size:10px}}
+.mascot-buddies{position:fixed;left:50%;bottom:18px;z-index:1200;display:grid;grid-template-columns:110px minmax(210px,320px) 110px;align-items:end;gap:8px;width:min(94vw,570px);padding:12px 18px;transform:translate(-50%,140%);opacity:0;border:2px solid #fff;border-radius:28px;background:linear-gradient(135deg,#fff,#fff8dc);box-shadow:0 18px 55px rgba(43,37,84,.22);transition:.7s}
+.mascot-buddies.is-open{transform:translate(-50%,0);opacity:1}
+.mascot-close{position:absolute;right:9px;top:7px;width:28px;height:28px;border:0;border-radius:50%;background:#fff;color:#4b4770;font-size:20px;cursor:pointer}
+.mascot-character{text-align:center;animation:mascotFloat 3.5s ease-in-out infinite}
+.mascot-character.vani{animation-delay:-1.4s}
+.mascot-character img{display:block;width:110px;height:auto;margin-bottom:-8px;object-fit:contain;filter:drop-shadow(0 10px 10px rgba(43,37,84,.28))}
+.mascot-character>b{display:inline-block;padding:5px 12px;border-radius:999px;color:#fff;font-size:13px}
+.vageesh>b{background:#168f91}
+.vani>b{background:#e64f7f}
+.mascot-message{text-align:center;padding:10px 6px}
+.mascot-message small{display:block;color:#6b6291;font-size:11px;font-weight:800;text-transform:uppercase}
+.mascot-message strong{display:block;margin:4px 0;color:#28215e;font-size:24px}
+.mascot-message span{display:block;color:#746d8e;font-size:12px;font-weight:700}
+.mascot-message button{margin-top:8px;padding:7px 16px;border:0;border-radius:999px;background:#5f49c7;color:#fff;font-weight:800;cursor:pointer}
+.mascot-sparkles{position:absolute;left:50%;top:-16px;transform:translateX(-50%);font-size:18px}
+@keyframes mascotFloat{50%{transform:translateY(-7px)}}
+@media(max-width:640px){
+  .mascot-buddies{grid-template-columns:78px 1fr 78px;bottom:8px;padding:9px 7px}
+  .mascot-character img{width:82px}
+  .mascot-message strong{font-size:18px}
+  .mascot-message span{font-size:10px}
+}

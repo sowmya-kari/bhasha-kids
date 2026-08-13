@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { BuddyTip } from "./BuddyTip";
 
 type Language = "Telugu" | "Hindi";
 type Vowel = { letter: string; sign: string; sound: string };
@@ -84,7 +85,7 @@ export default function AksharaBuilder(){
   function chooseVowel(index:number){setVi(index);if(!challenge)return;if(index===targetIndex){setScore(v=>v+1);setFeedback(`Wonderful! ${dead} + ${target.letter} = ${targetResult}`);setChallenge(false);}else setFeedback("Try another vowel sign");}
   const wordParts=analyseTeluguWord(word||"పిల్ల");
   return <section className="akshara-section" id="guninthalu">
-    <div className="akshara-heading"><div><p className="kicker"><b>✦</b> Game 4 · Akshara Builder</p><h2>Build every<br/><em>Gunintham.</em></h2><p>Choose a consonant through హ/ह, then add a vowel. The pieces join visibly to form a new sound.</p></div><div className="builder-language" role="group" aria-label="Choose builder language"><button className={language==="Telugu"?"active":""} onClick={()=>changeLanguage("Telugu")}>తెలుగు</button><button className={language==="Hindi"?"active":""} onClick={()=>changeLanguage("Hindi")}>हिन्दी</button></div></div>
+    <div className="akshara-heading"><div><p className="kicker"><b>✦</b> Game 4 · Akshara Builder</p><h2>Build every<br/><em>Gunintham.</em></h2><p>Choose a consonant through హ/ह, then add a vowel. The pieces join visibly to form a new sound.</p><BuddyTip name="vageesh" message="I love puzzles like this — let's build a new sound!" className="on-dark" /></div><div className="builder-language" role="group" aria-label="Choose builder language"><button className={language==="Telugu"?"active":""} onClick={()=>changeLanguage("Telugu")}>తెలుగు</button><button className={language==="Hindi"?"active":""} onClick={()=>changeLanguage("Hindi")}>हिन्दी</button></div></div>
     <div className="builder-shell">
       <div className="builder-label"><b>1. Pick a consonant</b><span>{consonants[language].length} letters · {consonants[language][0]} to {consonants[language].at(-1)}</span></div>
       <div className="consonant-strip">{consonants[language].map((letter,index)=><button key={letter} className={ci===index?"active":""} onClick={()=>{setCi(index);setFeedback("");setChallenge(false)}}>{letter}</button>)}</div>

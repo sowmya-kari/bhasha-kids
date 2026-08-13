@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import "./math-corner.css";
+import { BuddyTip } from "./BuddyTip";
 
 type Operation = "add" | "subtract" | "multiply" | "divide";
 type Language = "Telugu" | "Hindi";
@@ -53,7 +54,7 @@ export default function MathCorner() {
   return (
     <section className="math-corner" id="math-corner">
       <div className="math-heading">
-        <div><small>NEW · PLAY AND LEARN</small><h2>Math Corner</h2><p>Every round uses different numbers for addition, subtraction, multiplication, and division.</p></div>
+        <div><small>NEW · PLAY AND LEARN</small><h2>Math Corner</h2><p>Every round uses different numbers for addition, subtraction, multiplication, and division.</p><BuddyTip name="vageesh" message="Math is my favorite — let's solve one together!" /></div>
         <div className="math-language"><button className={language === "Telugu" ? "active" : ""} onClick={() => setLanguage("Telugu")}>తెలుగు</button><button className={language === "Hindi" ? "active" : ""} onClick={() => setLanguage("Hindi")}>हिन्दी</button></div>
       </div>
 
