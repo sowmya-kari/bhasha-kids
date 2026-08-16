@@ -2,7 +2,7 @@
 
 import "./buddy-tip.css";
 
-export type BuddyName = "vageesh" | "vani" | "mithu" | "mayuri" | "gaja";
+export type BuddyName = "vageesh" | "vani" | "mithu" | "mayuri" | "gaja" | "chintu";
 
 type BuddyDef = { label: string; emoji?: string; photo?: string; color: string };
 
@@ -12,6 +12,7 @@ export const BUDDIES: Record<BuddyName, BuddyDef> = {
   mithu: { label: "Mithu", emoji: "🦜", color: "#1f9d6c" },
   mayuri: { label: "Mayuri", emoji: "🦚", color: "#3a6ea5" },
   gaja: { label: "Gaja", emoji: "🐘", color: "#7b8fa6" },
+  chintu: { label: "Chintu", emoji: "🐒", color: "#a9682e" },
 };
 
 /** Small inline avatar + message, dropped near a section heading so a mascot feels present. */

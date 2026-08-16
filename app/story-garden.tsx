@@ -69,10 +69,38 @@ const stories: Story[] = [
     Hindi:{title:"ईमानदार लकड़हारा",teaser:"सच बोलने पर उसे अनमोल पुरस्कार मिला।",pages:["एक गरीब लकड़हारा नदी किनारे पेड़ काट रहा था। उसकी लोहे की कुल्हाड़ी पानी में गिर गई।","नदी देवी ने सोने की कुल्हाड़ी दिखाकर पूछा, ‘क्या यह तुम्हारी है?’ उसने ‘नहीं’ कहा। चाँदी की कुल्हाड़ी को भी अपना नहीं बताया।","अंत में लोहे की कुल्हाड़ी देखकर वह प्रसन्न हुआ, ‘यही मेरी है!’","उसकी ईमानदारी से प्रसन्न होकर देवी ने तीनों कुल्हाड़ियाँ दे दीं। लकड़हारा कृतज्ञ होकर घर लौटा।"],moral:"ईमानदारी का मूल्यवान फल मिलता है।",question:"लकड़हारे ने सोने की कुल्हाड़ी क्यों नहीं ली?"}}
 ];
 
+const storyCovers:Record<string,{emojis:[string,string];from:string;to:string}>={
+  "lion-mouse":{emojis:["🦁","🐭"],from:"#ffe3d9",to:"#fff7ee"},
+  "tortoise-hare":{emojis:["🐢","🐇"],from:"#dff3ff",to:"#f2fbff"},
+  "fox-grapes":{emojis:["🦊","🍇"],from:"#e9f9ef",to:"#f5fffa"},
+  "boy-wolf":{emojis:["🐑","🐺"],from:"#e9f9ef",to:"#f5fffa"},
+  "ant-grasshopper":{emojis:["🐜","🦗"],from:"#fff3d6",to:"#fffaf0"},
+  "crow-pitcher":{emojis:["🐦","🏺"],from:"#eee7ff",to:"#f8f5ff"},
+  "dog-reflection":{emojis:["🐶","🍞"],from:"#ffe9f0",to:"#fff5f8"},
+  "two-mice":{emojis:["🐭","🎂"],from:"#ffe9f0",to:"#fff5f8"},
+  "golden-goose":{emojis:["🦢","🥚"],from:"#fff0d1",to:"#fffaf0"},
+  "wind-sun":{emojis:["🌬️","☀️"],from:"#e5f7ff",to:"#f4fcff"},
+  "fox-stork":{emojis:["🦊","🦩"],from:"#f0eaff",to:"#f8f5ff"},
+  "bundle-sticks":{emojis:["🧑‍🌾","🪵"],from:"#e3fbf3",to:"#f2fffb"},
+  "shepherd-goat":{emojis:["🧑‍🌾","🐐"],from:"#ffe8e0",to:"#fff6f2"},
+  "peacock-crane":{emojis:["🦚","🦢"],from:"#fef2e0",to:"#fffaf2"},
+  "wolf-crane":{emojis:["🐺","🦢"],from:"#e6f0ff",to:"#f3f8ff"},
+  "milkmaid-pail":{emojis:["👧","🪣"],from:"#f5ecff",to:"#faf5ff"},
+  "lion-rabbit":{emojis:["🦁","🐰"],from:"#ffe6e6",to:"#fff5f5"},
+  "travelers-bear":{emojis:["🧑‍🤝‍🧑","🐻"],from:"#e7f9e9",to:"#f5fdf6"},
+  "hare-friends":{emojis:["🐇","🐴"],from:"#e7f9e9",to:"#f5fdf6"},
+  "honest-woodcutter":{emojis:["🪓","🌊"],from:"#e9f9ef",to:"#f5fffa"},
+};
+
 const labels = {
   Telugu:{garden:"✦ ఈసప్ కథల తోట",heading:"ఇరవై చిన్న కథలు.",em:"మరొక కథ వినాలా?",intro:"తెలివి, దయ, నిజాయితీ, స్నేహం నేర్పే 3–4 నిమిషాల తెలుగు కథలు.",all:"అన్నీ",read:"కథ చదవండి →",listen:"తెలుగులో వినండి",audio:"తెలుగు ఆడియోను ఇక్కడ జోడించవచ్చు",previous:"← వెనుక",next:"తరువాతి పేజీ →",again:"మళ్లీ చదవండి ↻",moral:"కథ నీతి",question:"మాట్లాడుకుందాం"},
   Hindi:{garden:"✦ ईसप की कहानी बगिया",heading:"बीस छोटी कहानियाँ।",em:"एक कहानी और?",intro:"बुद्धि, दया, ईमानदारी और मित्रता सिखाने वाली 3–4 मिनट की हिंदी कहानियाँ।",all:"सभी",read:"कहानी पढ़ें →",listen:"हिंदी में सुनें",audio:"हिंदी ऑडियो यहाँ जोड़ा जा सकता है",previous:"← पीछे",next:"अगला पन्ना →",again:"फिर से पढ़ें ↻",moral:"कहानी की सीख",question:"बात करें"}
 };
+
+function StoryCover({story,className}:{story:Story;className:string}){
+  const cover=storyCovers[story.id];
+  return <span className={className} style={{background:`linear-gradient(160deg, ${cover.from}, ${cover.to})`}}><span className="story-cover-scene">{cover.emojis.map((emoji,index)=><i key={index} style={{"--i":index} as React.CSSProperties}>{emoji}</i>)}</span></span>;
+}
 
 export default function StoryGarden() {
   const [language,setLanguage]=useState<Language>("Telugu");
@@ -81,25 +109,30 @@ export default function StoryGarden() {
   const [page,setPage]=useState(0);
   const [audioNotice,setAudioNotice]=useState(false);
   const [playing,setPlaying]=useState(false);
+  const [reading,setReading]=useState(false);
+  const [wordIndex,setWordIndex]=useState(-1);
   const audioRef=useRef<HTMLAudioElement|null>(null);
+  const readTimer=useRef<number|null>(null);
   const l=labels[language];
   const themes=["All","Kindness","Honesty","Friendship","Courage","Teamwork","Wisdom"];
   const shown=theme==="All"?stories:stories.filter(story=>story.theme===theme);
-  const selectedIndex=selected?stories.indexOf(selected):-1;
   const copy=selected?selected[language]:null;
   const currentAudio=copy?.audio?.[page];
-  function coverStyle(story:Story,index:number){return story.id==="wolf-crane"?{backgroundImage:"url('/assets/images/wolf-crane-natural.png')",backgroundSize:"cover",backgroundPosition:"center"}:{backgroundPosition:`${(index%5)*25}% ${Math.floor(index/5)*33.333}%`};}
+  const currentWords=copy&&page<copy.pages.length?copy.pages[page].split(" "):[];
   function stopAudio(){if(audioRef.current){audioRef.current.pause();audioRef.current.currentTime=0;}setPlaying(false);}
-  function openStory(story:Story){stopAudio();setSelected(story);setPage(0);setAudioNotice(false);setTimeout(()=>document.getElementById("story-reader")?.scrollIntoView({behavior:"smooth"}),50);}
-  function changePage(next:number){stopAudio();setAudioNotice(false);setPage(next);}
+  function stopReading(){if(readTimer.current!==null){window.clearInterval(readTimer.current);readTimer.current=null;}setReading(false);setWordIndex(-1);}
+  function startReading(){stopReading();if(!copy||page>=copy.pages.length)return;const words=copy.pages[page].split(" ");if(!words.length)return;setReading(true);setWordIndex(0);let index=0;readTimer.current=window.setInterval(()=>{index+=1;if(index>=words.length){stopReading();return;}setWordIndex(index);},420);}
+  function toggleReading(){reading?stopReading():startReading();}
+  function openStory(story:Story){stopAudio();stopReading();setSelected(story);setPage(0);setAudioNotice(false);setTimeout(()=>document.getElementById("story-reader")?.scrollIntoView({behavior:"smooth"}),50);}
+  function changePage(next:number){stopAudio();stopReading();setAudioNotice(false);setPage(next);}
   async function playCurrentAudio(){if(!currentAudio){setAudioNotice(true);return;}if(playing){stopAudio();return;}const audio=audioRef.current;if(!audio)return;audio.currentTime=0;setAudioNotice(false);try{await audio.play();setPlaying(true);}catch{setPlaying(false);setAudioNotice(true);}}
-  useEffect(()=>()=>{audioRef.current?.pause()},[]);
+  useEffect(()=>()=>{audioRef.current?.pause();if(readTimer.current!==null)window.clearInterval(readTimer.current);},[]);
 
   return <section className="story-garden" id="stories">
     <div className="story-heading"><div><h2>{language==="Telugu"?"కథా వనం":"कथा वन"}</h2></div><span><b>20</b><small>{language==="Telugu"?"చిత్ర కథలు":"चित्र कहानियाँ"}</small></span></div>
     <div className="story-language" role="group" aria-label="Story language"><button className={language==="Telugu"?"active":""} onClick={()=>{stopAudio();setLanguage("Telugu");setPage(0);setAudioNotice(false)}}>తెలుగు</button><button className={language==="Hindi"?"active":""} onClick={()=>{stopAudio();setLanguage("Hindi");setPage(0);setAudioNotice(false)}}>हिंदी</button></div>
     <div className="story-filters" role="group" aria-label="Filter stories">{themes.map(item=><button key={item} className={theme===item?"active":""} onClick={()=>setTheme(item)}>{item==="All"?l.all:item}</button>)}</div>
-    <div className="story-grid">{shown.map(story=>{const index=stories.indexOf(story),c=story[language];return <button className="story-card" key={story.id} onClick={()=>openStory(story)}><span className="story-cover" style={coverStyle(story,index)}/><span className="story-card-copy"><small>{story.theme} · {story.minutes} min</small><b>{c.title}</b><i>{c.teaser}</i><strong>{l.read}</strong></span></button>})}</div>
-    {selected&&copy&&<div className="story-reader" id="story-reader"><button className="reader-close" onClick={()=>{stopAudio();setSelected(null)}} aria-label="Close story">×</button><div className="reader-cover story-cover" style={coverStyle(selected,selectedIndex)}/><div className="reader-copy"><small>{selected.theme} · {page<copy.pages.length?`PAGE ${page+1} OF ${copy.pages.length}`:language==="Telugu"?"ముగింపు":"समापन"}</small><h3>{copy.title}</h3>{page<copy.pages.length?<p>{copy.pages[page]}</p>:<div className="story-ending"><h4>{l.moral}</h4><p>{copy.moral}</p><h4>{l.question}</h4><p>{copy.question}</p></div>}<audio ref={audioRef} src={currentAudio} onEnded={()=>setPlaying(false)} onError={()=>{setPlaying(false);setAudioNotice(true)}}/><button className={`story-audio-placeholder ${currentAudio?"has-audio":""}`} onClick={playCurrentAudio}>{playing?"■ ":"▶ "}{playing?(language==="Telugu"?"ఆపండి":"रोकें"):l.listen}</button>{audioNotice&&<small className="audio-notice">{currentAudio?(language==="Telugu"?"ఆడియో ప్లే కాలేదు. మళ్లీ ప్రయత్నించండి.":"ऑडियो नहीं चला। फिर कोशिश करें।"):l.audio}</small>}<div className="reader-progress"><i style={{width:`${((page+1)/(copy.pages.length+1))*100}%`}}/></div><div className="reader-actions"><button disabled={page===0} onClick={()=>changePage(page-1)}>{l.previous}</button><button onClick={()=>changePage(page===copy.pages.length?0:page+1)}>{page===copy.pages.length?l.again:l.next}</button></div></div></div>}
+    <div className="story-grid">{shown.map(story=>{const c=story[language];return <button className="story-card" key={story.id} onClick={()=>openStory(story)}><StoryCover story={story} className="story-cover"/><span className="story-card-copy"><small>{story.theme} · {story.minutes} min</small><b>{c.title}</b><i>{c.teaser}</i><strong>{l.read}</strong></span></button>})}</div>
+    {selected&&copy&&<div className="story-reader" id="story-reader"><button className="reader-close" onClick={()=>{stopAudio();setSelected(null)}} aria-label="Close story">×</button><StoryCover story={selected} className="reader-cover story-cover"/><div className="reader-copy"><small>{selected.theme} · {page<copy.pages.length?`PAGE ${page+1} OF ${copy.pages.length}`:language==="Telugu"?"ముగింపు":"समापन"}</small><h3>{copy.title}</h3>{page<copy.pages.length?<p className="story-text">{currentWords.map((word,index)=><span key={index} className={wordIndex===index?"active":""}>{word}{index<currentWords.length-1?" ":""}</span>)}</p>:<div className="story-ending"><h4>{l.moral}</h4><p>{copy.moral}</p><h4>{l.question}</h4><p>{copy.question}</p></div>}<audio ref={audioRef} src={currentAudio} onEnded={()=>setPlaying(false)} onError={()=>{setPlaying(false);setAudioNotice(true)}}/><div className="reader-buttons"><button className={`story-audio-placeholder ${currentAudio?"has-audio":""}`} onClick={playCurrentAudio}>{playing?"■ ":"▶ "}{playing?(language==="Telugu"?"ఆపండి":"रोकें"):l.listen}</button>{page<copy.pages.length&&<button className={`story-readalong ${reading?"active":""}`} onClick={toggleReading}>{reading?"⏸ ":"🔤 "}{reading?(language==="Telugu"?"ఆపండి":"रोकें"):(language==="Telugu"?"వెంట చదవండి":"साथ पढ़ें")}</button>}</div>{audioNotice&&<small className="audio-notice">{currentAudio?(language==="Telugu"?"ఆడియో ప్లే కాలేదు. మళ్లీ ప్రయత్నించండి.":"ऑडियो नहीं चला। फिर कोशिश करें।"):l.audio}</small>}<div className="reader-progress"><i style={{width:`${((page+1)/(copy.pages.length+1))*100}%`}}/></div><div className="reader-actions"><button disabled={page===0} onClick={()=>changePage(page-1)}>{l.previous}</button><button onClick={()=>changePage(page===copy.pages.length?0:page+1)}>{page===copy.pages.length?l.again:l.next}</button></div></div></div>}
   </section>;
 }
