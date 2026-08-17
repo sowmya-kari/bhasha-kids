@@ -4,11 +4,13 @@ import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } f
 import StoryGarden from "./story-garden";
 import AksharaBuilder from "./akshara-builder";
 import MoreGames from "./more-games";
+import MathCorner from "./math-corner";
 import OpeningScreen from "./opening-screen";
 import HeroMascots from "./HeroMascots";
 import "./story-garden.css";
 import "./akshara-builder.css";
 import "./more-games.css";
+import "./math-corner.css";
 import "./coloring-pencils.css";
 import "./action-card-motion.css";
 import "./opening-screen.css";
@@ -244,20 +246,18 @@ function TracePad({ letter, roman }: { letter: string; roman: string }) {
   );
 }
 
-function BubblePopGame() {
+function SectionOverlay({ title, onClose, children }: { title: string; onClose: () => void; children: React.ReactNode }) {
   return (
-    <section
-      id="games"
-      aria-label="Parrot Letter Balloon Pop"
-      style={{ maxWidth: "760px", margin: "0 auto", padding: "80px 24px" }}
-    >
-      <iframe
-        src="/pop-letter.html"
-        title="Parrot Letter Balloon Pop"
-        loading="lazy"
-        style={{ width: "100%", height: "620px", border: 0, borderRadius: "24px", background: "#f5f4ef" }}
-      />
-    </section>
+    <div className="learn-experience" role="dialog" aria-modal="true" aria-label={title}>
+      <div className="learn-shell">
+        <header className="learn-header">
+          <button onClick={onClose}>← Back to home</button>
+          <a href="#top" className="logo" onClick={(event) => { event.preventDefault(); onClose(); }}><span>🦚</span>Basha Kids</a>
+          <button className="learn-close" onClick={onClose} aria-label={`Close ${title}`}>✕</button>
+        </header>
+        {children}
+      </div>
+    </div>
   );
 }
 
@@ -273,7 +273,7 @@ export default function Home() {
   const [language, setLanguage] = useState<Language>("Telugu");
   const [group, setGroup] = useState<LetterGroup>("Vowels");
   const [selected, setSelected] = useState(0);
-  const [learnOpen, setLearnOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<"letters" | "stories" | "guninthalu" | "games" | "math" | null>(null);
   const [learnStage, setLearnStage] = useState<"choose" | "letters">("choose");
   const [audioState, setAudioState] = useState<"idle" | "playing" | "error">("idle");
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -282,9 +282,9 @@ export default function Home() {
   const example = examples[language][lesson.letter] ?? { word: lesson.letter, wordRoman: lesson.roman, meaning: `${lesson.roman} sound`, icon: "🔤" };
 
   useEffect(() => {
-    document.body.style.overflowY = started && !learnOpen ? "auto" : "hidden";
+    document.body.style.overflowY = started && !activeSection ? "auto" : "hidden";
     return () => { document.body.style.overflowY = "auto"; };
-  }, [started, learnOpen]);
+  }, [started, activeSection]);
 
   useEffect(() => {
     audioRef.current?.pause();
@@ -319,14 +319,16 @@ export default function Home() {
     setSelected(index);
   }
 
-  function openLearn() { setLearnStage("choose"); setLearnOpen(true); }
+  function openLearn() { setLearnStage("choose"); setActiveSection("letters"); }
+  function openSection(section: "stories" | "guninthalu" | "games" | "math") { setActiveSection(section); }
+  function closeSection() { setActiveSection(null); }
   function beginLetters(nextLanguage: Language, nextGroup: LetterGroup) { setLanguage(nextLanguage); setGroup(nextGroup); setSelected(0); setLearnStage("letters"); }
 
   return (
     <><main>
       <header className="nav-wrap">
         <a href="#top" className="logo"><span>🦚</span>Basha Kids</a>
-        <nav aria-label="Main navigation"><a href="#lessons" onClick={(event) => { event.preventDefault(); openLearn(); }}>Letters</a><a href="#stories">Stories</a><a href="#guninthalu">Guninthalu</a><a href="#more-games">Games</a></nav>
+        <nav aria-label="Main navigation"><a href="#lessons" onClick={(event) => { event.preventDefault(); openLearn(); }}>Letters</a><a href="#stories" onClick={(event) => { event.preventDefault(); openSection("stories"); }}>Stories</a><a href="#guninthalu" onClick={(event) => { event.preventDefault(); openSection("guninthalu"); }}>Guninthalu</a><a href="#more-games" onClick={(event) => { event.preventDefault(); openSection("games"); }}>Games</a><a href="#math-corner" onClick={(event) => { event.preventDefault(); openSection("math"); }}>Math Corner</a></nav>
         <a href="#lessons" className="nav-button" onClick={(event) => { event.preventDefault(); openLearn(); }}>Start learning <b>→</b></a>
       </header>
 
@@ -336,13 +338,14 @@ export default function Home() {
           <p className="kicker"><b>✦</b> Learn Telugu + Hindi with Vageesh &amp; Vani</p>
           <h1>Letters, stories &amp; games<br />for little <em>explorers.</em></h1>
           <p className="lead">A playful bilingual learning home for children ages 4–8—built around the lessons, stories, Guninthalu, and games already inside Basha Kids.</p>
-          <div className="hero-actions"><a href="#lessons" className="primary" onClick={(event) => { event.preventDefault(); openLearn(); }}>Open Letters <b>→</b></a><a href="#stories" className="secondary"><i>📖</i> Open Story Garden</a></div>
+          <div className="hero-actions"><a href="#lessons" className="primary" onClick={(event) => { event.preventDefault(); openLearn(); }}>Open Letters <b>→</b></a><a href="#stories" className="secondary" onClick={(event) => { event.preventDefault(); openSection("stories"); }}><i>📖</i> Open Story Garden</a></div>
           <div className="checks"><span>✓ Telugu + Hindi</span><span>✓ Child-friendly</span><span>✓ Tablet-ready</span></div>
           <div className="hero-roadmap" aria-label="Choose a learning path">
             <a href="#lessons" onClick={(event) => { event.preventDefault(); openLearn(); }}><span>అ</span><b>Letters</b><small>Tap, hear and trace</small></a>
-            <a href="#stories"><span>📖</span><b>Story Garden</b><small>Read and learn</small></a>
-            <a href="#guninthalu"><span>గు</span><b>Guninthalu</b><small>Build sounds and words</small></a>
-            <a href="#more-games"><span>🎮</span><b>Games</b><small>Play all practice games</small></a>
+            <a href="#stories" onClick={(event) => { event.preventDefault(); openSection("stories"); }}><span>📖</span><b>Story Garden</b><small>Read and learn</small></a>
+            <a href="#guninthalu" onClick={(event) => { event.preventDefault(); openSection("guninthalu"); }}><span>గు</span><b>Guninthalu</b><small>Build sounds and words</small></a>
+            <a href="#more-games" onClick={(event) => { event.preventDefault(); openSection("games"); }}><span>🎮</span><b>Games</b><small>Play all practice games</small></a>
+            <a href="#math-corner" onClick={(event) => { event.preventDefault(); openSection("math"); }}><span>➕</span><b>Math Corner</b><small>Add, subtract, play</small></a>
           </div>
         </div>
 
@@ -364,18 +367,17 @@ export default function Home() {
       </section>}
 
       <section className="features" id="features">
-        <div className="section-title"><p className="kicker"><b>✦</b> Your Basha Kids learning home</p><h2>Choose where to <em>explore.</em></h2><p>Letters, Story Garden, Guninthalu, and Games each lead to the learning content already built into the site.</p></div>
+        <div className="section-title"><p className="kicker"><b>✦</b> Your Basha Kids learning home</p><h2>Choose where to <em>explore.</em></h2><p>Letters, Story Garden, Guninthalu, Games, and Math Corner each open their own space—tap a card to dive in.</p></div>
         <div className="feature-grid home-destination-grid">
           <button className="feature feature-button violet" onClick={openLearn}><small>01</small><span>✨</span><h3>Letters</h3><p>Open Telugu or Hindi vowels and consonants, hear the word, and trace the letter.</p><b>Open Letters →</b></button>
-          <a className="feature coral" href="#stories"><small>02</small><span>📖</span><h3>Story Garden</h3><p>Explore the bilingual story collection and its kindness, honesty, friendship, courage, and other themes.</p><b>Open Story Garden →</b></a>
-          <a className="feature mint" href="#guninthalu"><small>03</small><span>🔤</span><h3>Guninthalu</h3><p>Choose a language, consonant, and vowel, then practice how sounds combine into words.</p><b>Open Guninthalu →</b></a>
-          <a className="feature gold" href="#more-games"><small>04</small><span>🎮</span><h3>Games</h3><p>Jump into Bubble Pop, matching, sorting, word practice, Letter Rain, and the rest of the game collection.</p><b>Open Games →</b></a>
+          <button className="feature feature-button coral" onClick={() => openSection("stories")}><small>02</small><span>📖</span><h3>Story Garden</h3><p>Explore the bilingual story collection and its kindness, honesty, friendship, courage, and other themes.</p><b>Open Story Garden →</b></button>
+          <button className="feature feature-button mint" onClick={() => openSection("guninthalu")}><small>03</small><span>🔤</span><h3>Guninthalu</h3><p>Choose a language, consonant, and vowel, then practice how sounds combine into words.</p><b>Open Guninthalu →</b></button>
+          <button className="feature feature-button gold" onClick={() => openSection("games")}><small>04</small><span>🎮</span><h3>Games</h3><p>Jump into Bubble Pop, matching, sorting, word practice, Letter Rain, and the rest of the game collection.</p><b>Open Games →</b></button>
+          <button className="feature feature-button violet" onClick={() => openSection("math")}><small>05</small><span>➕</span><h3>Math Corner</h3><p>Practice addition, subtraction, multiplication, and division, plus a fruit-counting equation game.</p><b>Open Math Corner →</b></button>
         </div>
       </section>
 
-      <StoryGarden />
-
-      {learnOpen && <div className="learn-experience" role="dialog" aria-modal="true" aria-label="Letters Come Alive lessons"><div className="learn-shell"><header className="learn-header"><button onClick={() => learnStage === "letters" ? setLearnStage("choose") : setLearnOpen(false)}>{learnStage === "letters" ? "← Back to choices" : "← Back to home"}</button><a href="#top" className="logo"><span>🦚</span>Basha Kids</a><button className="learn-close" onClick={() => setLearnOpen(false)} aria-label="Close letter lessons">✕</button></header>{learnStage === "choose" ? <section className="learn-chooser" id="lessons"><p className="kicker"><b>✦</b> Letters Come Alive</p><h2>What would you<br/><em>like to learn?</em></h2><p>First choose a language, then choose vowels or consonants.</p><div className="learn-language" role="group" aria-label="Choose lesson language"><button className={language === "Telugu" ? "active" : ""} onClick={() => pickLanguage("Telugu")}><b>తెలుగు</b><small>Telugu</small></button><button className={language === "Hindi" ? "active" : ""} onClick={() => pickLanguage("Hindi")}><b>हिन्दी</b><small>Hindi</small></button></div><div className="learn-paths"><button onClick={() => beginLetters(language, "Vowels")}><span>☀️</span><small>START WITH</small><b>Vowels</b><i>{language === "Telugu" ? "అచ్చులు · Acchulu" : "स्वर · Swar"}</i><strong>{letterSets[language].Vowels.length} letters →</strong></button><button onClick={() => beginLetters(language, "Consonants")}><span>🌱</span><small>EXPLORE</small><b>Consonants</b><i>{language === "Telugu" ? "హల్లులు · Hallulu" : "व्यंजन · Vyanjan"}</i><strong>{letterSets[language].Consonants.length} letters →</strong></button></div></section> : <><section className="lessons learn-lessons">
+      {activeSection === "letters" && <div className="learn-experience" role="dialog" aria-modal="true" aria-label="Letters Come Alive lessons"><div className="learn-shell"><header className="learn-header"><button onClick={() => learnStage === "letters" ? setLearnStage("choose") : closeSection()}>{learnStage === "letters" ? "← Back to choices" : "← Back to home"}</button><a href="#top" className="logo"><span>🦚</span>Basha Kids</a><button className="learn-close" onClick={closeSection} aria-label="Close letter lessons">✕</button></header>{learnStage === "choose" ? <section className="learn-chooser" id="lessons"><p className="kicker"><b>✦</b> Letters Come Alive</p><h2>What would you<br/><em>like to learn?</em></h2><p>First choose a language, then choose vowels or consonants.</p><div className="learn-language" role="group" aria-label="Choose lesson language"><button className={language === "Telugu" ? "active" : ""} onClick={() => pickLanguage("Telugu")}><b>తెలుగు</b><small>Telugu</small></button><button className={language === "Hindi" ? "active" : ""} onClick={() => pickLanguage("Hindi")}><b>हिन्दी</b><small>Hindi</small></button></div><div className="learn-paths"><button onClick={() => beginLetters(language, "Vowels")}><span>☀️</span><small>START WITH</small><b>Vowels</b><i>{language === "Telugu" ? "అచ్చులు · Acchulu" : "स्वर · Swar"}</i><strong>{letterSets[language].Vowels.length} letters →</strong></button><button onClick={() => beginLetters(language, "Consonants")}><span>🌱</span><small>EXPLORE</small><b>Consonants</b><i>{language === "Telugu" ? "హల్లులు · Hallulu" : "व्यंजन · Vyanjan"}</i><strong>{letterSets[language].Consonants.length} letters →</strong></button></div></section> : <><section className="lessons learn-lessons">
         <div className="lesson-copy">
           <p className="kicker"><b>✦</b> Explore the full alphabet</p><h2>Choose a group.<br /><em>Tap any letter.</em></h2>
           <p className="description">Learn vowels and consonants separately in Telugu or Hindi. Every letter card opens a large practice view.</p>
@@ -406,11 +408,13 @@ export default function Home() {
         </div>
       </section><TracePad letter={lesson.letter} roman={lesson.roman.toUpperCase()} /></>}</div></div>}
 
-      <AksharaBuilder />
+      {activeSection === "stories" && <SectionOverlay title="Story Garden" onClose={closeSection}><StoryGarden /></SectionOverlay>}
 
-      <BubblePopGame />
+      {activeSection === "guninthalu" && <SectionOverlay title="Guninthalu" onClose={closeSection}><AksharaBuilder /></SectionOverlay>}
 
-      <MoreGames />
+      {activeSection === "games" && <SectionOverlay title="Games" onClose={closeSection}><MoreGames /></SectionOverlay>}
+
+      {activeSection === "math" && <SectionOverlay title="Math Corner" onClose={closeSection}><MathCorner /></SectionOverlay>}
 
       <footer><a href="#top" className="logo"><span>🦚</span>Basha Kids</a><p>Little words. Big worlds.</p><a href="#top">Back to top ↑</a></footer>
     </main></>

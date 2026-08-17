@@ -279,4 +279,106 @@ function FirstLetterMatch(){
   return <article className="letter-match-game"><div className="letter-match-head"><div><small>GAME 10 · FIRST LETTER MATCH</small><h3>Drag the <em>First Letter!</em></h3><p>Look at the picture and its name, then drag the letter it starts with into the answer box.</p><BuddyTip name="chintu" message="Listen for the first sound and drag it home!" /></div><b>⭐ {score} points</b></div><div className="letter-match-lang" role="group" aria-label="Choose language">{(["Telugu","Hindi"] as const).map(item=><button key={item} className={language===item?"active":""} onClick={()=>changeLanguage(item)}>{item==="Telugu"?"తెలుగు":"हिन्दी"}</button>)}</div><div className="letter-match-board"><div className="letter-match-card"><span>{target.emoji}</span><b>{target.english}</b><i lang={language==="Telugu"?"te":"hi"}>{entry.word}</i><small>{entry.roman}</small></div><div className="letter-match-drop-wrap"><small>Drag the first letter here</small><div ref={dropRef} className={`letter-match-drop ${status}`}>{dropped??"?"}</div></div></div><div className="letter-match-tiles" aria-label="Letter choices">{choices.map(choice=><button key={choice.id} className={`letter-match-tile ${dragId===choice.id?"dragging":""}`} style={dragId===choice.id?{transform:`translate(${dragDelta.x}px, ${dragDelta.y}px)`}:undefined} onPointerDown={event=>onTileDown(event,choice.id)} onPointerMove={event=>onTileMove(event,choice.id)} onPointerUp={event=>onTileUp(event,choice.id,choice.letter)} onPointerCancel={()=>{setDragId(null);setDragDelta({x:0,y:0});}} lang={language==="Telugu"?"te":"hi"}>{choice.letter}</button>)}</div><div className={`letter-match-feedback ${status}`} aria-live="polite">{status==="correct"?`✓ Yes! ${entry.word} starts with ${targetLetter}.`:status==="wrong"?"Not quite—try another letter.":"Drag a letter tile onto the answer box."}</div><button className="letter-match-skip" onClick={skip}>New picture →</button>{celebrated&&<BuddyCelebrate name="chintu" title="Sharp ears! 🐒" message="You've matched 5 first letters — Chintu is swinging with excitement!" onAction={()=>setCelebrated(false)} actionLabel="Keep going" />}</article>;
 }
 
-export default function MoreGames(){return <section className="more-games" id="more-games"><div className="section-title"><p className="kicker"><b>✦</b> More playful practice</p><h2>Remember it.<br/><em>Sort it correctly.</em></h2><p>Short games for visual memory, word recognition, language practice, and careful thinking.</p></div><div className="more-games-grid"><MemoryGame/><PictureSortingGame/></div><VocabularyShuffle/><ActionFlashcards/><LetterRain/><FirstLetterMatch/><ColoringStudio/></section>}
+type EcoBinType="compost"|"recycle"|"trash";
+type EcoBilingual={telugu:string;hindi:string};
+type EcoItem=EcoBilingual&{emoji:string;type:EcoBinType};
+const ecoItems:EcoItem[]=[
+  {emoji:"🍌",telugu:"అరటి తొక్క",hindi:"केले का छिलका",type:"compost"},
+  {emoji:"🥕",telugu:"కూరగాయల తొక్కలు",hindi:"सब्जी के छिलके",type:"compost"},
+  {emoji:"🍚",telugu:"మిగిలిన అన్నం",hindi:"बचा हुआ खाना",type:"compost"},
+  {emoji:"🥚",telugu:"గుడ్డు పెంకు",hindi:"अंडे का छिलका",type:"compost"},
+  {emoji:"🧴",telugu:"ప్లాస్టిక్ సీసా",hindi:"प्लास्टिक की बोतल",type:"recycle"},
+  {emoji:"📰",telugu:"వార్తాపత్రిక",hindi:"अखबार",type:"recycle"},
+  {emoji:"🍾",telugu:"గాజు సీసా",hindi:"कांच की बोतल",type:"recycle"},
+  {emoji:"📦",telugu:"అట్ట పెట్టె",hindi:"गत्ते का डिब्बा",type:"recycle"},
+  {emoji:"🛍️",telugu:"ప్లాస్టిక్ సంచి",hindi:"प्लास्टिक की थैली",type:"trash"},
+  {emoji:"🥤",telugu:"థర్మాకోల్ కప్పు",hindi:"थर्माकोल कप",type:"trash"},
+  {emoji:"🍫",telugu:"చాక్లెట్ ర్యాపర్",hindi:"चॉकलेट रैपर",type:"trash"},
+  {emoji:"🧻",telugu:"వాడిన టిష్యూ పేపర్",hindi:"इस्तेमाल किया हुआ टिशू पेपर",type:"trash"},
+];
+const ecoFacts:EcoBilingual[]=[
+  {telugu:"ఒక ప్లాస్టిక్ సీసా మట్టిలో కలిసిపోవడానికి 450 సంవత్సరాలు పడుతుంది!",hindi:"एक प्लास्टिक की बोतल को मिट्टी में मिलने में 450 साल लगते हैं!"},
+  {telugu:"తడి చెత్తతో మంచి ఎరువు (కంపోస్ట్) తయారు చేయవచ్చు!",hindi:"गीले कचरे से अच्छी खाद (कम्पोस्ट) बनाई जा सकती है!"},
+  {telugu:"ప్లాస్టిక్ సంచులు, వాడిన టిష్యూలు రీసైకిల్ చేయలేము — వీటిని తగ్గించడమే మేలు!",hindi:"प्लास्टिक की थैलियां और इस्तेमाल किए टिशू रीसायकल नहीं हो सकते — इन्हें कम इस्तेमाल करना ही बेहतर है!"},
+];
+const ecoQuotes:EcoBilingual[]=[
+  {telugu:"వ్యర్థం నుండి విలువైనది పుడుతుంది — కంపోస్ట్ చేద్దాం!",hindi:"कचरे से भी कुछ कीमती बनता है — चलो कम्पोस्ट करें!"},
+  {telugu:"ఒక్క పేపర్ రీసైకిల్ చేస్తే ఒక్క చెట్టుకు ప్రాణం పోసినట్టే!",hindi:"एक कागज़ रीसायकल करना, एक पेड़ को जीवन देने जैसा है!"},
+  {telugu:"చెత్త వేరు చేయడం చిన్న పని, భూమికి పెద్ద సాయం!",hindi:"कचरा अलग करना छोटा काम है, पर पृथ्वी की बड़ी मदद है!"},
+  {telugu:"నేటి కంపోస్ట్ రేపటి పచ్చని తోట!",hindi:"आज की खाद, कल का हरा-भरा बगीचा!"},
+  {telugu:"రీసైకిల్ చేయడం అంటే భూమికి రెండో అవకాశం ఇవ్వడం!",hindi:"रीसायकल करने का मतलब है पृथ्वी को एक और मौका देना!"},
+  {telugu:"తగ్గించు, తిరిగి వాడు, రీసైకిల్ చేయి — ఇదే మన నినాదం!",hindi:"कम करो, दोबारा इस्तेमाल करो, रीसायकल करो — यही हमारा नारा है!"},
+  {telugu:"ప్రతి చిన్న అలవాటు భూమిని పెద్దగా కాపాడుతుంది!",hindi:"हर छोटी आदत पृथ्वी की बड़ी रक्षा करती है!"},
+  {telugu:"మట్టిని పోషిస్తే, మట్టి మనల్ని పోషిస్తుంది!",hindi:"मिट्टी को पोषण दो, मिट्टी तुम्हें पोषण देगी!"},
+];
+const ecoBins:(EcoBilingual&{id:EcoBinType;emoji:string})[]=[
+  {id:"compost",telugu:"కంపోస్ట్",hindi:"कम्पोस्ट",emoji:"🍃"},
+  {id:"recycle",telugu:"రీసైకిల్",hindi:"रीसायकल",emoji:"♻️"},
+  {id:"trash",telugu:"సాధారణ చెత్త",hindi:"सामान्य कचरा",emoji:"🗑️"},
+];
+function ecoLabel(item:EcoBilingual,language:"Telugu"|"Hindi"){return language==="Telugu"?item.telugu:item.hindi;}
+function ecoShuffle<T>(list:T[]):T[]{const copy=[...list];for(let i=copy.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[copy[i],copy[j]]=[copy[j],copy[i]];}return copy;}
+
+function EcoSortGame(){
+  const [language,setLanguage]=useState<"Telugu"|"Hindi">("Telugu");
+  const [round,setRound]=useState(0);
+  const [shuffled,setShuffled]=useState<EcoItem[]>(ecoItems);
+  // Shuffle only after mount so the server-rendered order matches the client's first paint (avoids hydration mismatch).
+  useEffect(()=>{setShuffled(ecoShuffle(ecoItems));},[round]);
+  const [index,setIndex]=useState(0);
+  const [score,setScore]=useState(0);
+  const [phase,setPhase]=useState<"play"|"fact"|"end">("play");
+  const [factIndex,setFactIndex]=useState(0);
+  const [feedback,setFeedback]=useState<{ok:boolean;text:string}|null>(null);
+  const [locked,setLocked]=useState(false);
+  const [quote,setQuote]=useState(ecoQuotes[0]);
+
+  function restart(){setRound(value=>value+1);setIndex(0);setScore(0);setPhase("play");setFeedback(null);setLocked(false);}
+
+  function pick(type:EcoBinType){
+    if(locked||phase!=="play")return;
+    setLocked(true);
+    const current=shuffled[index];
+    const correct=type===current.type;
+    if(correct){
+      setScore(value=>value+1);
+      setFeedback({ok:true,text:language==="Telugu"?"సరైనది! 🎉":"सही! 🎉"});
+    }else{
+      const bin=ecoBins.find(entry=>entry.id===current.type)!;
+      setFeedback({ok:false,text:(language==="Telugu"?"ఓహో! సరైన సమాధానం: ":"ओह! सही उत्तर है: ")+ecoLabel(bin,language)});
+    }
+    window.setTimeout(()=>{
+      setFeedback(null);setLocked(false);
+      const nextIndex=index+1;
+      if(nextIndex===4||nextIndex===8){setFactIndex(nextIndex===4?0:1);setIndex(nextIndex);setPhase("fact");}
+      else if(nextIndex>=shuffled.length){setQuote(ecoQuotes[Math.floor(Math.random()*ecoQuotes.length)]);setIndex(nextIndex);setPhase("end");}
+      else setIndex(nextIndex);
+    },900);
+  }
+  function continueFromFact(){setPhase(index>=shuffled.length?"end":"play");}
+
+  const stars=score>=10?3:score>=6?2:1;
+  return <article className="mini-game eco-game">
+    <div className="mini-game-head"><div><small>GAME 12 · SORT &amp; SAVE</small><h3>Paryavaran <em>Hero</em></h3><p>Sort each item into the right bin — compost, recycle, or trash — and help the tree grow.</p><BuddyTip name="mithu" message="Let's sort the trash and save the earth together!" /></div><div className="eco-status"><span className="eco-tree">{score<=4?"🌱":score<=8?"🌿":"🌳"}</span><b>{language==="Telugu"?"స్కోరు":"स्कोर"}: {score}/{ecoItems.length}</b></div></div>
+    <div className="eco-lang" role="group" aria-label="Choose language"><button className={language==="Telugu"?"active":""} onClick={()=>setLanguage("Telugu")}>తెలుగు</button><button className={language==="Hindi"?"active":""} onClick={()=>setLanguage("Hindi")}>हिन्दी</button></div>
+    {phase==="play"&&<>
+      <div className="eco-progress">{language==="Telugu"?"అంశం":"विषय"} {index+1}/{ecoItems.length}</div>
+      <div className={`eco-leaf${feedback?feedback.ok?" flash-correct":" flash-wrong":""}`}><div className="eco-leaf-inner"><span className="eco-item-emoji">{shuffled[index].emoji}</span><span className="eco-item-name">{ecoLabel(shuffled[index],language)}</span></div></div>
+      <div className="eco-bins">{ecoBins.map(bin=><button key={bin.id} className={`eco-bin eco-bin-${bin.id}`} disabled={locked} onClick={()=>pick(bin.id)}><span className="eco-bin-emoji">{bin.emoji}</span><b>{ecoLabel(bin,language)}</b></button>)}</div>
+      <div className={`eco-feedback${feedback?feedback.ok?" ok":" no":""}`} aria-live="polite">{feedback?.text}</div>
+    </>}
+    {phase==="fact"&&<div className="eco-fact"><b>{language==="Telugu"?"మీకు తెలుసా?":"क्या आप जानते हैं?"}</b><span className="eco-fact-emoji">🌳</span><p>{ecoLabel(ecoFacts[factIndex],language)}</p><button className="eco-primary" onClick={continueFromFact}>{language==="Telugu"?"తర్వాత":"आगे"}</button></div>}
+    {phase==="end"&&<div className="eco-end"><span className="eco-end-tree">{score>=9?"🌳":score>=5?"🌿":"🌱"}</span><div className="eco-stars">{"⭐".repeat(stars)}{"☆".repeat(3-stars)}</div><b>{(language==="Telugu"?"మీ స్కోరు: ":"आपका स्कोर: ")+score+"/"+ecoItems.length}</b><p>{language==="Telugu"?"మీరు ఒక చెట్టును పెంచారు! 🌳":"आपने एक पेड़ उगाया! 🌳"}</p><i>"{ecoLabel(quote,language)}"</i><button className="eco-primary" onClick={restart}>{language==="Telugu"?"మళ్ళీ ఆడండి":"फिर से खेलें"}</button></div>}
+  </article>;
+}
+
+function BubblePopGame(){
+  return <article className="mini-game bubble-pop-game"><div className="mini-game-head"><div><small>GAME 1 · LETTER POP</small><h3>Parrot <em>Letter</em> Balloon Pop</h3><p>Pop the balloon that matches the letter you hear or see, in Telugu or Hindi.</p></div></div><iframe src="/pop-letter.html" title="Parrot Letter Balloon Pop" loading="lazy" style={{width:"100%",height:"620px",border:0,borderRadius:"24px",background:"#f5f4ef"}}/></article>;
+}
+
+export default function MoreGames(){return <section className="more-games" id="more-games"><div className="section-title"><p className="kicker"><b>✦</b> More playful practice</p><h2>Remember it.<br/><em>Sort it correctly.</em></h2><p>Short games for visual memory, word recognition, language practice, and careful thinking.</p></div>
+  <div className="games-section"><h3 className="games-section-title">🧠 Memory &amp; Sorting</h3><div className="more-games-grid"><MemoryGame/><PictureSortingGame/></div></div>
+  <div className="games-section"><h3 className="games-section-title">🗣️ Words &amp; Vocabulary</h3><VocabularyShuffle/><ActionFlashcards/></div>
+  <div className="games-section"><h3 className="games-section-title">🔤 Letters &amp; Sounds</h3><BubblePopGame/><LetterRain/><FirstLetterMatch/></div>
+  <div className="games-section"><h3 className="games-section-title">🎨 Creativity &amp; Our Earth</h3><ColoringStudio/><EcoSortGame/></div>
+</section>}

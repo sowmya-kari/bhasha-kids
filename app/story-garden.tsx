@@ -99,7 +99,7 @@ const labels = {
 
 function StoryCover({story,className}:{story:Story;className:string}){
   const cover=storyCovers[story.id];
-  return <span className={className} style={{background:`linear-gradient(160deg, ${cover.from}, ${cover.to})`}}><span className="story-cover-scene">{cover.emojis.map((emoji,index)=><i key={index} style={{"--i":index} as React.CSSProperties}>{emoji}</i>)}</span></span>;
+  return <span className={className} style={{background:`linear-gradient(160deg, ${cover.from}, ${cover.to})`}}><img className="story-cover-art" src={`/assets/images/stories/${story.id}.jpg`} alt={story.Telugu.title} loading="lazy" /></span>;
 }
 
 export default function StoryGarden() {
