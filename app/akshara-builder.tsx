@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { BuddyTip } from "./BuddyTip";
+import { VoiceButton } from "./VoiceButton";
 
 type Language = "Telugu" | "Hindi";
 type Vowel = { letter: string; sign: string; sound: string };
@@ -31,6 +32,11 @@ const romanConsonantsByLanguage:Record<Language,Record<string,string>>={
   Hindi:{ksh:"क्ष",chh:"छ",kh:"ख",gh:"घ",ng:"ङ",ch:"च",jh:"झ",ny:"ञ",th:"थ",dh:"ध",ph:"फ",bh:"भ",sh:"श",tr:"त्र",gn:"ज्ञ",k:"क",g:"ग",c:"च",j:"ज",t:"त",d:"द",n:"न",p:"प",f:"फ",b:"ब",m:"म",y:"य",r:"र",l:"ल",v:"व",w:"व",s:"स",h:"ह"},
 };
 type WordPart = { formed:string; formula:string; kind:"gunintham"|"conjunct"|"letter" };
+
+const bareConsonantRoman:Record<Language,Record<string,string>> = {
+  Telugu: Object.entries(romanConsonantsByLanguage.Telugu).reduce<Record<string,string>>((map,[roman,script])=>{if(!map[script]||roman.length<map[script].length)map[script]=roman;return map;},{}),
+  Hindi: Object.entries(romanConsonantsByLanguage.Hindi).reduce<Record<string,string>>((map,[roman,script])=>{if(!map[script]||roman.length<map[script].length)map[script]=roman;return map;},{}),
+};
 
 function vowelNamesFor(language:Language):Record<string,string>{
   return Object.fromEntries(vowels[language].map(v=>[v.sign,v.letter]));
@@ -119,6 +125,8 @@ export default function AksharaBuilder(){
   const [word,setWord]=useState(wordLab.Telugu.defaultWord);
   const [romanWord,setRomanWord]=useState(wordLab.Telugu.defaultRoman);
   const consonant=consonants[language][ci]; const vowel=vowels[language][vi]; const result=consonant+vowel.sign; const dead=consonant+virama[language];
+  const consonantRoman=bareConsonantRoman[language][consonant]||"x";
+  const syllableAudio=`/assets/audio/guninthalu/${language.toLowerCase()}-${consonantRoman}${vowel.sound}.wav`;
   const targetIndex=(ci*3+score+5)%vowels[language].length; const target=vowels[language][targetIndex]; const targetResult=consonant+target.sign;
   const wl=wordLab[language];
   function changeLanguage(next:Language){setLanguage(next);setCi(0);setVi(0);setScore(0);setChallenge(false);setFeedback("");setWord(wordLab[next].defaultWord);setRomanWord(wordLab[next].defaultRoman);}
@@ -131,7 +139,7 @@ export default function AksharaBuilder(){
       <div className="consonant-strip">{consonants[language].map((letter,index)=><button key={letter} className={ci===index?"active":""} onClick={()=>{setCi(index);setFeedback("");setChallenge(false)}}>{letter}</button>)}</div>
       <div className="builder-label"><b>2. Add a vowel</b><span>{vowels[language].length} forms</span></div>
       <div className="vowel-strip">{vowels[language].map((item,index)=><button key={item.letter} className={`${vi===index?"active":""} ${challenge&&index===vi&&feedback.startsWith("Try")?"wrong":""}`} onClick={()=>chooseVowel(index)}><b>{item.letter}</b><small>{item.sign||"—"}</small></button>)}</div>
-      <div className="formation-board"><div><small>CONSONANT</small><strong>{dead}</strong></div><i>＋</i><div><small>VOWEL</small><strong>{vowel.letter}</strong></div><i>＝</i><div className="formed"><small>NEW SOUND · {vowel.sound.toUpperCase()}</small><strong key={`${ci}-${vi}`}>{result}</strong></div></div>
+      <div className="formation-board"><div><small>CONSONANT</small><strong>{dead}</strong></div><i>＋</i><div><small>VOWEL</small><strong>{vowel.letter}</strong></div><i>＝</i><div className="formed"><small>NEW SOUND · {vowel.sound.toUpperCase()}</small><strong key={`${ci}-${vi}`}>{result}</strong><VoiceButton key={`${ci}-${vi}-audio`} src={syllableAudio} playLabel={`🔊 Hear ${result}`} /></div></div>
       <div className="builder-challenge"><div><small>MINI CHALLENGE</small><b>{challenge?<>Which vowel builds <strong>{targetResult}</strong>?</>:<>You built <strong>{result}</strong>!</>}</b><span aria-live="polite">{feedback||"Tap a vowel above to explore every combination."}</span></div><button onClick={()=>{setChallenge(true);setFeedback("")}}>{challenge?"Challenge active":"Play a challenge →"}</button><em>⭐ {score}</em></div>
     </div>
     <div className="word-lab">

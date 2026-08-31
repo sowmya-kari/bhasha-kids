@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Vageesh's Number Adventure</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Noto+Sans+Telugu:wght@500;700&family=Noto+Sans+Devanagari:wght@500;700&display=swap');
+:root{
+  --sky:#83ddff;
+  --sky2:#d8f7ff;
+  --jungle:#30a24d;
+  --jungle-dark:#1b6b35;
+  --grass:#8ed15d;
+  --wood1:#9c5c20;
+  --wood2:#6f3710;
+  --wood3:#4c240c;
+  --cream:#fff8e7;
+  --gold:#ffc928;
+  --gold-deep:#c98513;
+  --purple:#7d4fd8;
+  --purple-deep:#5a33b2;
+  --blue:#2b8fe2;
+  --blue-deep:#1967b0;
+  --pink:#f95b95;
+  --green:#62c84e;
+  --green-deep:#2b9337;
+  --ink:#2f2419;
+  --card:#fff7df;
+  --danger:#f2675f;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;min-height:100%;font-family:'Baloo 2',system-ui,sans-serif;color:var(--ink);background:linear-gradient(var(--sky),#d3fbff 28%, #74c77c 28%, #65b964 100%)}
+body{overflow-x:hidden}
+button{font:inherit}
+.telugu{font-family:'Noto Sans Telugu','Baloo 2',sans-serif}
+.hindi{font-family:'Noto Sans Devanagari','Baloo 2',sans-serif}
+.hidden{display:none!important}
+.app{min-height:100vh;position:relative;padding:10px 10px 16px}
+.scenery{position:fixed;inset:0;pointer-events:none;overflow:hidden}
+.cloud{position:absolute;background:rgba(255,255,255,.75);border-radius:50px;filter:blur(.5px)}
+.cloud:before,.cloud:after{content:"";position:absolute;background:inherit;border-radius:50%}
+.cloud.one{top:6%;left:7%;width:120px;height:40px}.cloud.one:before{width:45px;height:45px;left:16px;top:-18px}.cloud.one:after{width:55px;height:55px;left:48px;top:-28px}
+.cloud.two{top:10%;right:16%;width:150px;height:48px}.cloud.two:before{width:55px;height:55px;left:18px;top:-22px}.cloud.two:after{width:60px;height:60px;left:72px;top:-25px}
+.hill{position:absolute;left:-6%;right:-6%;height:220px;bottom:22%;background:radial-gradient(circle at 20% 100%, #7acc5f 0 22%, transparent 23%),radial-gradient(circle at 40% 100%, #72c157 0 28%, transparent 29%),radial-gradient(circle at 64% 100%, #66b850 0 26%, transparent 27%),radial-gradient(circle at 88% 100%, #72c45a 0 25%, transparent 26%)}
+.tree{position:absolute;bottom:18%;width:140px;height:240px}
+.tree .trunk{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:44px;height:150px;background:linear-gradient(#9c5c20,#6f3710);border-radius:16px}
+.tree .trunk:before{content:"";position:absolute;inset:0;border-radius:16px;box-shadow:inset -8px 0 0 rgba(0,0,0,.08), inset 8px 0 0 rgba(255,255,255,.08)}
+.tree .leaves{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:130px;height:130px;background:radial-gradient(circle at 35% 35%, #59cd49 0, #2f973b 58%, #1c7734 100%);border-radius:50%;box-shadow:-55px 24px 0 -12px #43b644, 55px 28px 0 -12px #43b644, 0 -26px 0 -6px #3ca83f}
+.tree.left{left:-10px}.tree.right{right:-10px}
+.vines{position:absolute;top:-10px;left:0;right:0;height:120px;background:
+radial-gradient(circle at 10% 20%, transparent 0 20px, #2e933d 22px 26px, transparent 28px),
+radial-gradient(circle at 88% 22%, transparent 0 20px, #2e933d 22px 26px, transparent 28px)}
+.vines:before,.vines:after{content:"";position:absolute;top:0;width:220px;height:150px;border-left:6px solid #2c8d3e;border-radius:0 0 0 120px}
+.vines:before{left:20px;transform:rotate(12deg)}
+.vines:after{right:20px;transform:scaleX(-1) rotate(12deg)}
+.leaf{position:absolute;width:20px;height:12px;background:#47b54b;border-radius:20px 20px 20px 2px;transform-origin:left center}
+.vines .leaf:nth-child(1){left:145px;top:40px;transform:rotate(18deg)}
+.vines .leaf:nth-child(2){left:175px;top:72px;transform:rotate(-12deg)}
+.vines .leaf:nth-child(3){right:145px;top:46px;transform:rotate(30deg)}
+.vines .leaf:nth-child(4){right:190px;top:84px;transform:rotate(-22deg)}
+.header{max-width:1200px;margin:0 auto 10px;display:grid;grid-template-columns:68px 1fr 84px;gap:10px;align-items:center;position:relative;z-index:2}
+.icon-btn{width:60px;height:60px;border:0;border-radius:50%;cursor:pointer;color:white;font-size:28px;font-weight:800;background:linear-gradient(#8fc8ff,#2f88df);box-shadow:0 6px 0 #175f9f, 0 10px 20px rgba(0,0,0,.15)}
+.icon-btn.settings{background:linear-gradient(#ffd95a,#ef9f1b);box-shadow:0 6px 0 #b9690c,0 10px 20px rgba(0,0,0,.15)}
+.icon-btn:active{transform:translateY(3px);box-shadow:0 3px 0 rgba(0,0,0,.25)}
+.wood-title{justify-self:center;min-width:min(780px,100%);background:linear-gradient(#b06828,#7b3d12);border:5px solid var(--wood3);border-radius:26px;padding:10px 18px;text-align:center;color:white;box-shadow:inset 0 4px 0 #ce8a49,0 8px 18px rgba(0,0,0,.18);position:relative}
+.wood-title:before,.wood-title:after{content:"";position:absolute;top:-6px;width:28px;height:18px;background:#5aae45;border-radius:20px 20px 4px 20px}
+.wood-title:before{left:20px;transform:rotate(-22deg)}.wood-title:after{right:20px;transform:rotate(28deg)}
+.wood-title h1{margin:0;font-size:clamp(28px,4vw,54px);line-height:1;color:#fff}
+.wood-title .number{color:#ff5135;text-shadow:0 3px 0 #6d230f}.wood-title .adventure{color:#ffc92d;text-shadow:0 3px 0 #8a5800}
+.wood-title .sub{font-size:19px;line-height:1.15;margin-top:2px;color:#fff7db}
+.stars-pill{justify-self:end;background:#fffaf0;border:4px solid #edd39a;border-radius:18px;padding:8px 16px;min-width:82px;text-align:center;box-shadow:0 8px 18px rgba(0,0,0,.12);font-size:28px;font-weight:800}
+.main{max-width:1200px;margin:0 auto;position:relative;z-index:2}
+.screen{display:none}
+.screen.active{display:block}
+.home-grid{display:grid;grid-template-columns:300px 1fr;gap:16px;align-items:stretch}
+.mascot-card,.menu-card,.activity-card,.mini-preview{background:rgba(255,250,234,.97);border:4px solid #ebd08d;border-radius:28px;box-shadow:0 16px 34px rgba(0,0,0,.16)}
+.mascot-card{padding:16px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;position:relative;min-height:640px;background:
+radial-gradient(circle at 60% 15%, rgba(255,255,255,.45), transparent 20%),
+linear-gradient(180deg, #ecfbff 0%, #dbf9ff 30%, #87d5ef 30%, #4fb4dd 56%, #83cb5f 56%, #6ab652 100%)}
+.waterfall-hero{position:absolute;right:22px;top:130px;width:95px;height:180px;background:linear-gradient(90deg,rgba(255,255,255,.45),#f8ffff,rgba(125,218,255,.75));border-radius:40px;transform:skewX(-5deg);filter:blur(.4px)}
+.pool{position:absolute;right:10px;bottom:170px;width:160px;height:44px;background:radial-gradient(ellipse at center, rgba(255,255,255,.7), rgba(72,186,231,.95) 55%, rgba(17,120,172,.9));border-radius:50%}
+.photo-mascot{position:relative;z-index:2;display:flex;justify-content:center;align-items:flex-end;min-height:300px;filter:drop-shadow(0 14px 10px rgba(0,0,0,.28))}
+.photo-mascot img{width:100%;max-width:230px;height:auto;object-fit:contain}
+.mascot-card::before{content:"";position:absolute;left:-10%;right:-10%;top:-8%;height:180px;background:radial-gradient(circle at 50% 50%, rgba(255,255,255,.45), rgba(255,255,255,0) 68%);pointer-events:none;z-index:0}
+.mascot-card::after{content:"";position:absolute;left:24px;right:24px;bottom:150px;height:26px;background:radial-gradient(ellipse at center, rgba(0,0,0,.22), rgba(0,0,0,0) 70%);pointer-events:none;filter:blur(4px)}
+.photo-mascot{isolation:isolate}
+.photo-mascot::before{content:"";position:absolute;inset:auto 50% 18px 50%;width:180px;height:34px;transform:translateX(-50%);background:radial-gradient(ellipse at center, rgba(0,0,0,.24), rgba(0,0,0,0) 70%);filter:blur(5px);z-index:-1;animation:heroShadow 3.8s ease-in-out infinite}
+.photo-mascot::after{content:"✨";position:absolute;top:36px;right:18px;font-size:28px;text-shadow:0 0 10px rgba(255,255,255,.9);animation:twinkle 2.2s ease-in-out infinite}
+.photo-mascot img{transform-origin:50% 90%;animation:heroFloat 3.8s ease-in-out infinite, heroSway 6.6s ease-in-out infinite}
+.photo-mascot.talking img{animation:heroTalk .7s ease-in-out 2, heroFloat 3.8s ease-in-out infinite, heroSway 6.6s ease-in-out infinite}
+.photo-mascot.celebrate img{animation:heroCelebrate 1s ease-in-out 1, heroFloat 3.8s ease-in-out infinite, heroSway 6.6s ease-in-out infinite}
+.photo-mascot.wave img{animation:heroWave 1s ease-in-out 1, heroFloat 3.8s ease-in-out infinite, heroSway 6.6s ease-in-out infinite}
+.speech-bubble{box-shadow:0 10px 18px rgba(0,0,0,.12);animation:bubbleFloat 4.2s ease-in-out infinite}
+
+.speech-bubble{background:white;border:3px solid #d8caa0;border-radius:24px;padding:12px 16px;margin:6px 8px 12px 8px;position:relative;font-size:22px;font-weight:700}
+.speech-bubble:after{content:"";position:absolute;left:26px;bottom:-16px;border:10px solid transparent;border-top-color:white;filter:drop-shadow(0 2px 0 #d8caa0)}
+.lang-row{display:flex;gap:10px;justify-content:center;margin-top:10px}
+.lang-btn{border:0;border-radius:16px;padding:10px 18px;background:linear-gradient(#97e254,#4cad39);box-shadow:0 5px 0 #2a7c2b;color:white;font-size:22px;font-weight:800;cursor:pointer}
+.lang-btn.secondary{background:linear-gradient(#ffd55e,#efb31c);box-shadow:0 5px 0 #b77511;color:#56390f}
+.menu-card{padding:18px;display:flex;flex-direction:column;justify-content:flex-start;min-height:640px;gap:16px;background:linear-gradient(180deg, rgba(255,251,241,.99), rgba(255,245,218,.97));backdrop-filter:blur(3px);position:relative;overflow:hidden}
+.menu-card:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 15% 10%, rgba(255,255,255,.65), transparent 20%), radial-gradient(circle at 85% 0%, rgba(255,255,255,.45), transparent 18%);pointer-events:none}
+.card-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.card-grid.two-up .activity-card{min-height:230px}
+.activity-card{padding:10px;cursor:pointer;transition:transform .18s ease, box-shadow .18s ease, filter .18s ease;display:flex;flex-direction:column;gap:8px;min-height:196px;position:relative;overflow:hidden;border:3px solid rgba(255,255,255,.45);box-shadow:0 14px 24px rgba(0,0,0,.16)}
+.activity-card:after{content:"";position:absolute;top:-35%;left:-40%;width:60%;height:180%;background:linear-gradient(90deg, transparent, rgba(255,255,255,.24), transparent);transform:rotate(18deg);transition:transform .45s ease;pointer-events:none}
+.activity-card:hover:after{transform:translateX(180%) rotate(18deg)}
+.activity-card:hover{transform:translateY(-5px) scale(1.01);filter:saturate(1.05)}
+.activity-card.purple{background:linear-gradient(#8f66eb 0 34%, #fff6de 34% 100%)}
+.activity-card.blue{background:linear-gradient(#3f8fe6 0 34%, #fff6de 34% 100%)}
+.activity-card.green{background:linear-gradient(#3ab870 0 34%, #fff6de 34% 100%)}
+.activity-card.pink{background:linear-gradient(#d96ac7 0 34%, #fff6de 34% 100%)}
+.activity-title{color:white;font-size:28px;text-align:center;line-height:1.05;font-weight:800;margin-top:2px;text-shadow:0 2px 0 rgba(0,0,0,.2)}
+.thumb{flex:1;border-radius:22px;position:relative;overflow:hidden;background:linear-gradient(#effcf8,#def4ff 46%, #65c2e4 46%, #3eaad2 66%, #7dca54 66%, #65b54e);border:3px solid rgba(255,255,255,.55);box-shadow:inset 0 4px 0 rgba(255,255,255,.3)}
+.thumb.centered{display:flex;align-items:center;justify-content:center}
+.thumb .badge{position:absolute;left:14px;bottom:10px;background:#ffffffeb;border-radius:999px;padding:4px 10px;font-size:18px;font-weight:800;border:2px solid #dbc98f}
+.level-wrap{margin-top:2px;background:var(--card);border:4px solid #ecd090;border-radius:24px;padding:10px 16px}
+.level-wrap h3{margin:0 0 10px 0;text-align:center;font-size:24px}
+.level-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.level-btn{border:0;min-width:112px;border-radius:16px;padding:10px 16px;font-size:24px;font-weight:800;color:white;background:linear-gradient(#7ddc56,#42ac39);box-shadow:0 5px 0 #2f8a2e;cursor:pointer}
+.level-btn.blue{background:linear-gradient(#61a7ff,#316fd8);box-shadow:0 5px 0 #2353a1}.level-btn.purple{background:linear-gradient(#a783ff,#724ad6);box-shadow:0 5px 0 #51309f}
+.bottom-strip{margin-top:16px;background:linear-gradient(#6f4acf,#5536ae);border-radius:28px;padding:12px 16px;display:flex;align-items:center;gap:12px;color:white;box-shadow:0 14px 28px rgba(0,0,0,.18)}
+.bottom-label{font-size:26px;font-weight:800;white-space:nowrap}
+.dot-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.num-dot{width:44px;height:44px;border-radius:50%;border:3px solid #d2c0ff;background:#3d257d;color:white;font-size:26px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.num-dot.current{outline:4px solid #ffdf61;background:#fff7d1;color:#6b4c00}.num-dot.done{background:#ffca29;color:#6e4707}
+.chest-mini{margin-left:auto;width:86px;height:74px;position:relative;background:linear-gradient(#d8582d,#a93e1d);border:5px solid #7d410f;border-radius:14px;box-shadow:inset 0 -8px 0 rgba(0,0,0,.1),0 8px 18px rgba(0,0,0,.18)}
+.chest-mini:before{content:"";position:absolute;left:0;right:0;top:-18px;height:24px;background:linear-gradient(#dd6d35,#a63c18);border:5px solid #7d410f;border-bottom:none;border-radius:18px 18px 0 0}
+.chest-mini:after{content:"";position:absolute;left:38px;top:25px;width:14px;height:18px;background:#f0bf1f;border:3px solid #8b6511;border-radius:4px}
+.activity-shell{min-height:690px;display:grid;grid-template-columns:260px 1fr;gap:16px}
+.side-rail{background:rgba(255,248,231,.98);border:4px solid #ebd08d;border-radius:28px;padding:14px 12px;display:flex;flex-direction:column;gap:12px;box-shadow:0 16px 34px rgba(0,0,0,.16)}
+.mode-pill{border:0;border-radius:18px;padding:12px 14px;background:#ece3c8;box-shadow:0 4px 0 #c0b28b;font-size:24px;font-weight:800;cursor:pointer;text-align:left}
+.mode-pill.active{background:linear-gradient(#8f66eb,#6e48c7);color:white;box-shadow:0 4px 0 #513596}
+.side-speech{background:white;border:3px solid #dbcba0;border-radius:20px;padding:12px;font-size:21px;line-height:1.15;min-height:86px}
+.audio-btn{border:0;border-radius:50%;width:56px;height:56px;background:linear-gradient(#8bc2ff,#337fdc);box-shadow:0 5px 0 #175f9f;color:white;font-size:28px;font-weight:800;cursor:pointer}
+.lesson-stage{background:rgba(255,250,236,.98);border:4px solid #ebd08d;border-radius:28px;padding:16px;box-shadow:0 16px 34px rgba(0,0,0,.16);display:flex;flex-direction:column;min-height:690px}
+.top-bar{display:grid;grid-template-columns:60px 1fr 110px;align-items:center;gap:10px;margin-bottom:10px}
+.small-back{width:54px;height:54px;border:0;border-radius:50%;font-size:28px;font-weight:800;color:white;cursor:pointer;background:linear-gradient(#ffd95a,#f0a120);box-shadow:0 5px 0 #b7680b}
+.section-title{background:linear-gradient(#9f6025,#753a12);border:4px solid var(--wood3);border-radius:18px;padding:8px 14px;color:white;text-align:center;font-size:34px;box-shadow:inset 0 4px 0 #cb8749}
+.top-stars{justify-self:end;background:#fffaf0;border:4px solid #edd39a;border-radius:16px;padding:6px 12px;font-size:28px;font-weight:800}
+.stage-card{flex:1;background:linear-gradient(#fffef9,#fff7df 35%, #fff4d3 100%);border:4px solid #e1ca86;border-radius:26px;padding:14px;display:flex;flex-direction:column;justify-content:flex-start;position:relative;overflow:hidden;box-shadow:inset 0 5px 0 rgba(255,255,255,.75), inset 0 -10px 22px rgba(226,192,106,.12)}
+.stage-card:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 85% 8%, rgba(255,255,255,.36), transparent 18%), radial-gradient(circle at 8% 18%, rgba(255,255,255,.28), transparent 15%);pointer-events:none}
+.prompt-row{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:8px;flex-wrap:wrap}
+.prompt-box{background:linear-gradient(#fffefc,#fff7ea);border:3px solid #d9ca9e;border-radius:24px;padding:10px 18px;font-size:32px;font-weight:800;box-shadow:0 8px 14px rgba(0,0,0,.08), inset 0 3px 0 rgba(255,255,255,.8)}
+.stage-scroll{flex:1;display:flex;align-items:center;justify-content:center;position:relative}
+.big-number{font-size:clamp(120px,20vw,240px);line-height:1;color:#2a4178;text-shadow:0 6px 0 #d4e0ff}
+.number-word{font-size:54px;font-weight:800;color:#4630a3;text-align:center}
+.object-row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;font-size:54px;margin-top:10px}
+.bottom-action{display:flex;justify-content:center;margin-top:8px}
+.round-sound{border:0;border-radius:50%;width:66px;height:66px;background:linear-gradient(#8b6be0,#6744c4);box-shadow:0 5px 0 #4d2e97;color:white;font-size:28px;cursor:pointer}
+.trace-area{width:min(760px,100%);height:460px;background:#fff;border:4px solid #e1d3a8;border-radius:28px;position:relative;box-shadow:inset 0 0 0 2px #f7f0d6}
+.trace-canvas{width:100%;height:100%;touch-action:none;border-radius:24px}
+.trace-template{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:350px;font-weight:800;color:#fafafa;text-shadow:-4px -4px 0 #9b9b9b,4px -4px 0 #9b9b9b,-4px 4px 0 #9b9b9b,4px 4px 0 #9b9b9b;pointer-events:none;opacity:.95}
+.trace-start-dot{position:absolute;top:78px;left:170px;width:28px;height:28px;background:var(--pink);border-radius:50%;border:4px solid white;box-shadow:0 0 0 4px var(--pink)}
+.trace-start-label{position:absolute;top:48px;left:132px;background:white;border:2px solid #dfcaa0;border-radius:12px;padding:2px 8px;font-size:22px;font-weight:800;color:#d83c71}
+.trace-arrows{position:absolute;inset:0;pointer-events:none}
+.trace-arrow{position:absolute;font-size:40px;color:#28b3c9;text-shadow:0 2px 0 white}.trace-arrow.two{color:#7a46d6}.trace-arrow.three{color:#28b3c9}
+.trace-controls{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:14px}
+.trace-helper{position:absolute;right:18px;bottom:14px;display:flex;align-items:flex-end;gap:10px;max-width:280px;z-index:5}
+.trace-helper img{width:64px;height:64px;border-radius:50%;flex-shrink:0;box-shadow:0 4px 10px rgba(0,0,0,.25);border:3px solid #fff}
+.trace-helper-bubble{background:white;border:3px solid #d8caa0;border-radius:18px;padding:8px 12px;font-size:16px;font-weight:700;line-height:1.2;box-shadow:0 6px 12px rgba(0,0,0,.12)}
+.action-btn{border:0;border-radius:18px;padding:12px 20px;font-size:24px;font-weight:800;cursor:pointer;background:linear-gradient(#ffd659,#efaa1c);box-shadow:0 5px 0 #b67110;color:#613c08}
+.action-btn.green{background:linear-gradient(#7bdf59,#43ad3e);box-shadow:0 5px 0 #2f842f;color:white}.action-btn.blue{background:linear-gradient(#61a8ff,#316fd9);box-shadow:0 5px 0 #2353a1;color:white}
+.basket-scene{display:grid;grid-template-columns:180px 1fr 180px;gap:16px;align-items:end;width:100%;max-width:900px;margin:0 auto}
+.basket{width:170px;height:90px;background:linear-gradient(#d89d5f,#b56e2d);border:5px solid #8b4d17;border-radius:0 0 90px 90px;position:relative;justify-self:center}
+.basket:before{content:"";position:absolute;left:24px;right:24px;top:-42px;height:54px;border:8px solid #8b4d17;border-bottom:none;border-radius:90px 90px 0 0}
+.mango-tree{justify-self:end;width:150px;height:220px;position:relative}
+.mango-tree .trunk{position:absolute;bottom:0;left:56px;width:38px;height:120px;background:linear-gradient(#9c5c20,#6f3710);border-radius:14px}
+.mango-tree .crown{position:absolute;left:8px;top:18px;width:132px;height:120px;background:radial-gradient(circle at 40% 30%, #57ca47 0, #2f973b 58%, #1c7734 100%);border-radius:50%;box-shadow:-30px 30px 0 -10px #43b644, 26px 28px 0 -8px #43b644}
+.mango-tree .fruit{position:absolute;width:28px;height:38px;background:linear-gradient(#ffd559,#f1b21e);border-radius:50% 50% 50% 50% / 40% 40% 60% 60%;border:3px solid #d38b12}.mango-tree .fruit:before{content:"";position:absolute;width:7px;height:12px;background:#32953a;border-radius:10px 10px 2px 10px;top:-10px;left:11px;transform:rotate(-10deg)}
+.options-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+.option-card{min-width:140px;min-height:116px;background:linear-gradient(#fffdf9,#fff0c9);border:4px solid #e5c57a;border-radius:18px;padding:8px 12px;box-shadow:0 7px 0 #c4903d;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;font-size:42px;font-weight:800}
+.option-card.correct{background:linear-gradient(#c9f4b5,#87dc66);box-shadow:0 7px 0 #4da440}.option-card.wrong{background:linear-gradient(#ffd0c8,#f47967);box-shadow:0 7px 0 #c84f42;animation:wiggle .35s}
+.option-count{font-size:34px;color:#6f4611}
+.river-board{width:100%;max-width:960px;height:520px;background:linear-gradient(#e4fbff 0 26%, #70d6fb 26% 44%, #1f98d5 44% 100%);border-radius:26px;position:relative;overflow:hidden;border:4px solid #b6e9f4;box-shadow:inset 0 10px 20px rgba(255,255,255,.4), inset 0 -14px 22px rgba(0,0,0,.07)}
+.river-bank{position:absolute;bottom:0;width:28%;height:110px;background:linear-gradient(#88d45e,#67b44f);border-top:10px solid #5b973e}
+.river-bank.left{left:0;border-radius:0 100px 0 0}.river-bank.right{right:0;border-radius:100px 0 0 0}
+.river-path{position:absolute;left:20%;right:20%;top:150px;display:flex;justify-content:center;flex-wrap:wrap;gap:16px;z-index:3}
+.slot{width:102px;height:74px;border:5px dashed rgba(255,255,255,.9);border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.08)}
+.slot.filled{border-style:solid;border-color:rgba(255,247,195,.95);box-shadow:0 0 0 6px rgba(255,208,41,.24)}
+.stone{width:94px;height:68px;border-radius:50%;background:linear-gradient(#d0bf9d,#8a7a5f);border:4px solid #655645;box-shadow:inset 0 8px 0 rgba(255,255,255,.2),0 5px 0 #60513f;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#443729;cursor:grab;user-select:none;touch-action:none}
+.stone.dragging{opacity:.78;cursor:grabbing}
+.stone.correct-stone{box-shadow:0 0 0 6px rgba(255,208,41,.24), 0 5px 0 #60513f}
+.stone-pile{position:absolute;left:50%;transform:translateX(-50%);bottom:16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:center;background:rgba(255,250,230,.92);padding:10px 14px;border:4px solid #e5c57a;border-radius:22px;box-shadow:0 8px 14px rgba(0,0,0,.12)}
+.pile-label{width:100%;text-align:center;font-size:22px;font-weight:800;color:#6a470f}
+.animal{position:absolute;right:8%;bottom:86px;font-size:90px;transition:all .75s cubic-bezier(.34,1.56,.64,1)}
+.vageesh-mini{position:absolute;left:4%;bottom:60px;width:110px;height:170px;filter:drop-shadow(0 8px 8px rgba(0,0,0,.3))}
+.vageesh-mini img{width:100%;height:100%;object-fit:contain;object-position:bottom;transform-origin:50% 90%;animation:miniBob 3.1s ease-in-out infinite}
+.vageesh-mini.talking img{animation:miniTalk .65s ease-in-out 2, miniBob 3.1s ease-in-out infinite}
+.vageesh-mini.celebrate img{animation:miniCelebrate 1s ease-in-out 1, miniBob 3.1s ease-in-out infinite}
+.vageesh-mini.wave img{animation:miniWave .9s ease-in-out 1, miniBob 3.1s ease-in-out infinite}
+.counter-pill{position:absolute;right:10px;top:10px;background:#fffaf0;border:3px solid #e1c98e;border-radius:14px;padding:6px 12px;font-size:28px;font-weight:800;box-shadow:0 6px 12px rgba(0,0,0,.12)}
+.feedback-line{text-align:center;font-size:28px;min-height:40px;font-weight:800;color:#2d9238;margin-top:10px}
+.preview-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:14px}
+.mini-preview{padding:10px;background:linear-gradient(#fffdf8,#fff6e4)}
+.mini-head{background:linear-gradient(#8d63ea,#6d48c8);color:white;border-radius:14px;padding:4px 10px;font-size:22px;font-weight:800;display:inline-block;margin-bottom:10px}
+.mini-frame{height:190px;border-radius:22px;overflow:hidden;position:relative;background:linear-gradient(#eefcff 0 48%, #77d7fa 48% 65%, #7fc858 65%)}
+.choice-bubble{position:absolute;background:white;border:3px solid #dccb9e;border-radius:18px;padding:8px 12px;font-size:24px;font-weight:800}
+.sparkle{position:fixed;font-size:26px;pointer-events:none;z-index:50;animation:spark .9s ease-out forwards}
+@keyframes spark{to{transform:translate(var(--x),var(--y)) rotate(300deg) scale(.25);opacity:0}}
+@keyframes wiggle{25%{transform:rotate(-7deg)}75%{transform:rotate(7deg)}}
+@keyframes heroFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+@keyframes heroSway{0%,100%{rotate:0deg}25%{rotate:-1.5deg}75%{rotate:1.5deg}}
+@keyframes heroTalk{0%,100%{transform:translateY(0) scale(1)}25%{transform:translateY(-4px) scale(1.02)}50%{transform:translateY(0) scale(1.01)}75%{transform:translateY(-2px) scale(1.02)}}
+@keyframes heroCelebrate{0%{transform:scale(1)}25%{transform:translateY(-14px) scale(1.05) rotate(-2deg)}55%{transform:translateY(-4px) scale(1.02) rotate(2deg)}100%{transform:scale(1)}}
+@keyframes heroWave{0%,100%{transform:rotate(0deg)}30%{transform:rotate(-4deg) translateY(-6px)}60%{transform:rotate(4deg) translateY(-8px)}}
+@keyframes heroShadow{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(.9);opacity:.75}}
+@keyframes bubbleFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes twinkle{0%,100%{transform:scale(1) rotate(0)}50%{transform:scale(1.2) rotate(16deg)}}
+@keyframes miniBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes miniTalk{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px) scale(1.03)}}
+@keyframes miniCelebrate{0%{transform:translateY(0)}35%{transform:translateY(-16px) scale(1.06)}70%{transform:translateY(-6px) rotate(-2deg)}100%{transform:translateY(0)}}
+@keyframes miniWave{0%,100%{transform:translateY(0)}45%{transform:translateY(-6px) rotate(-3deg)}75%{transform:translateY(-4px) rotate(3deg)}}
+
+@media (max-width: 980px){
+  .header{grid-template-columns:54px 1fr 72px}.icon-btn{width:50px;height:50px;font-size:22px}.stars-pill{font-size:22px;padding:6px 10px}
+  .home-grid,.activity-shell{grid-template-columns:1fr}
+  .mascot-card,.menu-card,.lesson-stage,.side-rail{min-height:auto}
+  .basket-scene{grid-template-columns:1fr}
+  .mango-tree{justify-self:center}.bottom-label{white-space:normal}
+  .preview-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width: 640px){
+  .wood-title h1{font-size:22px}.wood-title .sub{font-size:14px}.wood-title{padding:8px 10px;border-width:3px}
+  .header{grid-template-columns:48px 1fr 64px}.lang-btn,.level-btn{font-size:18px}.activity-title{font-size:22px}.prompt-box{font-size:22px}
+  .trace-template{font-size:250px}.trace-area{height:330px}.trace-start-dot{left:86px;top:54px}.trace-start-label{left:50px;top:28px}.trace-arrow{font-size:30px}
+  .trace-helper{position:static;margin:14px auto 0;justify-content:center;max-width:100%}
+  .preview-grid{grid-template-columns:1fr}.bottom-strip{padding:10px}.num-dot{width:40px;height:40px;font-size:22px}.option-card{min-width:110px;min-height:104px}
+  .section-title{font-size:26px}.big-number{font-size:120px}.number-word{font-size:34px}
+}
+</style>
+</head>
+<body>
+<div class="scenery">
+  <div class="cloud one"></div><div class="cloud two"></div>
+  <div class="hill"></div>
+  <div class="tree left"><div class="leaves"></div><div class="trunk"></div></div>
+  <div class="tree right"><div class="leaves"></div><div class="trunk"></div></div>
+  <div class="vines"><div class="leaf"></div><div class="leaf"></div><div class="leaf"></div><div class="leaf"></div></div>
+</div>
+<div class="app">
+  <header class="header">
+    <button class="icon-btn settings" id="settingsBtn">⚙</button>
+    <div class="wood-title">
+      <h1>Vageesh's <span class="number">NUMBER</span> <span class="adventure">ADVENTURE</span></h1>
+      <div class="sub">Learn • Trace • Play • Rescue</div>
+    </div>
+    <div class="stars-pill">⭐ <span id="starCount">0</span></div>
+  </header>
+
+  <main class="main">
+    <section class="screen active" id="homeScreen">
+      <div class="home-grid">
+        <div class="mascot-card">
+          <div class="waterfall-hero"></div>
+          <div class="pool"></div>
+          <div class="photo-mascot">
+            <img src="/assets/images/vageesh.png" alt="Vageesh" />
+          </div>
+          <div class="speech-bubble telugu" id="homeSpeech">సంఖ్యలు నేర్చుకుందాం!</div>
+          <div style="display:flex;justify-content:center;gap:10px;align-items:center;margin-top:4px;position:relative;z-index:2;">
+            <button class="audio-btn" id="homeAudio">🔊</button>
+          </div>
+          <div class="lang-row" style="position:relative;z-index:2;">
+            <button class="lang-btn telugu" data-lang="te">తెలుగు</button>
+            <button class="lang-btn secondary hindi" data-lang="hi">हिन्दी</button>
+          </div>
+        </div>
+
+        <div class="menu-card">
+          <div class="card-grid two-up">
+            <button class="activity-card purple" data-open="trace">
+              <div class="activity-title">Number<br>Tracing</div>
+              <div class="thumb centered">
+                <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:130px;color:#f7f7f7;text-shadow:-3px -3px 0 #b0b0b0,3px -3px 0 #b0b0b0,-3px 3px 0 #b0b0b0,3px 3px 0 #b0b0b0;">3</div>
+                <div style="position:absolute;right:12px;bottom:12px;width:74px;height:74px;border-radius:50%;background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center;border:3px solid #e0c98c;font-size:44px;">☝️</div>
+              </div>
+            </button>
+            <button class="activity-card blue" data-open="rescue">
+              <div class="activity-title">Number River<br>Rescue</div>
+              <div class="thumb">
+                <div style="position:absolute;left:10px;right:10px;bottom:34px;display:flex;justify-content:center;gap:8px;">
+                  <div style="width:56px;height:34px;border-radius:50%;background:linear-gradient(#c9b189,#837257);box-shadow:0 4px 0 #5d503f;"></div>
+                  <div style="width:56px;height:34px;border-radius:50%;background:linear-gradient(#c9b189,#837257);box-shadow:0 4px 0 #5d503f;"></div>
+                  <div style="width:56px;height:34px;border-radius:50%;background:linear-gradient(#c9b189,#837257);box-shadow:0 4px 0 #5d503f;"></div>
+                </div>
+                <div style="position:absolute;right:24px;bottom:74px;font-size:64px;">🐰</div>
+              </div>
+            </button>
+          </div>
+
+          <div class="level-wrap">
+            <h3>Choose Level</h3>
+            <div class="level-row">
+              <button class="level-btn" data-range="0-5">0–5 ⭐</button>
+              <button class="level-btn blue" data-range="6-10">6–10 🔒</button>
+              <button class="level-btn purple" data-range="11-20">11–20 🔒</button>
+            </div>
+          </div>
+
+          <div class="preview-grid">
+            <div class="mini-preview">
+              <div class="mini-head">1. See & Hear</div>
+              <div class="mini-frame">
+                <div style="position:absolute;left:18px;top:18px;font-size:110px;color:#2a4178;text-shadow:0 5px 0 #d4e0ff;line-height:.9;">4</div>
+                <button class="round-sound" style="position:absolute;right:14px;top:18px;width:58px;height:58px;font-size:24px;">🔊</button>
+                <div style="position:absolute;left:20px;right:20px;bottom:56px;display:flex;justify-content:center;gap:8px;font-size:34px;">🍎 🍎 🍎 🍎</div>
+                <div class="choice-bubble telugu" style="left:16px;bottom:10px;right:16px;text-align:center;">4 ఆపిల్స్</div>
+              </div>
+            </div>
+            <div class="mini-preview">
+              <div class="mini-head">2. Trace</div>
+              <div class="mini-frame" style="background:linear-gradient(#fffdf8,#fff3d6)">
+                <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:130px;color:#fafafa;text-shadow:-3px -3px 0 #9b9b9b,3px -3px 0 #9b9b9b,-3px 3px 0 #9b9b9b,3px 3px 0 #9b9b9b;">4</div>
+                <div style="position:absolute;left:34px;top:24px;width:26px;height:26px;border-radius:50%;background:#f03b78;border:4px solid white;box-shadow:0 0 0 3px #f03b78"></div>
+                <div style="position:absolute;right:18px;bottom:10px;font-size:72px;">☝️</div>
+              </div>
+            </div>
+            <div class="mini-preview">
+              <div class="mini-head">3. Play — Give the correct number</div>
+              <div class="mini-frame">
+                <div style="position:absolute;left:12px;top:12px;display:flex;gap:6px;align-items:center;"><button class="round-sound" style="width:44px;height:44px;font-size:20px;">🔊</button><div class="choice-bubble telugu" style="position:static;font-size:18px;padding:6px 10px">వేగీష్ కి 4 మామిడిపండ్లు ఇవ్వు!</div></div>
+                <div style="position:absolute;left:16px;bottom:22px;display:flex;gap:8px;right:16px;justify-content:center;">
+                  <div class="option-card" style="min-width:80px;min-height:74px;padding:4px"><div style="font-size:26px">🥭 🥭</div><div class="option-count">3</div></div>
+                  <div class="option-card correct" style="min-width:80px;min-height:74px;padding:4px"><div style="font-size:26px">🥭 🥭 🥭</div><div class="option-count">4</div></div>
+                  <div class="option-card" style="min-width:80px;min-height:74px;padding:4px"><div style="font-size:26px">🥭 🥭 🥭 🥭</div><div class="option-count">5</div></div>
+                </div>
+              </div>
+            </div>
+            <div class="mini-preview">
+              <div class="mini-head">4. River Rescue</div>
+              <div class="mini-frame">
+                <div style="position:absolute;left:14px;top:12px;display:flex;gap:6px;align-items:center;"><button class="round-sound" style="width:44px;height:44px;font-size:20px;">🔊</button><div class="choice-bubble telugu" style="position:static;font-size:18px;padding:6px 10px">కుందేలికి మూడు రాళ్లు ఇవ్వు!</div></div>
+                <div style="position:absolute;right:10px;top:70px;font-size:48px">🐰</div>
+                <div style="position:absolute;left:14px;right:14px;bottom:54px;display:flex;justify-content:center;gap:10px;">
+                  <div style="width:56px;height:38px;border:4px dashed rgba(255,255,255,.95);border-radius:50%"></div>
+                  <div style="width:56px;height:38px;border:4px dashed rgba(255,255,255,.95);border-radius:50%;box-shadow:0 0 0 4px rgba(255,208,41,.22)"></div>
+                  <div style="width:56px;height:38px;border:4px dashed rgba(255,255,255,.95);border-radius:50%"></div>
+                </div>
+                <div style="position:absolute;left:0;right:0;bottom:10px;display:flex;justify-content:center;gap:10px;">
+                  <div style="width:54px;height:36px;border-radius:50%;background:linear-gradient(#d0bf9d,#8a7a5f);border:4px solid #655645"></div>
+                  <div style="width:54px;height:36px;border-radius:50%;background:linear-gradient(#d0bf9d,#8a7a5f);border:4px solid #655645"></div>
+                  <div style="width:54px;height:36px;border-radius:50%;background:linear-gradient(#d0bf9d,#8a7a5f);border:4px solid #655645"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bottom-strip">
+        <div class="bottom-label telugu">ఈరోజు నేర్చుకునే సంఖ్యలు</div>
+        <div class="dot-row" id="homeDots"></div>
+        <div class="chest-mini"></div>
+      </div>
+    </section>
+
+    <section class="screen" id="activityScreen">
+      <div class="activity-shell">
+        <aside class="side-rail">
+          <button class="mode-pill" data-mode="learn">1. See & Hear</button>
+          <button class="mode-pill" data-mode="trace">2. Trace</button>
+          <button class="mode-pill" data-mode="play">3. Play</button>
+          <button class="mode-pill" data-mode="rescue">4. River Rescue</button>
+          <div style="display:flex;justify-content:center;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px;">
+            <button class="lang-btn telugu" data-lang="te" style="font-size:18px;padding:8px 14px">తెలుగు</button>
+            <button class="lang-btn secondary hindi" data-lang="hi" style="font-size:18px;padding:8px 14px">हिन्दी</button>
+          </div>
+          <div class="side-speech" id="sideSpeech">సంఖ్యలు నేర్చుకుందాం!</div>
+          <div style="display:flex;justify-content:center;">
+            <button class="audio-btn" id="sideAudio">🔊</button>
+          </div>
+          <div class="level-wrap" style="padding:10px 12px;margin-top:auto;">
+            <h3 style="font-size:20px;margin-bottom:8px">Choose Level</h3>
+            <div class="level-row" style="gap:8px">
+              <button class="level-btn" data-range="0-5" style="font-size:18px;min-width:76px;padding:8px 10px">0–5</button>
+              <button class="level-btn blue" data-range="6-10" style="font-size:18px;min-width:76px;padding:8px 10px">6–10</button>
+              <button class="level-btn purple" data-range="11-20" style="font-size:18px;min-width:76px;padding:8px 10px">11–20</button>
+            </div>
+          </div>
+        </aside>
+
+        <section class="lesson-stage">
+          <div class="top-bar">
+            <button class="small-back" id="goHome">←</button>
+            <div class="section-title" id="sectionTitle">Trace Number</div>
+            <div class="top-stars">⭐ <span id="topStarCount">0</span></div>
+          </div>
+          <div class="stage-card">
+            <div class="prompt-row">
+              <div class="prompt-box" id="promptBox">Find number 3!</div>
+              <button class="round-sound" id="promptAudio">🔊</button>
+            </div>
+            <div class="stage-scroll" id="stageArea"></div>
+            <div class="feedback-line" id="feedbackLine"></div>
+          </div>
+          <div class="bottom-strip" style="margin-top:12px;box-shadow:none">
+            <div class="bottom-label telugu" id="bottomLabel">ఈరోజు నేర్చుకునే సంఖ్యలు</div>
+            <div class="dot-row" id="activityDots"></div>
+            <div class="chest-mini"></div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+</div>
+<script>
+const TELUGU = ['సున్నా','ఒకటి','రెండు','మూడు','నాలుగు','ఐదు','ఆరు','ఏడు','ఎనిమిది','తొమ్మిది','పది','పదకొండు','పన్నెండు','పదమూడు','పద్నాలుగు','పదిహేను','పదహారు','పదిహేడు','పద్దెనిమిది','పంతొమ్మిది','ఇరవై'];
+const HINDI = ['शून्य','एक','दो','तीन','चार','पाँच','छह','सात','आठ','नौ','दस','ग्यारह','बारह','तेरह','चौदह','पंद्रह','सोलह','सत्रह','अठारह','उन्नीस','बीस'];
+const emojis = ['🍎','🥭','⭐','🌼','🐞','🍓','🎈','🍋','🧁','🚗'];
+const animals = ['🐰','🐵','🐘','🐿️','🐢'];
+
+const state = {
+  lang:'te',
+  min:0,
+  max:5,
+  num:4,
+  mode:'learn',
+  screen:'home',
+  stars:0,
+  completed:new Set(),
+  rescueAnimal:0,
+  spoken:''
+};
+
+function word(n){ return state.lang==='te' ? TELUGU[n] : HINDI[n]; }
+function langClass(){ return state.lang==='te' ? 'telugu' : 'hindi'; }
+function langText(te,hi){ return state.lang==='te' ? te : hi; }
+function setPrompt(text){ state.spoken=text; document.getElementById('promptBox').innerHTML = `<span class="${langClass()}">${text}</span>`; document.getElementById('sideSpeech').innerHTML=`<span class="${langClass()}">${text}</span>`; }
+function setHomeSpeech(){ document.getElementById('homeSpeech').innerHTML = `<span class="${langClass()}">${langText('సంఖ్యలు నేర్చుకుందాం!','चलो संख्या सीखें!')}</span>`; }
+function speak(text){ flashMascot('talking'); flashMiniMascot('talking'); if(!('speechSynthesis' in window)) return; speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.lang = state.lang==='te' ? 'te-IN' : 'hi-IN'; u.rate=.85; u.pitch=1.05; speechSynthesis.speak(u); }
+function speakCurrent(){ speak(state.spoken || word(state.num)); }
+function sparkle(x,y){ const icons=['✨','⭐','💫']; for(let i=0;i<12;i++){ const s=document.createElement('div'); s.className='sparkle'; s.textContent=icons[i%3]; s.style.left=x+'px'; s.style.top=y+'px'; const a=Math.random()*Math.PI*2,d=40+Math.random()*70; s.style.setProperty('--x',Math.cos(a)*d+'px'); s.style.setProperty('--y',Math.sin(a)*d+'px'); document.body.appendChild(s); setTimeout(()=>s.remove(),900); }}
+function reward(el){ state.stars++; flashMascot('celebrate'); flashMiniMascot('celebrate'); document.getElementById('starCount').textContent=state.stars; document.getElementById('topStarCount').textContent=state.stars; state.completed.add(`${state.lang}-${state.num}`); document.getElementById('feedbackLine').innerHTML=`<span class="${langClass()}">${langText('చాలా బాగుంది! ⭐','बहुत बढ़िया! ⭐')}</span>`; if(el){ const r=el.getBoundingClientRect(); sparkle(r.left+r.width/2,r.top+r.height/2); } renderDots(); }
+function wrong(el, msg){ document.getElementById('feedbackLine').innerHTML=`<span class="${langClass()}">${msg || langText('మళ్లీ ఆలోచించు!','फिर से सोचो!')}</span>`; if(el){ el.classList.add('wrong'); setTimeout(()=>el.classList.remove('wrong'),450); }}
+function makeOptions(target){ const pool=[]; for(let n=state.min;n<=state.max;n++){ if(n!==target) pool.push(n); } if(pool.length<2){ for(let n=0;n<=20;n++){ if(n!==target && !pool.includes(n)) pool.push(n); if(pool.length>=2) break; } } const shuffled = pool.sort(()=>Math.random()-.5).slice(0,2); return [target,...shuffled].sort(()=>Math.random()-.5); }
+
+function renderDots(){
+  const ranges=[]; for(let n=state.min;n<=state.max;n++) ranges.push(n);
+  ['homeDots','activityDots'].forEach(id=>{
+    const wrap=document.getElementById(id); if(!wrap) return; wrap.innerHTML='';
+    ranges.forEach(n=>{
+      const b=document.createElement('button'); b.className='num-dot'; if(n===state.num) b.classList.add('current'); if(state.completed.has(`${state.lang}-${n}`)) b.classList.add('done'); b.textContent=n; b.onclick=()=>{ state.num=n; if(state.screen==='activity') renderActivity(); else renderHome(); }; wrap.appendChild(b);
+    });
+  });
+}
+
+function setLang(lang){ state.lang=lang; setHomeSpeech(); renderActivity(); renderDots(); updateLangButtons(); }
+function setRange(range){ const [a,b]=range.split('-').map(Number); state.min=a; state.max=b; if(state.num<a || state.num>b) state.num = Math.min(Math.max(3,a),b); renderHome(); renderActivity(); renderDots(); }
+function updateLangButtons(){ document.querySelectorAll('[data-lang]').forEach(btn=>{ const active = btn.dataset.lang===state.lang; btn.classList.toggle('secondary', !active && btn.classList.contains('lang-btn')); if(btn.closest('.lang-row')||btn.closest('.side-rail')){ if(active){ btn.style.background='linear-gradient(#97e254,#4cad39)'; btn.style.boxShadow='0 5px 0 #2a7c2b'; btn.style.color='white'; } else { btn.style.background='linear-gradient(#ffd55e,#efb31c)'; btn.style.boxShadow='0 5px 0 #b77511'; btn.style.color='#56390f'; }
+      }
+    });
+}
+function showScreen(screen){ state.screen=screen; document.getElementById('homeScreen').classList.toggle('active', screen==='home'); document.getElementById('activityScreen').classList.toggle('active', screen==='activity'); if(screen==='home') renderHome(); else renderActivity(); }
+
+function renderHome(){
+  setHomeSpeech(); renderDots(); updateLangButtons();
+}
+
+function renderActivity(){
+  if(state.screen!=='activity') return;
+  renderDots(); updateLangButtons();
+  document.querySelectorAll('.mode-pill').forEach(b=>b.classList.toggle('active', b.dataset.mode===state.mode));
+  document.getElementById('topStarCount').textContent=state.stars;
+  document.getElementById('bottomLabel').innerHTML = `<span class="${langClass()}">${langText('ఈరోజు నేర్చుకునే సంఖ్యలు','आज सीखने वाली संख्याएँ')}</span>`;
+  const titleMap = {learn:'See & Hear', trace:'Trace Number', play:'Play', rescue:'River Rescue'};
+  document.getElementById('sectionTitle').textContent = titleMap[state.mode];
+  document.getElementById('feedbackLine').textContent='';
+  const area=document.getElementById('stageArea');
+  area.innerHTML='';
+  if(state.mode==='learn') renderLearn(area);
+  if(state.mode==='trace') renderTrace(area);
+  if(state.mode==='play') renderPlay(area);
+  if(state.mode==='rescue') renderRescue(area);
+}
+
+function renderLearn(area){
+  const n=state.num; const obj=emojis[n%emojis.length] || '🍎';
+  setPrompt(langText(`${n} అంటే ${word(n)}`,`${n} यानी ${word(n)}`));
+  const wrap=document.createElement('div'); wrap.style.width='100%'; wrap.innerHTML=`
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;">
+      <div class="big-number">${n}</div>
+      <div class="number-word ${langClass()}">${word(n)}</div>
+      <div class="object-row">${n===0 ? '<span style="font-size:26px;color:#8d7f64">—</span>' : Array.from({length:n},()=>obj).join(' ')}</div>
+      <div class="bottom-action"><button class="round-sound" id="learnAudio">🔊</button></div>
+    </div>`;
+  area.appendChild(wrap);
+  document.getElementById('learnAudio').onclick=()=>speak(word(n));
+}
+
+function renderTrace(area){
+  const n=state.num;
+  setPrompt(langText(`${n} సంఖ్యను గీయండి`, `${n} को ट्रेस करो`));
+  const wrap=document.createElement('div'); wrap.style.width='100%'; wrap.style.display='flex'; wrap.style.flexDirection='column'; wrap.style.alignItems='center';
+  wrap.innerHTML=`
+    <div class="trace-area">
+      <canvas class="trace-canvas" id="traceCanvas" width="760" height="460"></canvas>
+      <div class="trace-template">${n}</div>
+      <div class="trace-start-label">START</div>
+      <div class="trace-start-dot"></div>
+      <div class="trace-arrows">
+        <div class="trace-arrow" style="left:43%;top:38%">↕</div>
+        <div class="trace-arrow two" style="left:48%;top:48%">↩</div>
+        <div class="trace-arrow three" style="left:56%;top:66%">↘</div>
+      </div>
+    </div>
+    <div class="trace-controls">
+      <button class="action-btn blue" id="clearTrace">↻ Clear</button>
+      <button class="action-btn green" id="doneTrace">NEXT</button>
+    </div>
+    <div class="trace-helper">
+      <img src="/assets/images/vageesh.png" alt="Vageesh" />
+      <div class="trace-helper-bubble telugu">నెమ్మదిగా గీతను అనుసరించి రాయండి!</div>
+    </div>`;
+  area.appendChild(wrap);
+  setupTraceCanvas();
+}
+function setupTraceCanvas(){
+  const c=document.getElementById('traceCanvas'); const ctx=c.getContext('2d'); ctx.lineCap='round'; ctx.lineJoin='round'; ctx.lineWidth=26; ctx.strokeStyle='#ff9d21';
+  let drawing=false, points=0;
+  function pos(e){ const r=c.getBoundingClientRect(); const t=e.touches?e.touches[0]:e; return {x:(t.clientX-r.left)*c.width/r.width, y:(t.clientY-r.top)*c.height/r.height}; }
+  function start(e){ drawing=true; const p=pos(e); ctx.beginPath(); ctx.moveTo(p.x,p.y); points++; e.preventDefault(); }
+  function move(e){ if(!drawing) return; const p=pos(e); ctx.lineTo(p.x,p.y); ctx.stroke(); points++; e.preventDefault(); }
+  function end(){ drawing=false; }
+  c.onmousedown=start; c.onmousemove=move; window.onmouseup=end; c.ontouchstart=start; c.ontouchmove=move; c.ontouchend=end;
+  document.getElementById('clearTrace').onclick=()=>{ ctx.clearRect(0,0,c.width,c.height); points=0; document.getElementById('feedbackLine').textContent=''; };
+  document.getElementById('doneTrace').onclick=(e)=>{ if(points>14){ reward(e.currentTarget); speak(word(state.num)); } else { wrong(null, langText('ముందు సంఖ్యను గీయండి!','पहले संख्या ट्रेस करो!')); } };
+}
+
+function renderPlay(area){
+  const target=Math.max(1,state.num); const options=makeOptions(target);
+  setPrompt(langText(`వేగీష్ కి ${word(target)} మామిడిపండ్లు ఇవ్వు!`, `वागीश को ${word(target)} आम दो!`));
+  const wrap=document.createElement('div'); wrap.style.width='100%';
+  wrap.innerHTML=`
+    <div class="basket-scene">
+      <div style="justify-self:start;text-align:center;"><img src="/assets/images/vageesh.png" alt="Vageesh" style="width:110px;height:110px;border-radius:50%;border:4px solid #fff;box-shadow:0 6px 14px rgba(0,0,0,.2)" /></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+        <div class="basket"></div>
+      </div>
+      <div class="mango-tree">
+        <div class="crown"></div><div class="trunk"></div>
+        <div class="fruit" style="left:18px;top:60px"></div>
+        <div class="fruit" style="left:56px;top:48px"></div>
+        <div class="fruit" style="left:92px;top:76px"></div>
+        <div class="fruit" style="left:70px;top:98px"></div>
+      </div>
+    </div>
+    <div class="options-row">
+      ${options.map(n=>`<button class="option-card" data-n="${n}"><div style="font-size:34px">${Array.from({length:n},()=> '🥭').join(' ')}</div><div class="option-count">${n}</div></button>`).join('')}
+    </div>`;
+  area.appendChild(wrap);
+  wrap.querySelectorAll('.option-card').forEach(btn=>{
+    btn.onclick=()=>{ const n=+btn.dataset.n; if(n===target){ btn.classList.add('correct'); reward(btn); } else wrong(btn); };
+  });
+}
+
+function renderRescue(area){
+  const target=Math.max(1,state.num); const animal=animals[state.rescueAnimal % animals.length];
+  setPrompt(langText(`కుందేలికి ${word(target)} రాళ్లు ఇవ్వు!`.replace('కుందేలికి', animal==='🐰'?'కుందేలికి':'జంతువుకు'), `${word(target)} पत्थर दो!`));
+  const wrap=document.createElement('div'); wrap.style.width='100%';
+  wrap.innerHTML=`
+    <div class="river-board" id="riverBoard">
+      <div class="river-bank left"></div><div class="river-bank right"></div>
+      <div class="vageesh-mini"><img src="/assets/images/vageesh.png" alt="Vageesh" /></div>
+      <div class="animal" id="riverAnimal">${animal}</div>
+      <div class="counter-pill"><span id="stoneCounter">0</span> / ${target}</div>
+      <div class="river-path" id="riverPath">${Array.from({length:target},(_,i)=>`<div class="slot" data-slot="${i}"></div>`).join('')}</div>
+      <div class="stone-pile" id="stonePile"><div class="pile-label ${langClass()}">${langText('రాళ్లు ఇక్కడి నుండి లాగండి','पत्थर यहाँ से खींचो')}</div>${Array.from({length:target+2},(_,i)=>`<div class="stone" draggable="true" data-stone="${i}">🪨</div>`).join('')}</div>
+    </div>`;
+  area.appendChild(wrap);
+  setupRescueDrag(target);
+}
+function setupRescueDrag(target){
+  const pile = document.getElementById('stonePile');
+  const slots = [...document.querySelectorAll('.slot')];
+  const counter = document.getElementById('stoneCounter');
+  const animal = document.getElementById('riverAnimal');
+  let placed = 0;
+  let dragged = null;
+  pile.querySelectorAll('.stone').forEach(stone=>{
+    stone.addEventListener('dragstart', e=>{ dragged=stone; stone.classList.add('dragging'); e.dataTransfer.setData('text/plain','stone'); });
+    stone.addEventListener('dragend', ()=>stone.classList.remove('dragging'));
+    // touch support
+    stone.addEventListener('pointerdown', (e)=>{
+      stone.setPointerCapture(e.pointerId); dragged=stone; stone.classList.add('dragging');
+      const move = (ev)=>{ stone.style.position='fixed'; stone.style.left=(ev.clientX-48)+'px'; stone.style.top=(ev.clientY-34)+'px'; stone.style.zIndex=1000; };
+      move(e);
+      const up = (ev)=>{
+        stone.classList.remove('dragging');
+        const found = slots.find(slot=>{
+          const r=slot.getBoundingClientRect(); return ev.clientX>=r.left && ev.clientX<=r.right && ev.clientY>=r.top && ev.clientY<=r.bottom && !slot.dataset.filled; });
+        if(found && placed<target){ placeStone(found, stone); } else { resetStone(stone); if(placed>=target) wrong(null, langText('ఇంకా అవసరం లేదు!','अब ज़रूरत नहीं!')); }
+        stone.removeEventListener('pointermove', move); stone.removeEventListener('pointerup', up); stone.removeEventListener('pointercancel', up);
+      };
+      stone.addEventListener('pointermove', move); stone.addEventListener('pointerup', up); stone.addEventListener('pointercancel', up);
+    });
+  });
+  slots.forEach(slot=>{
+    slot.addEventListener('dragover', e=>e.preventDefault());
+    slot.addEventListener('drop', e=>{ e.preventDefault(); if(!dragged) return; if(slot.dataset.filled) { resetStone(dragged); return; } placeStone(slot, dragged); });
+  });
+  function placeStone(slot, stone){
+    if(slot.dataset.filled || stone.dataset.placed) { resetStone(stone); return; }
+    slot.dataset.filled='1'; slot.classList.add('filled'); stone.dataset.placed='1'; stone.classList.add('correct-stone'); slot.appendChild(stone); stone.style.position='static'; stone.style.left=''; stone.style.top=''; stone.style.zIndex=''; stone.draggable=false; placed++; counter.textContent=placed; sparkleSlot(slot);
+    if(placed===target){ reward(slot); setTimeout(()=>{ animal.style.right='72%'; animal.style.transform='translateY(-8px)'; document.getElementById('feedbackLine').innerHTML=`<span class="${langClass()}">${langText('జంతువు నది దాటింది!','जानवर नदी पार कर गया!')}</span>`; state.rescueAnimal++; },350); }
+  }
+  function resetStone(stone){ stone.style.position=''; stone.style.left=''; stone.style.top=''; stone.style.zIndex=''; }
+  function sparkleSlot(slot){ const r=slot.getBoundingClientRect(); sparkle(r.left+r.width/2, r.top+r.height/2); }
+}
+
+
+function flashMascot(kind='talking'){
+  const home = document.querySelector('.photo-mascot');
+  if(home){ home.classList.remove('talking','celebrate','wave'); home.offsetWidth; home.classList.add(kind); setTimeout(()=>home.classList.remove(kind), 1200); }
+}
+function flashMiniMascot(kind='talking'){
+  const mini = document.querySelector('.vageesh-mini');
+  if(mini){ mini.classList.remove('talking','celebrate','wave'); mini.offsetWidth; mini.classList.add(kind); setTimeout(()=>mini.classList.remove(kind), 1100); }
+}
+// events
+function bindEvents(){
+  document.getElementById('homeAudio').onclick=()=>speak(langText('సంఖ్యలు నేర్చుకుందాం!','चलो संख्या सीखें!'));
+  document.getElementById('sideAudio').onclick=speakCurrent;
+  document.getElementById('promptAudio').onclick=speakCurrent;
+  document.getElementById('goHome').onclick=()=>showScreen('home');
+  document.querySelectorAll('[data-open]').forEach(btn=>btn.onclick=()=>{ state.mode=btn.dataset.open; flashMascot('wave'); showScreen('activity'); });
+  document.querySelectorAll('[data-mode]').forEach(btn=>btn.onclick=()=>{ state.mode=btn.dataset.mode; renderActivity(); });
+  document.querySelectorAll('[data-lang]').forEach(btn=>btn.onclick=()=>setLang(btn.dataset.lang));
+  document.querySelectorAll('[data-range]').forEach(btn=>btn.onclick=()=>setRange(btn.dataset.range));
+}
+
+bindEvents();
+setHomeSpeech();
+renderHome();
+renderDots();
+updateLangButtons();
+</script>
+</body>
+</html>

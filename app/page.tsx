@@ -7,6 +7,8 @@ import MoreGames from "./more-games";
 import MathCorner from "./math-corner";
 import OpeningScreen from "./opening-screen";
 import HeroMascots from "./HeroMascots";
+import SplashScreen from "./SplashScreen";
+import { BuddyCelebrate } from "./BuddyTip";
 import "./story-garden.css";
 import "./akshara-builder.css";
 import "./more-games.css";
@@ -163,9 +165,97 @@ const examples: Record<Language, Record<string, Example>> = {
   },
 };
 
+const TRACE_FONT = `220px "Noto Sans Telugu", "Noto Sans Devanagari", Arial, sans-serif`;
+const TRACE_USER_COLOR = [109, 92, 232];
+const TRACE_BG_COLOR = [255, 253, 249];
+const TRACE_GUIDE_COLOR = [203, 195, 239];
+
+type TraceResult = { stars: 0 | 1 | 2 | 3; message: string };
+
+function buildTraceGuideMask(letter: string, width: number, height: number, ratio: number): Uint8Array {
+  const maskCanvas = document.createElement("canvas");
+  maskCanvas.width = width * ratio;
+  maskCanvas.height = height * ratio;
+  const context = maskCanvas.getContext("2d");
+  if (!context) return new Uint8Array(0);
+  context.scale(ratio, ratio);
+  context.lineWidth = 34;
+  context.strokeStyle = "#000";
+  context.textAlign = "center";
+  context.textBaseline = "middle";
+  context.font = TRACE_FONT;
+  context.strokeText(letter, width / 2, height / 2 + 8);
+  const { data } = context.getImageData(0, 0, maskCanvas.width, maskCanvas.height);
+  const mask = new Uint8Array(maskCanvas.width * maskCanvas.height);
+  for (let i = 0; i < mask.length; i++) mask[i] = data[i * 4 + 3] > 10 ? 1 : 0;
+  return mask;
+}
+
+function scoreTrace(context: CanvasRenderingContext2D, mask: Uint8Array): TraceResult {
+  const canvas = context.canvas;
+  const w = canvas.width, h = canvas.height;
+  const { data } = context.getImageData(0, 0, w, h);
+  const cell = 10;
+  const gw = Math.ceil(w / cell), gh = Math.ceil(h / cell);
+  const guideGrid = new Uint8Array(gw * gh);
+  const userGrid = new Uint8Array(gw * gh);
+  let userTotal = 0, userOnGuide = 0;
+  const stride = 2;
+  const dist = (r: number, g: number, b: number, c: number[]) => Math.hypot(r - c[0], g - c[1], b - c[2]);
+
+  for (let y = 0; y < h; y += stride) {
+    const gy = (y / cell) | 0;
+    for (let x = 0; x < w; x += stride) {
+      const i = y * w + x;
+      const gx = (x / cell) | 0;
+      const gi = gy * gw + gx;
+      if (mask[i]) guideGrid[gi] = 1;
+      const o = i * 4;
+      const r = data[o], g = data[o + 1], b = data[o + 2];
+      const du = dist(r, g, b, TRACE_USER_COLOR);
+      if (du < 70 && du < dist(r, g, b, TRACE_BG_COLOR) && du < dist(r, g, b, TRACE_GUIDE_COLOR)) {
+        userGrid[gi] = 1;
+        userTotal++;
+        if (mask[i]) userOnGuide++;
+      }
+    }
+  }
+
+  if (userTotal < 40) return { stars: 0, message: "Trace over the dotted letter, then tap Check my trace." };
+
+  let guideTotal = 0, guideCovered = 0;
+  for (let gy = 0; gy < gh; gy++) {
+    for (let gx = 0; gx < gw; gx++) {
+      const gi = gy * gw + gx;
+      if (!guideGrid[gi]) continue;
+      guideTotal++;
+      let touched = false;
+      for (let ny = -1; ny <= 1 && !touched; ny++) {
+        for (let nx = -1; nx <= 1 && !touched; nx++) {
+          const yy = gy + ny, xx = gx + nx;
+          if (yy < 0 || yy >= gh || xx < 0 || xx >= gw) continue;
+          if (userGrid[yy * gw + xx]) touched = true;
+        }
+      }
+      if (touched) guideCovered++;
+    }
+  }
+
+  const coverage = guideTotal ? guideCovered / guideTotal : 0;
+  const accuracy = userTotal ? userOnGuide / userTotal : 0;
+
+  if (coverage >= 0.8 && accuracy >= 0.55) return { stars: 3, message: "Beautiful tracing — every part of the letter!" };
+  if (coverage >= 0.55 && accuracy >= 0.4) return { stars: 2, message: "Nice work! Try to keep the lines closer to the dots." };
+  if (coverage >= 0.25) return { stars: 1, message: "Good start — trace the whole letter, from top to bottom." };
+  return { stars: 0, message: "Give it another go — follow the dotted shape closely." };
+}
+
 function TracePad({ letter, roman }: { letter: string; roman: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const drawing = useRef(false);
+  const guideMaskRef = useRef<Uint8Array | null>(null);
+  const [result, setResult] = useState<TraceResult | null>(null);
+  const [celebrated, setCelebrated] = useState(false);
 
   function paintGuide() {
     const canvas = canvasRef.current;
@@ -187,9 +277,12 @@ function TracePad({ letter, roman }: { letter: string; roman: string }) {
     context.strokeStyle = "#cbc3ef";
     context.textAlign = "center";
     context.textBaseline = "middle";
-    context.font = `220px "Noto Sans Telugu", "Noto Sans Devanagari", Arial, sans-serif`;
+    context.font = TRACE_FONT;
     context.strokeText(letter, width / 2, height / 2 + 8);
     context.setLineDash([]);
+    guideMaskRef.current = buildTraceGuideMask(letter, width, height, ratio);
+    setResult(null);
+    setCelebrated(false);
   }
 
   useEffect(() => {
@@ -234,6 +327,16 @@ function TracePad({ letter, roman }: { letter: string; roman: string }) {
     drawing.current = false;
   }
 
+  function checkTrace() {
+    const canvas = canvasRef.current;
+    const context = canvas?.getContext("2d");
+    const mask = guideMaskRef.current;
+    if (!canvas || !context || !mask) return;
+    const outcome = scoreTrace(context, mask);
+    setResult(outcome);
+    if (outcome.stars === 3) setCelebrated(true);
+  }
+
   return (
     <section className="trace-section" id="trace-pad" aria-label={`Trace ${letter}`}>
       <div className="trace-heading">
@@ -241,7 +344,15 @@ function TracePad({ letter, roman }: { letter: string; roman: string }) {
         <span>{roman}</span>
       </div>
       <div className="trace-board"><canvas ref={canvasRef} onPointerDown={startDrawing} onPointerMove={draw} onPointerUp={stopDrawing} onPointerCancel={stopDrawing} onPointerLeave={stopDrawing} /></div>
-      <div className="trace-actions"><button onClick={paintGuide}>↻ Clear and try again</button><small>Tip: Start at the top and move slowly.</small></div>
+      <div className="trace-actions">
+        <div className="trace-buttons">
+          <button className="trace-check" onClick={checkTrace}>✓ Check my trace</button>
+          <button onClick={paintGuide}>↻ Clear and try again</button>
+        </div>
+        <small>Tip: Start at the top and move slowly.</small>
+      </div>
+      {result && <div className={`trace-feedback ${result.stars >= 2 ? "ok" : "no"}`} aria-live="polite"><span className="trace-stars">{"⭐".repeat(result.stars)}{"☆".repeat(3 - result.stars)}</span><span>{result.message}</span></div>}
+      {celebrated && <BuddyCelebrate name="vageesh" title="Beautiful tracing! 🎉" message={`You traced ${letter} so well — keep it up!`} onAction={() => { paintGuide(); }} actionLabel="Trace again 🎉" />}
     </section>
   );
 }
@@ -269,6 +380,7 @@ const features = [
 ];
 
 export default function Home() {
+  const [showSplash, setShowSplash] = useState(true);
   const [started, setStarted] = useState(false);
   const [language, setLanguage] = useState<Language>("Telugu");
   const [group, setGroup] = useState<LetterGroup>("Vowels");
@@ -325,7 +437,7 @@ export default function Home() {
   function beginLetters(nextLanguage: Language, nextGroup: LetterGroup) { setLanguage(nextLanguage); setGroup(nextGroup); setSelected(0); setLearnStage("letters"); }
 
   return (
-    <><main>
+    <>{showSplash && <SplashScreen onFinish={() => setShowSplash(false)} />}<main>
       <header className="nav-wrap">
         <a href="#top" className="logo"><span>🦚</span>Basha Kids</a>
         <nav aria-label="Main navigation"><a href="#lessons" onClick={(event) => { event.preventDefault(); openLearn(); }}>Letters</a><a href="#stories" onClick={(event) => { event.preventDefault(); openSection("stories"); }}>Stories</a><a href="#guninthalu" onClick={(event) => { event.preventDefault(); openSection("guninthalu"); }}>Guninthalu</a><a href="#more-games" onClick={(event) => { event.preventDefault(); openSection("games"); }}>Games</a><a href="#math-corner" onClick={(event) => { event.preventDefault(); openSection("math"); }}>Math Corner</a></nav>

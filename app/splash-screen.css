@@ -1,0 +1,95 @@
+.splash-stage { position: fixed; inset: 0; z-index: 300; overflow: hidden; isolation: isolate; background: #FCE9B8; cursor: pointer; }
+
+.splash-frame { position: absolute; inset: 0; width: 100%; height: 100%; will-change: opacity, transform; }
+.splash-running { animation: splashRunningAnim 4.6s ease-in-out forwards; z-index: 1; }
+.splash-highfive { animation: splashHighfiveAnim 4.6s ease-in-out forwards; z-index: 2; }
+.splash-logo { animation: splashLogoAnim 4.6s ease-in-out forwards; z-index: 3; transform-origin: center center; }
+
+@keyframes splashRunningAnim {
+  0%   { opacity: 1; }
+  24%  { opacity: 1; }
+  36%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes splashHighfiveAnim {
+  0%   { opacity: 0; }
+  30%  { opacity: 0; }
+  40%  { opacity: 1; }
+  62%  { opacity: 1; }
+  74%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes splashLogoAnim {
+  0%   { opacity: 0; transform: scale(0.94); }
+  68%  { opacity: 0; transform: scale(0.94); }
+  78%  { opacity: 1; transform: scale(1.04); }
+  86%  { opacity: 1; transform: scale(1); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.splash-flash {
+  position: absolute; inset: 0; background: white; z-index: 5;
+  pointer-events: none; opacity: 0;
+  animation: splashFlashAnim 4.6s ease-in-out forwards;
+}
+@keyframes splashFlashAnim {
+  0%    { opacity: 0; }
+  35%   { opacity: 0; }
+  38.5% { opacity: 0.85; }
+  42%   { opacity: 0; }
+  70%   { opacity: 0; }
+  73%   { opacity: 0.85; }
+  77%   { opacity: 0; }
+  100%  { opacity: 0; }
+}
+
+.splash-sparkle-layer {
+  position: absolute; inset: 0; z-index: 4; pointer-events: none; opacity: 0;
+  animation: splashSparkleLayerAnim 4.6s ease-in-out forwards;
+}
+@keyframes splashSparkleLayerAnim {
+  0%   { opacity: 0; }
+  34%  { opacity: 0; }
+  40%  { opacity: 1; }
+  64%  { opacity: 1; }
+  74%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+.splash-spark {
+  position: absolute; left: 50%; top: 42%;
+  background: radial-gradient(circle, #fff 0%, #ffe27a 40%, rgba(255,226,122,0) 70%);
+  border-radius: 50%; transform: translate(-50%, -50%);
+  animation: splashSparkFly 1.6s ease-out infinite;
+}
+.splash-spark::before {
+  content: ''; position: absolute; inset: -4px; background: inherit;
+  filter: blur(2px); border-radius: 50%;
+}
+@keyframes splashSparkFly {
+  0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.2) rotate(0deg) translateY(0); }
+  15%  { opacity: 1; }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1) rotate(180deg) translateY(var(--dist)); }
+}
+.splash-center-burst {
+  position: absolute; left: 50%; top: 42%; width: 90px; height: 90px;
+  transform: translate(-50%, -50%) scale(0); border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(255,226,122,0.6) 45%, rgba(255,226,122,0) 75%);
+  animation: splashBurstAnim 4.6s ease-in-out forwards;
+}
+@keyframes splashBurstAnim {
+  0%   { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+  38%  { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+  40%  { transform: translate(-50%, -50%) scale(1.6); opacity: 1; }
+  50%  { transform: translate(-50%, -50%) scale(2.4); opacity: 0; }
+  100% { transform: translate(-50%, -50%) scale(2.4); opacity: 0; }
+}
+
+.splash-backdrop { object-fit: cover; filter: blur(38px) brightness(0.92) saturate(1.05); transform: scale(1.25); }
+.splash-sharp { object-fit: contain; width: 100%; height: 100%; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.25)); }
+
+.splash-skip { position: absolute; z-index: 6; left: 50%; bottom: 28px; transform: translateX(-50%); padding: 8px 16px; border-radius: 99px; color: #7a6a35; background: #ffffffb0; font-size: 11px; font-weight: 800; letter-spacing: .04em; opacity: 0; animation: splashSkipAnim 4.6s ease-in-out forwards; }
+@keyframes splashSkipAnim { 0% { opacity: 0; } 60% { opacity: 0; } 80% { opacity: .9; } 100% { opacity: .9; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .splash-stage * { animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+}

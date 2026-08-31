@@ -1,16 +1,10 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import "./math-corner.css";
 import { BuddyTip } from "./BuddyTip";
 
-type Operation = "add" | "subtract" | "multiply" | "divide";
 type Language = "Telugu" | "Hindi";
-
-const labels: Record<Language, Record<Operation, string>> = {
-  Telugu: { add: "కూడిక", subtract: "తీసివేత", multiply: "గుణకారం", divide: "భాగహారం" },
-  Hindi: { add: "जोड़", subtract: "घटाव", multiply: "गुणा", divide: "भाग" },
-};
 
 type FruitEquation = { op: "add" | "sub"; a: number; b: number; result: number; fruit: string };
 const fruitEquations: FruitEquation[] = [
@@ -219,61 +213,42 @@ function CompareSortGame() {
   );
 }
 
-function makeQuestion(operation: Operation) {
-  let a = Math.floor(Math.random() * 9) + 1;
-  let b = Math.floor(Math.random() * 9) + 1;
-  if (operation === "subtract" && b > a) [a, b] = [b, a];
-  if (operation === "divide") {
-    b = Math.floor(Math.random() * 8) + 1;
-    const answer = Math.floor(Math.random() * 8) + 1;
-    a = b * answer;
-  }
-  const answer = operation === "add" ? a + b : operation === "subtract" ? a - b : operation === "multiply" ? a * b : a / b;
-  const symbol = operation === "add" ? "+" : operation === "subtract" ? "−" : operation === "multiply" ? "×" : "÷";
-  return { a, b, answer, symbol };
-}
-
 export default function MathCorner() {
-  const [language, setLanguage] = useState<Language>("Telugu");
-  const [operation, setOperation] = useState<Operation>("add");
-  const [question, setQuestion] = useState(() => makeQuestion("add"));
-  const [choice, setChoice] = useState<number | null>(null);
+  const [introVisible, setIntroVisible] = useState(true);
+  const [introFading, setIntroFading] = useState(false);
 
-  const answers = useMemo(() => {
-    const set = new Set<number>([question.answer]);
-    while (set.size < 4) set.add(Math.max(0, question.answer + Math.floor(Math.random() * 9) - 4));
-    return [...set].sort(() => Math.random() - .5);
-  }, [question]);
-
-  function chooseOperation(next: Operation) {
-    setOperation(next);
-    setQuestion(makeQuestion(next));
-    setChoice(null);
-  }
-
-  function nextQuestion() {
-    setQuestion(makeQuestion(operation));
-    setChoice(null);
-  }
-
-  const correct = choice === question.answer;
+  useEffect(() => {
+    const timer = window.setTimeout(() => setIntroFading(true), 2600);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   return (
     <section className="math-corner" id="math-corner">
       <div className="math-heading">
-        <div><small>NEW · PLAY AND LEARN</small><h2>Math Corner</h2><p>Every round uses different numbers for addition, subtraction, multiplication, and division.</p><BuddyTip name="vageesh" message="Math is my favorite — let's solve one together!" /></div>
-        <div className="math-language"><button className={language === "Telugu" ? "active" : ""} onClick={() => setLanguage("Telugu")}>తెలుగు</button><button className={language === "Hindi" ? "active" : ""} onClick={() => setLanguage("Hindi")}>हिन्दी</button></div>
+        <div><small>NEW · PLAY AND LEARN</small><h2>Math Corner</h2><p>Follow Vageesh's Number Adventure — see &amp; hear a number, trace it, play, and rescue animals across the river — then keep practicing with fruit equations and comparing &amp; sorting.</p><BuddyTip name="vageesh" message="Let's learn numbers together — see, trace, play, and rescue!" /></div>
       </div>
 
-      <div className="math-operations">
-        {(["add","subtract","multiply","divide"] as Operation[]).map((item) => <button key={item} className={operation === item ? "active" : ""} onClick={() => chooseOperation(item)}><span>{item === "add" ? "+" : item === "subtract" ? "−" : item === "multiply" ? "×" : "÷"}</span><b>{labels[language][item]}</b></button>)}
+      <div className="math-treasure-hunt">
+        <iframe src="/number-adventure.html" title="Vageesh's Number Adventure" loading="lazy" style={{ width: "100%", height: "760px", border: 0, borderRadius: "24px", background: "#54cfff" }} />
+        {introVisible && (
+          <div
+            className={`number-adventure-intro${introFading ? " fading" : ""}`}
+            role="button"
+            tabIndex={0}
+            aria-label="Vageesh's Number Adventure — tap to play"
+            onClick={() => setIntroFading(true)}
+            onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") setIntroFading(true); }}
+            onTransitionEnd={() => { if (introFading) setIntroVisible(false); }}
+          >
+            <img src="/assets/images/number-adventure-cover.webp" alt="Vageesh's Number Adventure" />
+            <span className="number-adventure-intro-hint">Tap to play</span>
+          </div>
+        )}
       </div>
 
-      <div className="math-board">
-        <div className="math-question"><small>SOLVE IT</small><strong>{question.a} {question.symbol} {question.b} = ?</strong></div>
-        <div className="math-answers">{answers.map((answer) => <button key={answer} className={choice === answer ? (answer === question.answer ? "correct" : "wrong") : ""} onClick={() => setChoice(answer)}>{answer}</button>)}</div>
-        <div className={`math-feedback ${choice !== null ? "show" : ""}`}>{choice === null ? "" : correct ? (language === "Telugu" ? "చాలా బాగా చేశావు! 🎉" : "बहुत बढ़िया! 🎉") : (language === "Telugu" ? "మళ్లీ ప్రయత్నించు" : "फिर से कोशिश करो")}</div>
-        {correct && <button className="math-next" onClick={nextQuestion}>Next question →</button>}
+      <div className="treasure-hunt-game">
+        <div className="treasure-hunt-head"><div><small>PLAY · NUMBER TREASURE HUNT</small><h3>Number Treasure Hunt</h3><p>Follow five number clues along the stepping stones to unlock Vageesh&apos;s treasure chest.</p><BuddyTip name="vageesh" message="Let's find the treasure together — follow the number clues!" /></div></div>
+        <iframe src="/treasure-hunt.html" title="Vageesh's Number Treasure Hunt" loading="lazy" style={{ width: "100%", height: "620px", border: 0, borderRadius: "24px", background: "#153e2c" }} />
       </div>
 
       <FruitMathGame />
