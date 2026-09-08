@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Telugu Word Builder</title>
+<style>
+  :root{
+    --navy:#2b2a4a;
+    --navy-deep:#211f3d;
+    --purple:#7c6cf0;
+    --purple-light:#efeafd;
+    --orange:#ff8a65;
+    --teal:#5fc9b8;
+    --teal-light:#e3f6f2;
+    --gold:#f6c453;
+    --gold-light:#fdf1d6;
+    --text:#2b2a4a;
+    --muted:#8b88a6;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Segoe UI', system-ui, -apple-system, sans-serif;
+    background:var(--navy-deep);
+    color:var(--text);
+  }
+  .header{
+    background:linear-gradient(135deg, var(--navy) 0%, var(--navy-deep) 100%);
+    padding:28px 40px 20px;
+    color:white;
+  }
+  .eyebrow{
+    display:flex; align-items:center; gap:8px;
+    font-size:13px; letter-spacing:2px; font-weight:700;
+    color:#c9c3ff; text-transform:uppercase; margin-bottom:10px;
+  }
+  .header h1{ margin:0; font-size:34px; font-weight:600; }
+  .header .sub{ color:#a9a6c9; font-size:14px; margin-top:6px; }
+  .header-row{ display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:10px;}
+
+  .grid{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:24px;
+    padding:24px 40px 40px;
+  }
+  @media (max-width:900px){ .grid{ grid-template-columns:1fr; } }
+
+  .card{
+    background:white;
+    border-radius:18px;
+    padding:22px;
+    box-shadow:0 10px 30px rgba(0,0,0,.25);
+    min-height:420px;
+  }
+  .card.split{ background:linear-gradient(180deg,#fffaf0,#fff6e0); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:18px;}
+  .card-label{ font-size:12px; font-weight:800; letter-spacing:1.5px; color:var(--purple); text-transform:uppercase; margin-bottom:14px;}
+
+  label{ display:block; font-weight:700; font-size:14px; margin-bottom:8px; }
+  .tag-guninth{ background:var(--gold-light); color:#8a6d1f; font-size:11px; padding:2px 8px; border-radius:20px; font-weight:700; margin-left:6px;}
+
+  input[type=text]{
+    width:100%; padding:16px; border:2px solid var(--purple); border-radius:12px;
+    font-size:22px; font-weight:700; color:var(--text); margin-bottom:18px; outline:none;
+  }
+  .telugu-box{
+    width:100%; padding:16px; border-radius:12px; background:var(--purple-light);
+    font-size:34px; font-weight:700; color:var(--purple); margin-bottom:16px; text-align:left;
+    border:2px solid transparent;
+  }
+
+  .chips{ display:flex; flex-wrap:wrap; gap:10px; margin-top:6px; }
+  .chip{
+    background:var(--purple-light); border:none; border-radius:10px; padding:10px 16px;
+    font-size:18px; font-weight:600; color:var(--text); cursor:pointer; transition:.15s;
+  }
+  .chip:hover{ transform:translateY(-2px); box-shadow:0 4px 10px rgba(0,0,0,.1); }
+  .legend{ font-size:11px; color:var(--muted); margin-top:10px; display:flex; gap:14px; flex-wrap:wrap;}
+  .dot{ display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:5px; vertical-align:middle;}
+
+  .split-word{ font-size:44px; font-weight:800; color:var(--navy); display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:center;}
+  .split-word span.piece{ padding:4px 8px; border-radius:10px; cursor:pointer; transition:.15s; }
+  .split-word span.piece.active{ background:#ffe0d3; }
+  .equals{ font-size:22px; color:var(--muted); }
+  .whole-word{ font-size:56px; font-weight:800; color:var(--orange); }
+  .romanization{ font-size:15px; color:var(--muted); font-style:italic; }
+  .toggle-row{ display:flex; align-items:center; gap:8px; font-size:13px; color:var(--muted); }
+  .toggle-row input{ width:auto; margin:0; }
+
+  .rows{ display:flex; flex-direction:column; gap:12px; }
+  .row{
+    display:flex; align-items:center; justify-content:space-between;
+    background:var(--purple-light); border-radius:14px; padding:14px 18px;
+    cursor:pointer; transition:.15s; border:2px solid transparent;
+  }
+  .row:hover, .row.active{ border-color:var(--purple); background:#e8e1fd; }
+  .row-formula{ font-size:26px; font-weight:800; color:var(--navy); display:flex; align-items:center; gap:10px; }
+  .row-formula .rom{ font-size:13px; color:var(--muted); font-weight:400; margin-left:6px; }
+  .badge{ font-size:11px; font-weight:800; padding:5px 12px; border-radius:20px; }
+  .badge.guninth{ background:var(--gold-light); color:#8a6d1f; }
+  .badge.aksharam{ background:var(--teal-light); color:#1d7a68; }
+  .badge.anuswaram{ background:#e4e1ff; color:#5a4bc4; }
+  .play-btn{
+    background:var(--purple); color:white; border:none; border-radius:50%;
+    width:34px; height:34px; font-size:15px; cursor:pointer; display:flex;
+    align-items:center; justify-content:center; flex-shrink:0; margin-left:10px;
+  }
+  .play-btn:hover{ background:#6355d6; }
+
+  .footer-note{
+    padding:0 40px 30px; color:#c9c3ff; font-size:14px;
+  }
+  .footer-note b{ color:var(--gold); }
+
+  .mascot-toast{
+    position:fixed; bottom:24px; right:24px; background:white; border-radius:16px;
+    padding:16px 20px; box-shadow:0 10px 30px rgba(0,0,0,.3); display:flex; align-items:center;
+    gap:12px; font-weight:700; color:var(--navy); transform:translateY(120%); opacity:0;
+    transition:.4s ease; max-width:280px;
+  }
+  .mascot-toast.show{ transform:translateY(0); opacity:1; }
+  .mascot-emoji{ font-size:32px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-row">
+    <div>
+      <div class="eyebrow">✨ TELUGU WORD BUILDER</div>
+      <h1>See how a word is formed.</h1>
+    </div>
+    <div class="sub" style="text-align:right; max-width:280px;">Type a Telugu word to separate its గుణింతాలు and joined letters. Tap any piece to hear it 🔊</div>
+  </div>
+</div>
+
+<div class="grid">
+
+  <!-- STEP 1 -->
+  <div class="card">
+    <div class="card-label">1 · Enter a word</div>
+    <label>Type with English letters (example: pilla or sowmya)</label>
+    <input type="text" id="romanInput" value="Shaarada">
+    <label>Telugu word — you can edit this too</label>
+    <div class="telugu-box" id="teluguDisplay">శారద</div>
+
+    <div class="chips" id="chipRow">
+      <button class="chip" data-word="pilla">పిల్ల</button>
+      <button class="chip" data-word="sowmya">సౌమ్య</button>
+      <button class="chip" data-word="kamalam">కమలం</button>
+      <button class="chip" data-word="mamidi">మామిడి</button>
+      <button class="chip" data-word="enugu">ఏనుగు</button>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="card split">
+    <div class="card-label" style="align-self:flex-start;">2 · Split the word</div>
+    <div class="split-word" id="splitWord"></div>
+    <div class="equals">=</div>
+    <div class="whole-word" id="wholeWord">శారద</div>
+    <div class="romanization" id="wholeRoman">shaarada</div>
+    <label class="toggle-row"><input type="checkbox" id="romToggle" checked> Show pronunciation (romanized)</label>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="card">
+    <div class="card-label">3 · How it is formed</div>
+    <div class="rows" id="rowsContainer"></div>
+    <div class="legend" style="margin-top:16px;">
+      <span><span class="dot" style="background:var(--gold-light);border:1px solid #8a6d1f"></span>గుణింతం — consonant + vowel sign</span>
+      <span><span class="dot" style="background:var(--teal-light);border:1px solid #1d7a68"></span>అక్షరం — base letter</span>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer-note" id="footerNote"></div>
+
+<div class="mascot-toast" id="mascotToast">
+  <div class="mascot-emoji">🧩</div>
+  <div id="mascotText">Vageesh: Great job exploring words!</div>
+</div>
+
+<script>
+// ====================================================================
+// Live English -> Telugu transliteration engine
+// (same logic as telugu-transliterate.js, inlined here so this file
+// stays a single standalone prototype — see that file for the
+// reusable module version with full comments.)
+// ====================================================================
+const ROMAN_OVERRIDES = {
+  shaarada:'శారద', sharada:'శారద', pilla:'పిల్ల', sowmya:'సౌమ్య',
+  kamalam:'కమలం', mamidi:'మామిడి', enugu:'ఏనుగు', vageesh:'వాగీష్',
+  amma:'అమ్మ', nanna:'నాన్న',
+  krishna:'కృష్ణ', raama:'రామ', rama:'రామ', shri:'శ్రీ', sri:'శ్రీ',
+  naaraayana:'నారాయణ', narayana:'నారాయణ'
+};
+const INDEP_VOWELS = [
+  ['aa','ఆ'],['ee','ఈ'],['oo','ఊ'],['ai','ఐ'],['ow','ఔ'],['au','ఔ'],
+  ['a','అ'],['i','ఇ'],['u','ఉ'],['e','ఎ'],['o','ఒ'],
+];
+const VOWEL_SIGNS = [
+  ['aa','ా'],['ee','ీ'],['oo','ూ'],['ai','ై'],['ow','ౌ'],['au','ౌ'],
+  ['i','ి'],['u','ు'],['e','ె'],['o','ొ'],['a',''],
+];
+const CONSONANTS = [
+  ['ksh','క్ష','క్ష్'],['gn','జ్ఞ','జ్ఞ్'],['jn','జ్ఞ','జ్ఞ్'],
+  ['ch','చ','చ్'],['chh','ఛ','ఛ్'],['sh','శ','శ్'],['Sh','ష','ష్'],
+  ['th','థ','థ్'],['dh','ధ','ధ్'],['ph','ఫ','ఫ్'],['bh','భ','భ్'],
+  ['kh','ఖ','ఖ్'],['gh','ఘ','ఘ్'],['jh','ఝ','ఝ్'],
+  ['T','ట','ట్'],['D','డ','డ్'],['N','ణ','ణ్'],['L','ళ','ళ్'],
+  ['k','క','క్'],['g','గ','గ్'],['j','జ','జ్'],
+  ['t','త','త్'],['d','ద','ద్'],['n','న','న్'],
+  ['p','ప','ప్'],['b','బ','బ్'],['m','మ','మ్'],
+  ['y','య','య్'],['r','ర','ర్'],['l','ల','ల్'],
+  ['v','వ','వ్'],['w','వ','వ్'],['s','స','స్'],['h','హ','హ్'],
+];
+function matchLongest(str, i, table){
+  for(const entry of table){ if(str.startsWith(entry[0], i)) return entry; }
+  return null;
+}
+function ruleBasedConvert(input){
+  const str = input.toLowerCase().trim();
+  let out = '', i = 0;
+  while(i < str.length){
+    if(str[i] === ' '){ out += ' '; i++; continue; }
+    const consMatch = matchLongest(str, i, CONSONANTS);
+    if(consMatch){
+      const [rom, base, virama] = consMatch;
+      const afterCons = i + rom.length;
+      if(str.startsWith(rom, afterCons)){
+        const vAfter = matchLongest(str, afterCons + rom.length, VOWEL_SIGNS);
+        out += virama + base + (vAfter ? vAfter[1] : '');
+        i = afterCons + rom.length + (vAfter ? vAfter[0].length : 0);
+        continue;
+      }
+      const nextConsNoVowel = matchLongest(str, afterCons, CONSONANTS)
+        && !matchLongest(str, afterCons, VOWEL_SIGNS);
+      if(nextConsNoVowel){
+        // Nasal (m/n) immediately before another consonant is almost
+        // always written with అనుస్వారం in Telugu, not a joined
+        // consonant — e.g. "sundari" -> సుందరి, not సున్దరి.
+        if(rom === 'm' || rom === 'n'){ out += 'ం'; }
+        else { out += virama; }
+        i = afterCons;
+        continue;
+      }
+      const vowelMatch = matchLongest(str, afterCons, VOWEL_SIGNS);
+      if(vowelMatch){ out += base + vowelMatch[1]; i = afterCons + vowelMatch[0].length; }
+      else { out += base; i = afterCons; }
+      continue;
+    }
+    if((str[i]==='m'||str[i]==='n') && i===str.length-1 && out.length>0){
+      out += 'ం'; i++; continue;
+    }
+    const vowMatch = matchLongest(str, i, INDEP_VOWELS);
+    if(vowMatch){ out += vowMatch[1]; i += vowMatch[0].length; continue; }
+    out += str[i]; i++;
+  }
+  return out;
+}
+function transliterateToTelugu(input){
+  if(!input) return '';
+  return input.trim().split(/\s+/).map(word => {
+    const key = word.toLowerCase();
+    return ROMAN_OVERRIDES[key] || ruleBasedConvert(word);
+  }).join(' ');
+}
+
+// ====================================================================
+// Generic Telugu-script splitter (for words typed/pasted directly,
+// not in the curated WORDS table). Segments into అక్షరం / గుణింతం /
+// సంయుక్తాక్షరం / అనుస్వారం pieces using Unicode ranges.
+// Best-effort — the curated WORDS table below is used instead whenever
+// the typed word matches a known entry, since it's hand-verified.
+// ====================================================================
+const CONSONANT_RE = /[\u0C15-\u0C39]/;
+const VOWEL_SIGN_RE = /[\u0C3E-\u0C4C]/;
+const INDEP_VOWEL_RE = /[\u0C05-\u0C14]/;
+const VIRAMA = '\u0C4D', ANUSVARA = '\u0C02', VISARGA = '\u0C03';
+const SIGN_TO_INDEP = {'ా':'ఆ','ి':'ఇ','ీ':'ఈ','ు':'ఉ','ూ':'ఊ','ె':'ఎ','ే':'ఏ','ై':'ఐ','ొ':'ఒ','ో':'ఓ','ౌ':'ఔ'};
+const BASE_TO_ROMAN = {}, SIGN_TO_ROMAN = {}, INDEP_TO_ROMAN = {};
+CONSONANTS.forEach(([rom, base]) => { if(!BASE_TO_ROMAN[base]) BASE_TO_ROMAN[base] = rom; });
+VOWEL_SIGNS.forEach(([rom, sign]) => { if(sign && !SIGN_TO_ROMAN[sign]) SIGN_TO_ROMAN[sign] = rom; });
+INDEP_VOWELS.forEach(([rom, letter]) => { if(!INDEP_TO_ROMAN[letter]) INDEP_TO_ROMAN[letter] = rom; });
+
+function splitTeluguWord(telugu){
+  const chars = Array.from(telugu.trim());
+  const pieces = [];
+  let i = 0;
+  while(i < chars.length){
+    const c = chars[i];
+    if(c === ' '){ i++; continue; }
+    if(INDEP_VOWEL_RE.test(c)){ pieces.push({text:c, type:'aksharam'}); i++; continue; }
+    if(CONSONANT_RE.test(c)){
+      let piece = c, j = i + 1, hasVirama = false;
+      while(chars[j] === VIRAMA && CONSONANT_RE.test(chars[j+1])){
+        piece += chars[j] + chars[j+1]; hasVirama = true; j += 2;
+      }
+      let hasVowelSign = false;
+      if(VOWEL_SIGN_RE.test(chars[j])){ piece += chars[j]; hasVowelSign = true; j++; }
+      let hasAnusvara = false;
+      if(chars[j] === ANUSVARA){ piece += chars[j]; hasAnusvara = true; j++; }
+      if(chars[j] === VISARGA){ piece += chars[j]; j++; }
+      let type = 'aksharam';
+      if(hasAnusvara) type = 'anuswaram';
+      else if(hasVowelSign) type = 'guninth';
+      pieces.push({text:piece, type});
+      i = j;
+      continue;
+    }
+    pieces.push({text:c, type:'aksharam'});
+    i++;
+  }
+  return pieces;
+}
+
+// Builds the "శ + ఆ = శా" style formula (and best-effort roman) for a
+// generic piece produced by splitTeluguWord().
+function buildFormula(pieceText){
+  let text = pieceText;
+  const hasAnusvara = text.endsWith(ANUSVARA);
+  if(hasAnusvara) text = text.slice(0, -1);
+  const segments = text.split(VIRAMA);
+  const parts = [];
+  segments.forEach((seg, idx) => {
+    const base = seg[0], sign = seg.slice(1);
+    const isLast = idx === segments.length - 1;
+    if(!isLast){
+      parts.push({t: base + VIRAMA, r: BASE_TO_ROMAN[base] || ''});
+    } else {
+      parts.push({t: base, r: BASE_TO_ROMAN[base] || ''});
+      if(sign){
+        const indep = SIGN_TO_INDEP[sign] || sign;
+        parts.push({t: indep, r: SIGN_TO_ROMAN[sign] || INDEP_TO_ROMAN[indep] || ''});
+      } else if(segments.length === 1){
+        parts.push({t:'అ', r:'a'});
+      }
+    }
+  });
+  if(hasAnusvara) parts.push({t:'ం', r:'m'});
+  return parts;
+}
+
+function buildWordDataFromTelugu(telugu, roman){
+  const rawPieces = splitTeluguWord(telugu);
+  const pieces = rawPieces.map(p => {
+    const formula = buildFormula(p.text);
+    return { text:p.text, roman: formula.map(f=>f.r).join(''), type:p.type, formula };
+  });
+  return { telugu, roman: roman || '', pieces, note:null };
+}
+
+// ---- Word data (hardcoded for prototype demo) ----
+const WORDS = {
+  shaarada: {
+    telugu: "శారద", roman: "shaarada",
+    pieces: [
+      { text:"శా", roman:"shaa", type:"guninth", formula:[{t:"శ",r:"sha"},{t:"ఆ",r:"aa"}] },
+      { text:"ర", roman:"ra", type:"aksharam", formula:[{t:"ర",r:"ra"},{t:"అ",r:"a"}] },
+      { text:"ద", roman:"da", type:"aksharam", formula:[{t:"ద",r:"da"},{t:"అ",r:"a"}] },
+    ],
+    note: null
+  },
+  pilla: {
+    telugu:"పిల్ల", roman:"pilla",
+    pieces:[
+      { text:"పి", roman:"pi", type:"guninth", formula:[{t:"ప",r:"pa"},{t:"ి",r:"i"}] },
+      { text:"ల్ల", roman:"lla", type:"aksharam", formula:[{t:"ల్",r:"l"},{t:"ల",r:"la"}] },
+    ],
+    note: null
+  },
+  sowmya: {
+    telugu:"సౌమ్య", roman:"sowmya",
+    pieces:[
+      { text:"సౌ", roman:"sow", type:"guninth", formula:[{t:"స",r:"sa"},{t:"ఔ",r:"ow"}] },
+      { text:"మ్య", roman:"mya", type:"aksharam", formula:[{t:"మ్",r:"m"},{t:"య",r:"ya"}] },
+    ],
+    note: null
+  },
+  kamalam: {
+    telugu:"కమలం", roman:"kamalam",
+    pieces:[
+      { text:"క", roman:"ka", type:"aksharam", formula:[{t:"క",r:"ka"},{t:"అ",r:"a"}] },
+      { text:"మ", roman:"ma", type:"aksharam", formula:[{t:"మ",r:"ma"},{t:"అ",r:"a"}] },
+      { text:"లం", roman:"lam", type:"anuswaram", formula:[{t:"ల",r:"la"},{t:"ం",r:"m (bindu)"}] },
+    ],
+    note: "లం carries an అనుస్వారం (nasal dot) — it nasalizes the vowel sound."
+  },
+  mamidi: {
+    telugu:"మామిడి", roman:"maamidi",
+    pieces:[
+      { text:"మా", roman:"maa", type:"guninth", formula:[{t:"మ",r:"ma"},{t:"ఆ",r:"aa"}] },
+      { text:"మి", roman:"mi", type:"guninth", formula:[{t:"మ",r:"ma"},{t:"ి",r:"i"}] },
+      { text:"డి", roman:"di", type:"guninth", formula:[{t:"డ",r:"da"},{t:"ి",r:"i"}] },
+    ],
+    note: null
+  },
+  enugu: {
+    telugu:"ఏనుగు", roman:"aenugu",
+    pieces:[
+      { text:"ఏ", roman:"ae", type:"aksharam", formula:[{t:"ఏ",r:"ae (independent vowel)"}] },
+      { text:"ను", roman:"nu", type:"guninth", formula:[{t:"న",r:"na"},{t:"ు",r:"u"}] },
+      { text:"గు", roman:"gu", type:"guninth", formula:[{t:"గ",r:"ga"},{t:"ు",r:"u"}] },
+    ],
+    note: "ఏ stands alone here — it's an independent vowel letter, not a consonant+matra."
+  }
+};
+
+const TYPE_LABEL = {
+  guninth:{label:"గుణింతం", cls:"guninth"},
+  aksharam:{label:"అక్షరం", cls:"aksharam"},
+  anuswaram:{label:"అనుస్వారం", cls:"anuswaram"}
+};
+
+let exploredCount = 0;
+let exploredSet = new Set();
+
+function speak(text){
+  if(!('speechSynthesis' in window)) return;
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'te-IN';
+  u.rate = 0.85;
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(u);
+}
+
+function renderData(w, opts){
+  opts = opts || {};
+  const showRoman = document.getElementById('romToggle').checked;
+
+  if(!opts.skipRomanInput){
+    document.getElementById('romanInput').value = w.roman
+      ? w.roman.charAt(0).toUpperCase()+w.roman.slice(1) : '';
+  }
+  if(!opts.skipTeluguDisplay){
+    document.getElementById('teluguDisplay').textContent = w.telugu;
+  }
+  document.getElementById('wholeWord').textContent = w.telugu;
+  document.getElementById('wholeRoman').textContent = w.roman;
+  document.getElementById('wholeRoman').style.display = showRoman ? 'block' : 'none';
+
+  // Step 2: split pieces
+  const splitEl = document.getElementById('splitWord');
+  splitEl.innerHTML = '';
+  w.pieces.forEach((p, i) => {
+    const span = document.createElement('span');
+    span.className = 'piece';
+    span.dataset.idx = i;
+    span.textContent = p.text + (i < w.pieces.length-1 ? ' +' : '');
+    span.onclick = () => { speak(p.text); highlightRow(i); };
+    splitEl.appendChild(span);
+  });
+
+  // Step 3: rows
+  const rowsEl = document.getElementById('rowsContainer');
+  rowsEl.innerHTML = '';
+  w.pieces.forEach((p, i) => {
+    const row = document.createElement('div');
+    row.className = 'row';
+    row.dataset.idx = i;
+    const info = TYPE_LABEL[p.type];
+    const formulaStr = p.formula.map(f => f.t).join(' + ');
+    const romStr = p.formula.map(f => f.r).join(' + ');
+    row.innerHTML = `
+      <div class="row-formula">${formulaStr} = ${p.text}
+        ${showRoman ? `<span class="rom">(${romStr} → ${p.roman})</span>` : ''}
+      </div>
+      <div style="display:flex; align-items:center;">
+        <span class="badge ${info.cls}">${info.label}</span>
+        <button class="play-btn" title="Play sound">🔊</button>
+      </div>
+    `;
+    row.querySelector('.play-btn').onclick = (e) => { e.stopPropagation(); speak(p.text); };
+    row.onclick = () => highlightRow(i);
+    row.onmouseenter = () => highlightPiece(i);
+    row.onmouseleave = () => highlightPiece(-1);
+    rowsEl.appendChild(row);
+  });
+
+  document.getElementById('footerNote').innerHTML = w.note
+    ? `<b>${w.telugu}:</b> ${w.note}`
+    : '';
+
+  // celebration tracking (keyed by Telugu text so both curated and
+  // freshly-typed words count toward the same streak)
+  if(w.telugu && !exploredSet.has(w.telugu)){
+    exploredSet.add(w.telugu);
+    exploredCount++;
+    if(exploredCount === 3 || exploredCount === 5){
+      showMascot(exploredCount === 3
+        ? "Vageesh: 3 words explored — keep going!"
+        : "Vageesh: 5 words! You're a word-building star! 🌟");
+    }
+  }
+}
+
+function highlightRow(idx){
+  document.querySelectorAll('.row').forEach(r => r.classList.remove('active'));
+  const row = document.querySelector(`.row[data-idx="${idx}"]`);
+  if(row) row.classList.add('active');
+  highlightPiece(idx);
+}
+function highlightPiece(idx){
+  document.querySelectorAll('.split-word .piece').forEach(p => p.classList.remove('active'));
+  if(idx >= 0){
+    const p = document.querySelector(`.split-word .piece[data-idx="${idx}"]`);
+    if(p) p.classList.add('active');
+  }
+}
+
+function showMascot(text){
+  const toast = document.getElementById('mascotToast');
+  document.getElementById('mascotText').textContent = text;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3200);
+}
+
+let currentWordData = null;
+
+function renderKnown(key){
+  currentWordData = WORDS[key];
+  renderData(currentWordData);
+}
+
+document.querySelectorAll('.chip').forEach(chip => {
+  chip.onclick = () => renderKnown(chip.dataset.word);
+});
+document.getElementById('romToggle').onchange = () => {
+  if(currentWordData) renderData(currentWordData);
+};
+
+// ---- Step 1: typing English letters converts live ----
+const romanInputEl = document.getElementById('romanInput');
+romanInputEl.addEventListener('input', () => {
+  const value = romanInputEl.value;
+  const key = value.toLowerCase().trim();
+  if(!value){ return; }
+  if(WORDS[key]){
+    // Single known/curated word — use the hand-verified breakdown.
+    currentWordData = WORDS[key];
+    renderData(currentWordData, { skipRomanInput:true });
+  } else {
+    // Transliterate live (per-word override lookup + rule engine)
+    // and split generically for step 2/3.
+    const telugu = transliterateToTelugu(value);
+    currentWordData = buildWordDataFromTelugu(telugu, value);
+    renderData(currentWordData, { skipRomanInput:true });
+  }
+});
+
+// ---- Telugu box is directly editable too ----
+const teluguDisplayEl = document.getElementById('teluguDisplay');
+teluguDisplayEl.setAttribute('contenteditable', 'true');
+teluguDisplayEl.addEventListener('input', () => {
+  const text = teluguDisplayEl.textContent;
+  if(!text.trim()) return;
+  currentWordData = buildWordDataFromTelugu(text, '');
+  renderData(currentWordData, { skipTeluguDisplay:true, skipRomanInput:true });
+});
+
+renderKnown('shaarada');
+</script>
+
+</body>
+</html>

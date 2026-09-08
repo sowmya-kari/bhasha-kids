@@ -142,14 +142,16 @@ export default function AksharaBuilder(){
       <div className="formation-board"><div><small>CONSONANT</small><strong>{dead}</strong></div><i>＋</i><div><small>VOWEL</small><strong>{vowel.letter}</strong></div><i>＝</i><div className="formed"><small>NEW SOUND · {vowel.sound.toUpperCase()}</small><strong key={`${ci}-${vi}`}>{result}</strong><VoiceButton key={`${ci}-${vi}-audio`} src={syllableAudio} playLabel={`🔊 Hear ${result}`} /></div></div>
       <div className="builder-challenge"><div><small>MINI CHALLENGE</small><b>{challenge?<>Which vowel builds <strong>{targetResult}</strong>?</>:<>You built <strong>{result}</strong>!</>}</b><span aria-live="polite">{feedback||"Tap a vowel above to explore every combination."}</span></div><button onClick={()=>{setChallenge(true);setFeedback("")}}>{challenge?"Challenge active":"Play a challenge →"}</button><em>⭐ {score}</em></div>
     </div>
-    <div className="word-lab">
-      <div className="word-lab-title"><p className="kicker"><b>✦</b> {wl.title}</p><h3>See how a word is formed.</h3><p>{wl.intro}</p></div>
-      <div className="word-lab-grid">
-        <div className="word-panel word-entry"><small>1 · ENTER A WORD</small><label htmlFor="roman-word">Type with English letters (example: {wl.examples[0][0]} or {wl.examples[1][0]})</label><input id="roman-word" className="roman-input" value={romanWord} onChange={event=>{setRomanWord(event.target.value);setWord(transliterateWord(event.target.value,language))}} lang="en" maxLength={24}/><label htmlFor="script-word">{language} word — you can edit this too</label><input id="script-word" value={word} onChange={event=>{setWord(event.target.value);setRomanWord("")}} lang={language==="Telugu"?"te":"hi"} maxLength={18}/><div className="example-words">{wl.examples.map(([roman,example])=><button key={example} onClick={()=>{setRomanWord(roman);setWord(example)}}>{example}</button>)}</div></div>
-        <div className="word-panel word-split"><small>2 · SPLIT THE WORD</small><strong>{wordParts.map(part=>part.formed).join(" + ")}</strong><span>＝</span><b>{word||wl.defaultWord}</b></div>
-        <div className="word-panel word-formation"><small>3 · HOW IT IS FORMED</small><div>{wordParts.map((part,index)=><article key={`${part.formed}-${index}`}><b>{part.formula}</b><span className={part.kind}>{wl.kindLabels[part.kind]}</span></article>)}</div></div>
-      </div>
-      <p className="word-note"><b>{wl.noteWord}:</b> {wl.noteRest}</p>
-    </div>
+    {language==="Telugu"
+      ? <div className="word-lab"><iframe src="/telugu-word-builder.html" title="Telugu Word Builder" loading="lazy" style={{width:"100%",height:"860px",border:0,borderRadius:"18px",background:"#211f3d"}}/></div>
+      : <div className="word-lab">
+          <div className="word-lab-title"><p className="kicker"><b>✦</b> {wl.title}</p><h3>See how a word is formed.</h3><p>{wl.intro}</p></div>
+          <div className="word-lab-grid">
+            <div className="word-panel word-entry"><small>1 · ENTER A WORD</small><label htmlFor="roman-word">Type with English letters (example: {wl.examples[0][0]} or {wl.examples[1][0]})</label><input id="roman-word" className="roman-input" value={romanWord} onChange={event=>{setRomanWord(event.target.value);setWord(transliterateWord(event.target.value,language))}} lang="en" maxLength={24}/><label htmlFor="script-word">{language} word — you can edit this too</label><input id="script-word" value={word} onChange={event=>{setWord(event.target.value);setRomanWord("")}} lang={language==="Telugu"?"te":"hi"} maxLength={18}/><div className="example-words">{wl.examples.map(([roman,example])=><button key={example} onClick={()=>{setRomanWord(roman);setWord(example)}}>{example}</button>)}</div></div>
+            <div className="word-panel word-split"><small>2 · SPLIT THE WORD</small><strong>{wordParts.map(part=>part.formed).join(" + ")}</strong><span>＝</span><b>{word||wl.defaultWord}</b></div>
+            <div className="word-panel word-formation"><small>3 · HOW IT IS FORMED</small><div>{wordParts.map((part,index)=><article key={`${part.formed}-${index}`}><b>{part.formula}</b><span className={part.kind}>{wl.kindLabels[part.kind]}</span></article>)}</div></div>
+          </div>
+          <p className="word-note"><b>{wl.noteWord}:</b> {wl.noteRest}</p>
+        </div>}
   </section>;
 }
