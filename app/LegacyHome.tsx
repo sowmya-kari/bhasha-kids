@@ -363,7 +363,7 @@ function SectionOverlay({ title, onClose, children }: { title: string; onClose: 
       <div className="learn-shell">
         <header className="learn-header">
           <button onClick={onClose}>← Back to home</button>
-          <a href="#top" className="logo" onClick={(event) => { event.preventDefault(); onClose(); }}><span>🦚</span>Basha Kids</a>
+          <a href="#top" className="logo" onClick={(event) => { event.preventDefault(); onClose(); }}><span>🦚</span>Bhasha Kids</a>
           <button className="learn-close" onClick={onClose} aria-label={`Close ${title}`}>✕</button>
         </header>
         {children}
@@ -439,7 +439,7 @@ export default function Home() {
   return (
     <>{showSplash && <SplashScreen onFinish={() => setShowSplash(false)} />}<main>
       <header className="nav-wrap">
-        <a href="#top" className="logo"><span>🦚</span>Basha Kids</a>
+        <a href="#top" className="logo"><span>🦚</span>Bhasha Kids</a>
         <nav aria-label="Main navigation"><a href="#lessons" onClick={(event) => { event.preventDefault(); openLearn(); }}>Letters</a><a href="#stories" onClick={(event) => { event.preventDefault(); openSection("stories"); }}>Stories</a><a href="#guninthalu" onClick={(event) => { event.preventDefault(); openSection("guninthalu"); }}>Guninthalu</a><a href="#more-games" onClick={(event) => { event.preventDefault(); openSection("games"); }}>Games</a><a href="#math-corner" onClick={(event) => { event.preventDefault(); openSection("math"); }}>Math Corner</a></nav>
         <a href="#lessons" className="nav-button" onClick={(event) => { event.preventDefault(); openLearn(); }}>Start learning <b>→</b></a>
       </header>
@@ -449,7 +449,7 @@ export default function Home() {
         <div className="hero-copy">
           <p className="kicker"><b>✦</b> Learn Telugu + Hindi with Vageesh &amp; Vani</p>
           <h1>Letters, stories &amp; games<br />for little <em>explorers.</em></h1>
-          <p className="lead">A playful bilingual learning home for children ages 4–8—built around the lessons, stories, Guninthalu, and games already inside Basha Kids.</p>
+          <p className="lead">A playful bilingual learning home for children ages 4–8—built around the lessons, stories, Guninthalu, and games already inside Bhasha Kids.</p>
           <div className="hero-actions"><a href="#lessons" className="primary" onClick={(event) => { event.preventDefault(); openLearn(); }}>Open Letters <b>→</b></a><a href="#stories" className="secondary" onClick={(event) => { event.preventDefault(); openSection("stories"); }}><i>📖</i> Open Story Garden</a></div>
           <div className="checks"><span>✓ Telugu + Hindi</span><span>✓ Child-friendly</span><span>✓ Tablet-ready</span></div>
           <div className="hero-roadmap" aria-label="Choose a learning path">
@@ -461,7 +461,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="hero-art" aria-label="Basha Kids app preview">
+        <div className="hero-art" aria-label="Bhasha Kids app preview">
           <div className="blob" />
           <div className="phone">
             <div className="phone-status"><span>9:41</span><span>● ●</span></div>
@@ -479,7 +479,7 @@ export default function Home() {
       </section>}
 
       <section className="features" id="features">
-        <div className="section-title"><p className="kicker"><b>✦</b> Your Basha Kids learning home</p><h2>Choose where to <em>explore.</em></h2><p>Letters, Story Garden, Guninthalu, Games, and Math Corner each open their own space—tap a card to dive in.</p></div>
+        <div className="section-title"><p className="kicker"><b>✦</b> Your Bhasha Kids learning home</p><h2>Choose where to <em>explore.</em></h2><p>Letters, Story Garden, Guninthalu, Games, and Math Corner each open their own space—tap a card to dive in.</p></div>
         <div className="feature-grid home-destination-grid">
           <button className="feature feature-button violet" onClick={openLearn}><small>01</small><span>✨</span><h3>Letters</h3><p>Open Telugu or Hindi vowels and consonants, hear the word, and trace the letter.</p><b>Open Letters →</b></button>
           <button className="feature feature-button coral" onClick={() => openSection("stories")}><small>02</small><span>📖</span><h3>Story Garden</h3><p>Explore the bilingual story collection and its kindness, honesty, friendship, courage, and other themes.</p><b>Open Story Garden →</b></button>
@@ -528,7 +528,7 @@ export default function Home() {
 
       {activeSection === "math" && <SectionOverlay title="Math Corner" onClose={closeSection}><MathCorner /></SectionOverlay>}
 
-      <footer><a href="#top" className="logo"><span>🦚</span>Basha Kids</a><p>Little words. Big worlds.</p><a href="#top">Back to top ↑</a></footer>
+      <footer><a href="#top" className="logo"><span>🦚</span>Bhasha Kids</a><p>Little words. Big worlds.</p><a href="#top">Back to top ↑</a></footer>
     </main></>
   );
 }
