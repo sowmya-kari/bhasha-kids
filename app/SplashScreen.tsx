@@ -34,13 +34,13 @@ export default function SplashScreen({ onFinish }: { onFinish: () => void }) {
   }, [onFinish]);
 
   return (
-    <div className="splash-stage" role="presentation" aria-label="Basha Kids intro" onClick={onFinish}>
+    <div className="splash-stage" role="presentation" aria-label="Bhasha Kids intro" onClick={onFinish}>
       <img className="splash-frame splash-running splash-backdrop" src="/assets/splash/running.webp" alt="" aria-hidden="true" />
       <img className="splash-frame splash-highfive splash-backdrop" src="/assets/splash/highfive.webp" alt="" aria-hidden="true" />
       <img className="splash-frame splash-logo splash-backdrop" src="/assets/splash/logo.webp" alt="" aria-hidden="true" />
       <img className="splash-frame splash-running splash-sharp" src="/assets/splash/running.webp" alt="Vageesh and Vani running toward each other" />
       <img className="splash-frame splash-highfive splash-sharp" src="/assets/splash/highfive.webp" alt="Vageesh and Vani sharing a high five" />
-      <img ref={logoRef} className="splash-frame splash-logo splash-sharp" src="/assets/splash/logo.webp" alt="Basha Kids" />
+      <img ref={logoRef} className="splash-frame splash-logo splash-sharp" src="/assets/splash/logo.webp" alt="Bhasha Kids" />
       <div className="splash-flash" />
       <div className="splash-sparkle-layer">
         {sparks.map((s, i) => (
