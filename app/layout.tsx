@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Basha Kids | Little words. Big worlds.",
+  title: "Bhasha Kids | Little words. Big worlds.",
   description: "A playful Telugu and Hindi learning experience for children ages 4-8.",
   other: {
     "codex-preview": "development",
