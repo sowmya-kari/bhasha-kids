@@ -12,7 +12,6 @@ export default function OpeningScreen({ onEnter }: { onEnter: (language: Languag
     <section className="opening-screen agreed-welcome" aria-label="Welcome to Bhasha Kids">
       <div className="agreed-welcome-art">
         <img src="/assets/welcome/vageesh-vani-welcome-reference.webp" alt="Vageesh and Vani welcome children to Bhasha Kids" />
-        <div className="agreed-title" aria-hidden="true">Bhasha Kids</div>
 
         <button
           className={`agreed-language agreed-telugu ${language === "Telugu" ? "selected" : ""}`}
