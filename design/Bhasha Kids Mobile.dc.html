@@ -1,0 +1,1669 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@700;900&family=Noto+Sans+Telugu:wght@700&family=Noto+Sans+Devanagari:wght@700&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#efe9df;font-family:Figtree,"Noto Sans Telugu","Noto Sans Devanagari",system-ui,sans-serif;color:#25334f}
+a{color:#5143bb;text-decoration:none}a:hover{color:#6d5ce8}
+.dv-turn{padding:44px 48px 36px;border-bottom:1px solid rgba(0,0,0,.08)}
+.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 22px}
+.dv-tid{font:800 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#25334f;color:#fff;border-radius:4px;text-decoration:none}
+.dv-tname{font:800 13px/1.2 Figtree,sans-serif;color:#25334f}
+.dv-opts{display:flex;flex-wrap:wrap;gap:34px;align-items:flex-start}
+.dv-opt{flex:none;display:flex;flex-direction:column;gap:10px}
+.dv-oid{font:800 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(37,51,79,.1);color:#25334f;border-radius:5px;text-decoration:none}
+.dv-olabel{display:flex;align-items:baseline;gap:8px;font:600 11.5px/1.35 Figtree,sans-serif;color:rgba(37,51,79,.6);max-width:420px}
+.dv-next{margin:24px 0 0;font:600 12px/1.6 Figtree,sans-serif;color:rgba(37,51,79,.55)}
+.bk-scroll::-webkit-scrollbar{width:0;height:0}
+@keyframes bkFloat{50%{transform:translateY(-7px)}}
+@keyframes bkPop{0%{transform:scale(.2);opacity:0}45%{transform:scale(1.15);opacity:1}100%{transform:scale(1);opacity:1}}
+@keyframes bkBurst{0%{transform:translate(-50%,-50%) scale(.2);opacity:.95}100%{transform:translate(-50%,-50%) scale(2.6);opacity:0}}
+@keyframes bkSpark{0%{transform:translate(-50%,-50%) scale(.3);opacity:0}20%{opacity:1}100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(1);opacity:0}}
+@keyframes bkWave{50%{transform:scaleY(.4)}}
+@keyframes bkSlide{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes bkSplashRun{0%,24%{opacity:1}36%,100%{opacity:0}}
+@keyframes bkSplashHi{0%,30%{opacity:0}40%,62%{opacity:1}74%,100%{opacity:0}}
+@keyframes bkSplashLogo{0%,68%{opacity:0;transform:scale(.94)}78%{opacity:1;transform:scale(1.04)}86%,100%{opacity:1;transform:scale(1)}}
+@keyframes bkSplashFlash{0%,35%{opacity:0}38.5%{opacity:.85}42%,70%{opacity:0}73%{opacity:.85}77%,100%{opacity:0}}
+@keyframes bkSplashSkip{0%,60%{opacity:0}80%,100%{opacity:.9}}
+@keyframes bkLetterFall{to{top:calc(100% - 46px)}}
+</style></helmet>
+
+<section class="dv-turn" id="t1">
+<div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">Bhasha Kids — phone / tablet app, ported from the repo</span></div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="1a">
+<div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a>Working prototype — all nine screens, real letter sets, tracing, swipe reader, drag-built syllables. Tap through it.</div>
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:874px;display:flex;flex-direction:column;background:#fffaf1;font-family:Figtree,'Noto Sans Telugu','Noto Sans Devanagari',sans-serif;color:#25334f;overflow:hidden">
+
+<sc-if value="{{ isSplash }}" hint-placeholder-val="{{ true }}">
+<div onClick="{{ skipSplash }}" style="position:relative;flex:1;overflow:hidden;background:#FCE9B8;cursor:pointer">
+  <img src="../public/assets/splash/running.webp" alt="Vageesh and Vani running toward each other" width="402" height="874" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 20px 40px rgba(0,0,0,.25));animation:bkSplashRun 4.6s ease-in-out forwards">
+  <img src="../public/assets/splash/highfive.webp" alt="Vageesh and Vani sharing a high five" width="402" height="874" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 20px 40px rgba(0,0,0,.25));animation:bkSplashHi 4.6s ease-in-out forwards">
+  <img src="../public/assets/splash/logo.webp" alt="Bhasha Kids" width="402" height="874" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;transform-origin:center;filter:drop-shadow(0 20px 40px rgba(0,0,0,.25));animation:bkSplashLogo 4.6s ease-in-out forwards">
+  <div style="position:absolute;inset:0;background:#fff;pointer-events:none;animation:bkSplashFlash 4.6s ease-in-out forwards"></div>
+  <span style="position:absolute;left:50%;bottom:44px;transform:translateX(-50%);padding:8px 16px;border-radius:999px;color:#7a6a35;background:#ffffffb0;font-size:11px;font-weight:800;letter-spacing:.04em;animation:bkSplashSkip 4.6s ease-in-out forwards">Tap to skip</span>
+</div>
+</sc-if>
+
+<sc-if value="{{ isIntro }}" hint-placeholder-val="{{ false }}">
+<div style="position:relative;flex:1;overflow:hidden;background:#FCE9B8">
+  <video ref="{{ introRef }}" src="../public/assets/splash/wave-intro.mp4" playsInline="{{ true }}" onEnded="{{ endIntro }}" onError="{{ endIntro }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block"></video>
+  <sc-if value="{{ introMuted }}" hint-placeholder-val="{{ false }}">
+    <button onClick="{{ unmuteIntro }}" style="position:absolute;left:18px;bottom:44px;padding:12px 18px;border:0;border-radius:999px;background:#5143bb;color:#fff;font:800 13px Figtree,sans-serif;cursor:pointer;box-shadow:0 6px 16px rgba(60,40,20,.22)">🔊 Tap for sound</button>
+  </sc-if>
+  <button onClick="{{ endIntro }}" style="position:absolute;right:18px;bottom:44px;padding:12px 18px;border:0;border-radius:999px;background:rgba(255,255,255,.92);color:#5143bb;font:800 13px Figtree,sans-serif;cursor:pointer;box-shadow:0 6px 16px rgba(60,40,20,.18)">Skip →</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ isWelcome }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;display:flex;flex-direction:column;padding:70px 26px 30px;background:radial-gradient(circle at 12% 18%,#ffddd5 0 4px,transparent 5px) 0 0/34px 34px,linear-gradient(150deg,#fffaf1,#f5f1ff 55%,#ebfaf6)">
+  <div style="display:flex;align-items:center;gap:9px;font-weight:900;font-size:17px;letter-spacing:-.03em"><span style="width:38px;height:38px;display:grid;place-items:center;border-radius:14px;background:#6d5ce8;box-shadow:0 8px 20px #6d5ce838;font-size:21px">🦚</span>Bhasha Kids</div>
+  <p style="margin:26px 0 0;color:#5143bb;font-size:10px;font-weight:900;letter-spacing:.16em;text-transform:uppercase">✦ Little words. Big worlds.</p>
+  <h1 style="margin:10px 0 8px;font-size:40px;line-height:.98;letter-spacing:-.055em;font-weight:900">Namaskaram,<br>little <em style="font-family:Georgia,serif;font-weight:500;color:#6d5ce8">explorer.</em></h1>
+  <p style="margin:0;color:#6d768b;font-size:14px;line-height:1.6;max-width:300px">Pick a language to begin. A grown-up can change it any time.</p>
+  <div style="display:flex;gap:12px;margin:22px 0 0">
+    <button onClick="{{ pickTelugu }}" style="{{ teluguPickStyle }}"><b style="display:block;font-family:'Noto Sans Telugu',sans-serif;font-size:36px;line-height:1">అ</b><small style="display:block;margin-top:6px;font-size:12px;font-weight:800">తెలుగు · Telugu</small></button>
+    <button onClick="{{ pickHindi }}" style="{{ hindiPickStyle }}"><b style="display:block;font-family:'Noto Sans Devanagari',sans-serif;font-size:36px;line-height:1">अ</b><small style="display:block;margin-top:6px;font-size:12px;font-weight:800">हिन्दी · Hindi</small></button>
+  </div>
+  <div style="position:relative;flex:1;display:flex;align-items:flex-end;justify-content:center;margin:0 -26px">
+    <img src="../public/assets/small/vageesh.png" alt="Vageesh" width="118" height="220" loading="lazy" decoding="async" style="width:118px;height:auto;filter:drop-shadow(0 16px 18px rgba(43,37,84,.26));animation:bkFloat 3.5s ease-in-out infinite">
+    <img src="../public/assets/images/vani.png" alt="Vani" width="132" height="210" loading="lazy" decoding="async" style="width:132px;height:auto;margin-left:-6px;filter:drop-shadow(0 16px 18px rgba(43,37,84,.26));animation:bkFloat 3.5s ease-in-out infinite;animation-delay:-1.4s">
+  </div>
+  <button onClick="{{ begin }}" style="min-height:58px;margin-top:8px;border:0;border-radius:999px;color:#fff;background:#6d5ce8;box-shadow:0 14px 28px #5041ba3d;font:900 17px Figtree,sans-serif;cursor:pointer">Let's begin →</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ isApp }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;min-height:0;display:flex;flex-direction:column">
+
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:60px 18px 12px;background:#fffaf1;border-bottom:1px solid #efe7dc">
+    <div style="display:flex;align-items:center;gap:9px;min-width:0">
+      <button onClick="{{ goBack }}" style="{{ backBtnStyle }}">←</button>
+      <div style="min-width:0">
+        <small style="display:block;color:#8d93a2;font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase">{{ headerKicker }}</small>
+        <strong style="display:block;font-size:16px;letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ headerTitle }}</strong>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:7px">
+      <button onClick="{{ toggleLang }}" style="padding:8px 11px;border:1px solid #e7e4ed;border-radius:999px;background:#fff;font:800 11px Figtree,sans-serif;color:#5143bb;cursor:pointer">{{ langShort }}</button>
+      <button onClick="{{ goParent }}" aria-label="Parent area" style="width:38px;height:38px;border:1px solid #e7e4ed;border-radius:999px;background:#fff;font-size:15px;cursor:pointer">🔒</button>
+    </div>
+  </div>
+
+  <div class="bk-scroll" style="flex:1;min-height:0;overflow-y:auto;overflow-x:hidden">
+
+  <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+  <div style="padding:16px 18px 26px;animation:bkSlide .25s ease both">
+    <div style="display:grid;grid-template-columns:46px 1fr auto;align-items:center;gap:12px;padding:14px 16px;border-radius:22px;color:#fff;background:linear-gradient(120deg,#6d5ce8,#8c7bf0);box-shadow:0 12px 22px #6d5ce82e">
+      <b style="width:44px;height:44px;display:grid;place-items:center;border:4px solid #ffffff55;border-top-color:#ffd166;border-radius:50%;font-size:16px">{{ streak }}</b>
+      <div><strong style="display:block;font-size:14px">Day streak!</strong><small style="display:block;margin-top:2px;font-size:10px;opacity:.78">Keep your sparkle going</small></div>
+      <span style="font-size:22px">⭐</span>
+    </div>
+
+    <div style="display:flex;align-items:baseline;justify-content:space-between;margin:22px 2px 10px">
+      <b style="font-size:15px">Today's letters</b>
+      <button onClick="{{ goLetters }}" style="border:0;background:none;color:#6d5ce8;font:800 11px Figtree,sans-serif;cursor:pointer">See all →</button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+      <sc-for list="{{ todayLetters }}" as="t" hint-placeholder-count="3">
+        <button onClick="{{ t.open }}" style="{{ t.style }}"><b style="display:block;font-size:34px;line-height:1;font-family:'Noto Sans Telugu','Noto Sans Devanagari',sans-serif">{{ t.letter }}</b><small style="display:block;margin-top:7px;font-size:10px;color:#7c8497;font-weight:700">{{ t.word }}</small></button>
+      </sc-for>
+    </div>
+
+    <button onClick="{{ goStories }}" style="width:100%;margin-top:14px;padding:14px;display:grid;grid-template-columns:54px 1fr 30px;align-items:center;gap:12px;border:0;border-radius:22px;background:#fff7db;text-align:left;cursor:pointer">
+      <span style="font-size:36px">🦁</span>
+      <div><small style="display:block;color:#9c741f;font-size:8px;font-weight:900;letter-spacing:.13em">STORY OF THE DAY</small><b style="display:block;margin:5px 0;font-size:13px">{{ storyOfDay }}</b><i style="display:block;color:#858b99;font-size:9px;font-style:normal">3 min · Telugu + Hindi</i></div>
+      <span style="width:30px;height:30px;display:grid;place-items:center;border-radius:50%;color:#fff;background:#ff7c69;font-size:12px">→</span>
+    </button>
+
+    <b style="display:block;margin:24px 2px 10px;font-size:15px">Where shall we explore?</b>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px">
+      <sc-for list="{{ destinations }}" as="d" hint-placeholder-count="5">
+        <button onClick="{{ d.open }}" style="{{ d.style }}"><span style="{{ d.iconStyle }}">{{ d.icon }}</span><b style="display:block;margin-top:12px;font-size:14px;letter-spacing:-.02em">{{ d.title }}</b><small style="display:block;margin-top:4px;color:#6d768b;font-size:10.5px;line-height:1.45">{{ d.sub }}</small></button>
+      </sc-for>
+    </div>
+
+    <div style="display:grid;grid-template-columns:96px 1fr;align-items:end;gap:6px;margin-top:20px;padding:12px 14px 0;border:2px solid #fff;border-radius:24px;background:linear-gradient(135deg,#fff,#fff8dc);box-shadow:0 12px 30px rgba(43,37,84,.1)">
+      <img src="../public/assets/small/vageesh.png" alt="Vageesh" width="96" height="179" loading="lazy" decoding="async" style="width:96px;height:auto;margin-bottom:-4px;filter:drop-shadow(0 8px 10px rgba(43,37,84,.24))">
+      <div style="padding-bottom:14px"><small style="display:block;color:#6b6291;font-size:10px;font-weight:800;text-transform:uppercase">Your buddy Vageesh</small><strong style="display:block;margin:3px 0;font-size:16px;color:#28215e">Great job! 🎉</strong><span style="display:block;color:#746d8e;font-size:11px;font-weight:700;font-family:'Noto Sans Telugu','Noto Sans Devanagari',sans-serif">చాలా బాగా చేశావు! · बहुत बढ़िया!</span></div>
+    </div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ isLetters }}" hint-placeholder-val="{{ false }}">
+  <div style="padding:16px 18px 26px;animation:bkSlide .25s ease both">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <button onClick="{{ pickVowels }}" style="{{ vowelsTabStyle }}"><span style="width:34px;height:34px;display:grid;place-items:center;border-radius:12px;background:#fff;font-size:17px">☀️</span><b style="display:block;margin-top:9px;font-size:14px">Vowels</b><small style="display:block;color:#6d768b;font-size:9.5px;font-weight:700">{{ vowelsSub }}</small></button>
+      <button onClick="{{ pickConsonants }}" style="{{ consTabStyle }}"><span style="width:34px;height:34px;display:grid;place-items:center;border-radius:12px;background:#fff;font-size:17px">🌱</span><b style="display:block;margin-top:9px;font-size:14px">Consonants</b><small style="display:block;color:#6d768b;font-size:9.5px;font-weight:700">{{ consSub }}</small></button>
+    </div>
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;margin:20px 0 10px">
+      <div><b style="display:block;font-size:15px">{{ group }}</b><small style="display:block;margin-top:3px;color:#6d768b;font-size:10.5px">{{ rangeNote }}</small></div>
+      <span style="padding:6px 10px;border-radius:999px;color:#5143bb;background:#eeeafd;font-size:10px;font-weight:800">{{ letterCount }} letters</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:9px">
+      <sc-for list="{{ letterTiles }}" as="l" hint-placeholder-count="16">
+        <button onClick="{{ l.open }}" style="{{ l.style }}"><b style="display:block;font-size:27px;line-height:1;font-family:'Noto Sans Telugu','Noto Sans Devanagari',sans-serif">{{ l.letter }}</b><small style="display:block;margin-top:5px;font-size:9px;font-weight:800;opacity:.72">{{ l.roman }}</small><i style="{{ l.dotStyle }}"></i></button>
+      </sc-for>
+    </div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ isLesson }}" hint-placeholder-val="{{ false }}">
+  <div style="padding:18px 18px 26px;animation:bkSlide .25s ease both">
+    <div style="padding:22px 20px 24px;border:7px solid #fff;border-radius:32px;background:#fffdf9;box-shadow:0 22px 50px #3b2a7a1f;text-align:center">
+      <span style="display:inline-flex;padding:7px 12px;border-radius:999px;color:#5143bb;background:#eeeafd;font-size:9px;font-weight:900;letter-spacing:.13em">STEP 1 · LISTEN</span>
+      <sc-if value="{{ hasPoster }}" hint-placeholder-val="{{ false }}">
+      <button onClick="{{ goTrace }}" aria-label="{{ posterAlt }}" style="position:relative;display:block;width:100%;aspect-ratio:9/16;margin:12px 0 0;padding:0;border:0;border-radius:22px;overflow:hidden;cursor:pointer;background:#fff7db;box-shadow:0 14px 30px rgba(78,45,45,.16)">
+        <div style="{{ posterImgStyle }}"></div>
+        <sc-if value="{{ posterOverlay }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;padding:20px 14px;pointer-events:none">
+          <b style="font-size:110px;line-height:.9;font-weight:900;color:#7c46c8;-webkit-text-stroke:6px #fff;paint-order:stroke fill;text-shadow:0 8px 12px rgba(70,30,90,.2);font-family:'Noto Sans Telugu','Noto Sans Devanagari',sans-serif">{{ lessonLetter }}</b>
+        </div>
+        </sc-if>
+        <span style="position:absolute;left:50%;bottom:14px;transform:translateX(-50%);padding:9px 16px;border-radius:999px;background:rgba(255,255,255,.94);color:#5143bb;font:900 12px Figtree,sans-serif;white-space:nowrap;box-shadow:0 6px 16px rgba(60,40,20,.18)">Tap to trace ✎</span>
+      </button>
+      </sc-if>
+      <sc-if value="{{ noPoster }}" hint-placeholder-val="{{ true }}">
+      <b style="display:block;margin:10px 0 2px;color:#6d5ce8;font-size:92px;line-height:1;font-family:'Noto Sans Telugu','Noto Sans Devanagari',sans-serif">{{ lessonLetter }}</b>
+      <div style="width:96px;height:96px;display:grid;place-items:center;margin:8px auto 0;border-radius:30px;background:#fff7db;font-size:52px">{{ lessonIcon }}</div>
+      </sc-if>
+      <h3 style="margin:14px 0 4px;font-size:21px;letter-spacing:-.02em;font-family:'Noto Sans Telugu','Noto Sans Devanagari',Figtree,sans-serif">{{ lessonHeadline }}</h3>
+      <p style="margin:0;color:#6d768b;font-size:12.5px">{{ lessonSub }}</p>
+      <button onClick="{{ playAudio }}" style="{{ audioBtnStyle }}">{{ audioLabel }}</button>
+      <div style="display:flex;align-items:center;justify-content:center;gap:4px;height:22px;margin-top:12px">
+        <sc-for list="{{ waveBars }}" as="w" hint-placeholder-count="7">
+          <i style="{{ w.style }}"></i>
+        </sc-for>
+      </div>
+      <button onClick="{{ goTrace }}" style="width:100%;margin-top:16px;padding:15px;border:0;border-radius:16px;color:#fff;background:#ff7c69;box-shadow:0 10px 20px #ff7c6938;font:900 14px Figtree,sans-serif;cursor:pointer">Continue to trace →</button>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;margin-top:14px;padding:13px 15px;border-radius:18px;background:#f5f1ff">
+      <button onClick="{{ toggleRecord }}" style="{{ recBtnStyle }}">{{ recIcon }}</button>
+      <div style="min-width:0"><b style="display:block;font-size:12px">{{ recTitle }}</b><small style="display:block;margin-top:2px;color:#746a82;font-size:10px;font-weight:700">{{ recSub }}</small></div>
+    </div>
+    <div style="display:flex;gap:9px;margin-top:12px">
+      <button onClick="{{ prevLetter }}" style="flex:1;padding:14px;border:1px solid #ddd5e9;border-radius:16px;background:#fff;color:#5143bb;font:800 12px Figtree,sans-serif;cursor:pointer">← Previous</button>
+      <button onClick="{{ nextLetter }}" style="flex:1;padding:14px;border:1px solid #ddd5e9;border-radius:16px;background:#fff;color:#5143bb;font:800 12px Figtree,sans-serif;cursor:pointer">Next letter →</button>
+    </div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ isTrace }}" hint-placeholder-val="{{ false }}">
+  <div style="padding:18px 18px 26px;background:linear-gradient(145deg,#f0ebff,#fff8ea);min-height:100%;animation:bkSlide .25s ease both">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:16px">
+      <div><small style="color:#5143bb;font-size:10px;font-weight:900;letter-spacing:.15em">STEP 2 · PRACTICE</small><h3 style="margin:6px 0 4px;font-size:30px;letter-spacing:-.04em;font-family:'Noto Sans Telugu','Noto Sans Devanagari',Figtree,sans-serif">Trace {{ lessonLetter }}</h3><p style="margin:0;color:#6d768b;font-size:12px">Follow the dotted shape with your finger.</p></div>
+      <span style="min-width:54px;height:54px;display:grid;place-items:center;padding:0 10px;border-radius:17px;color:#fff;background:#6d5ce8;box-shadow:0 12px 26px #6d5ce838;font:900 14px Figtree,sans-serif">{{ lessonRoman }}</span>
+    </div>
+    <div style="padding:8px;border:3px solid #fff;border-radius:26px;background:#fffdf9;box-shadow:0 20px 45px #4d3d8a1c">
+      <canvas ref="{{ traceRef }}" onPointerDown="{{ traceDown }}" onPointerMove="{{ traceMove }}" onPointerUp="{{ traceUp }}" onPointerCancel="{{ traceUp }}" style="width:100%;display:block;border:2px dashed #e2dcf8;border-radius:18px;touch-action:none;cursor:crosshair"></canvas>
+    </div>
+    <div style="display:flex;gap:9px;margin-top:14px">
+      <button onClick="{{ checkTrace }}" style="flex:1;padding:14px;border:1px solid #6d5ce8;border-radius:15px;color:#fff;background:#6d5ce8;font:800 12.5px Figtree,sans-serif;cursor:pointer">✓ Check my trace</button>
+      <button onClick="{{ clearTrace }}" style="flex:1;padding:14px;border:1px solid #c9c0f3;border-radius:15px;color:#5143bb;background:#fff;font:800 12.5px Figtree,sans-serif;cursor:pointer">↻ Try again</button>
+    </div>
+    <sc-if value="{{ traceResult }}" hint-placeholder-val="{{ false }}">
+      <div style="{{ traceFeedbackStyle }}"><span style="font-size:17px;letter-spacing:2px;white-space:nowrap">{{ traceStars }}</span><span>{{ traceMessage }}</span></div>
+    </sc-if>
+    <p style="margin:14px 2px 0;color:#6d768b;font-size:11px;font-weight:700">Tip: start at the top and move slowly.</p>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ isStories }}" hint-placeholder-val="{{ false }}">
+  <div style="padding:16px 18px 26px;animation:bkSlide .25s ease both">
+    <p style="margin:0 0 14px;color:#6d768b;font-size:12.5px;line-height:1.6">Twenty bilingual stories. Every story reads in Telugu and Hindi, with its moral and a question at the end.</p>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <sc-for list="{{ storyCards }}" as="s" hint-placeholder-count="8">
+        <button onClick="{{ s.open }}" style="width:100%;padding:12px;display:grid;grid-template-columns:52px 1fr auto;align-items:center;gap:12px;border:1px solid #e7e4ed;border-radius:20px;background:#fff;text-align:left;cursor:pointer">
+          <span role="img" aria-label="{{ s.title }}" style="{{ s.coverStyle }}"></span>
+          <div style="min-width:0"><b style="display:block;font-size:14px;font-family:'Noto Sans Telugu','Noto Sans Devanagari',Figtree,sans-serif">{{ s.title }}</b><small style="display:block;margin-top:4px;color:#6d768b;font-size:10.5px;line-height:1.4;font-family:'Noto Sans Telugu','Noto Sans Devanagari',Figtree,sans-serif">{{ s.teaser }}</small><i style="display:inline-block;margin-top:6px;padding:4px 8px;border-radius:999px;background:#f5f1ff;color:#5143bb;font-size:9px;font-weight:800;font-style:normal">{{ s.theme }} · {{ s.minutes }} min</i></div>
+          <span style="color:#c3c7d2;font-size:14px">→</span>
+        </button>
+      </sc-for>
+    </div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ isReader }}" hint-placeholder-val="{{ false }}">
+  <div onPointerDown="{{ swipeDown }}" onPointerUp="{{ swipeUp }}" style="padding:18px 18px 26px;animation:bkSlide .25s ease both;touch-action:pan-y">
+    <div style="padding:20px;border:6px solid #fff;border-radius:30px;background:#fffdf9;box-shadow:0 20px 45px #3b2a7a1c">
+      <div style="display:flex;align-items:center;justify-content:space-between"><small style="color:#9c741f;font-size:9px;font-weight:900;letter-spacing:.13em">{{ readerTheme }}</small><small style="color:#8d93a2;font-size:10px;font-weight:800">Page {{ pageNo }} / {{ pageTotal }}</small></div>
+      <h3 style="margin:8px 0 14px;font-size:22px;letter-spacing:-.02em;font-family:'Noto Sans Telugu','Noto Sans Devanagari',Figtree,sans-serif">{{ readerTitle }}</h3>
+      <div role="img" aria-label="{{ readerTitle }}" style="{{ readerCoverStyle }}"></div>
+      <p style="margin:16px 0 0;font-size:15.5px;line-height:1.85;font-family:'Noto Sans Telugu','Noto Sans Devanagari',Figtree,sans-serif">{{ readerText }}</p>
+      <sc-if value="{{ readerPlaceholder }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-top:12px;padding:12px 14px;border:1px dashed #cbc3ef;border-radius:16px;color:#746a82;font-size:11px;font-weight:700;line-height:1.5">Page text placeholder — this page's Telugu and Hindi copy lives in story-garden.tsx and drops straight in here.</div>
+      </sc-if>
+      <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:16px">
+        <sc-for list="{{ pageDots }}" as="p" hint-placeholder-count="4"><i style="{{ p.style }}"></i></sc-for>
+      </div>
+    </div>
+    <div style="display:flex;gap:9px;margin-top:14px">
+      <button onClick="{{ prevPage }}" style="flex:1;padding:14px;border:1px solid #ddd5e9;border-radius:16px;background:#fff;color:#5143bb;font:800 12px Figtree,sans-serif;cursor:pointer">← Back</button>
+      <button onClick="{{ readAloud }}" style="flex:1.3;padding:14px;border:0;border-radius:16px;color:#fff;background:#6d5ce8;font:800 12px Figtree,sans-serif;cursor:pointer">{{ readAloudLabel }}</button>
+      <button onClick="{{ nextPage }}" style="flex:1;padding:14px;border:1px solid #ddd5e9;border-radius:16px;background:#fff;color:#5143bb;font:800 12px Figtree,sans-serif;cursor:pointer">Next →</button>
+    </div>
+    <p style="margin:12px 2px 0;color:#6d768b;font-size:11px;font-weight:700">Swipe the card left or right to turn pages.</p>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ isGuninthalu }}" hint-placeholder-val="{{ false }}">
+  <div style="padding:16px 18px 26px;animation:bkSlide .25s ease both">
+    <p style="margin:0 0 14px;color:#6d768b;font-size:12.5px;line-height:1.6">Pick a consonant, then drag a vowel onto it. The pieces join into a new sound.</p>
+    <b style="display:block;margin:0 0 8px;font-size:12px">1 · Pick a consonant</b>
+    <div class="bk-scroll" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px">
+      <sc-for list="{{ consonantChips }}" as="c" hint-placeholder-count="12">
+        <button onClick="{{ c.pick }}" style="{{ c.style }}">{{ c.letter }}</button>
+      </sc-for>
+    </div>
+    <b style="display:block;margin:18px 0 8px;font-size:12px">2 · Drag a vowel onto the slot</b>
+    <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:7px">
+      <sc-for list="{{ vowelChips }}" as="v" hint-placeholder-count="16">
+        <button draggable="true" onDragStart="{{ v.drag }}" onClick="{{ v.pick }}" style="{{ v.style }}"><b style="display:block;font-size:17px;line-height:1;font-family:'Noto Sans Telugu','Noto Sans Devanagari',sans-serif">{{ v.letter }}</b><small style="display:block;font-size:11px;font-family:'Noto Sans Telugu','Noto Sans Devanagari',sans-serif">{{ v.sign }}</small></button>
+      </sc-for>
+    </div>
+    <div onDragOver="{{ allowDrop }}" onDrop="{{ dropVowel }}" style="{{ dropZoneStyle }}">
+      <div style="text-align:center"><small style="display:block;color:#8d93a2;font-size:8px;font-weight:900;letter-spacing:.12em">CONSONANT</small><strong style="display:block;margin-top:5px;font-size:32px;font-family:'Noto Sans Telugu','Noto Sans Devanagari',sans-serif">{{ deadConsonant }}</strong></div>
+      <i style="color:#b4b0c4;font-size:20px;font-style:normal">＋</i>
+      <div style="text-align:center"><small style="display:block;color:#8d93a2;font-size:8px;font-weight:900;letter-spacing:.12em">VOWEL</small><strong style="display:block;margin-top:5px;font-size:32px;font-family:'Noto Sans Telugu','Noto Sans Devanagari',sans-serif">{{ vowelLetter }}</strong></div>
+      <i style="color:#b4b0c4;font-size:20px;font-style:normal">＝</i>
+      <div style="text-align:center;padding:10px 12px;border-radius:18px;background:#eeeafd"><small style="display:block;color:#5143bb;font-size:8px;font-weight:900;letter-spacing:.1em">{{ soundLabel }}</small><strong key="{{ builtKey }}" style="display:block;margin-top:5px;color:#6d5ce8;font-size:36px;font-family:'Noto Sans Telugu','Noto Sans Devanagari',sans-serif;animation:bkPop .35s ease both">{{ builtSyllable }}</strong></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;margin-top:14px;padding:14px 16px;border-radius:20px;background:#25334f;color:#fff">
+      <div><small style="display:block;color:#cbc4ff;font-size:9px;font-weight:900;letter-spacing:.13em">MINI CHALLENGE</small><b style="display:block;margin:5px 0;font-size:13px;font-family:'Noto Sans Telugu','Noto Sans Devanagari',Figtree,sans-serif">{{ challengePrompt }}</b><span style="display:block;color:#bdc5d6;font-size:11px;font-weight:700">{{ challengeFeedback }}</span></div>
+      <div style="display:grid;gap:8px;justify-items:end"><em style="color:#ffd166;font-size:13px;font-weight:900;font-style:normal">⭐ {{ gScore }}</em><button onClick="{{ startChallenge }}" style="padding:10px 13px;border:0;border-radius:12px;background:#fff;color:#25334f;font:800 11px Figtree,sans-serif;cursor:pointer">{{ challengeBtn }}</button></div>
+    </div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ isMath }}" hint-placeholder-val="{{ false }}">
+  <div style="padding:16px 18px 26px;animation:bkSlide .25s ease both">
+    <div style="border-radius:24px;overflow:hidden;background:#dff0f8;border:1px solid #efe7dc;box-shadow:0 12px 26px rgba(60,80,50,.14)">
+      <iframe src="../public/pattern-garden.html?portrait=1" title="Vani's Magic Pattern Garden" style="width:100%;height:640px;border:0;display:block"></iframe>
+    </div>
+    <sc-if value="{{ sortClosed }}" hint-placeholder-val="{{ true }}">
+    <div style="margin-top:14px;padding:16px 18px;border-radius:24px;background:linear-gradient(145deg,#f2fbf1,#e6f6e2);border:1px solid #d5efe4">
+      <b style="display:block;font-size:18px;line-height:1.3;font-family:'Noto Sans Telugu','Noto Sans Devanagari',Figtree,sans-serif;color:#1f7a52">🌸 {{ compareTitle }}</b>
+      <small style="display:block;margin-top:4px;color:#5d6b60;font-size:11.5px;line-height:1.5;font-weight:700">{{ compareSubtitle }}</small>
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin-top:12px">
+        <img src="../public/assets/images/vani.png" alt="Vani" style="width:64px;display:block;filter:drop-shadow(0 5px 8px rgba(40,70,40,.18))">
+        <div style="display:flex;align-items:flex-end;gap:8px">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px"><span style="font-size:26px;line-height:1">🍎</span><span style="font-size:15px;line-height:1">🍎</span></div>
+          <div style="display:flex;align-items:flex-end;gap:3px;padding:6px 8px;border-radius:6px 6px 14px 14px;background:linear-gradient(#e6b877,#cf9a52);border:1px solid #b57f3c"><span style="font-size:16px;line-height:1">🐘</span><span style="font-size:11px;line-height:1">🐭</span></div>
+        </div>
+      </div>
+      <button onClick="{{ openGardenSort }}" style="margin-top:14px;width:100%;padding:13px 16px;border:0;border-radius:999px;color:#fff;background:#22b8a6;font:800 13px Figtree,sans-serif;cursor:pointer;box-shadow:0 4px 0 #17897c">PLAY 🌟</button>
+    </div>
+    </sc-if>
+    <sc-if value="{{ sortOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="margin-top:14px;border-radius:24px;overflow:hidden;background:#e9f6e6;border:1px solid #d5efe4;box-shadow:0 12px 26px rgba(60,80,50,.14)">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;background:#fff;border-bottom:1px solid #e3efe3">
+        <b style="font:800 12px Figtree,sans-serif;color:#1f7a52">🌸 Little Garden Sort</b>
+        <button onClick="{{ closeGardenSort }}" style="padding:8px 13px;border:1px solid #e7e4ed;border-radius:999px;background:#fff;color:#5143bb;font:800 11px Figtree,sans-serif;cursor:pointer">Close</button>
+      </div>
+      <iframe src="{{ gardenSortSrc }}" title="Vani's Little Garden Sort" style="width:100%;height:640px;border:0;display:block"></iframe>
+    </div>
+    </sc-if>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ inGame }}" hint-placeholder-val="{{ false }}">
+  <div style="padding:14px 16px 26px;animation:bkSlide .25s ease both">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px">
+      <button onClick="{{ exitGame }}" style="padding:9px 13px;border:1px solid #e7e4ed;border-radius:999px;background:#fff;color:#5143bb;font:800 11px Figtree,sans-serif;cursor:pointer">← Games</button>
+      <b style="flex:1;min-width:0;font-size:13.5px;text-align:center">{{ gameTitle }}</b>
+      <span style="padding:8px 11px;border-radius:999px;background:#fff7db;color:#9c741f;font:900 11px Figtree,sans-serif">⭐ {{ gameScore }}</span>
+    </div>
+
+    <sc-if value="{{ isRain }}" hint-placeholder-val="{{ false }}">
+    <div>
+      <div style="display:flex;justify-content:space-between;gap:8px;margin-bottom:10px">
+        <div style="display:flex;gap:5px">
+          <button onClick="{{ rainTelugu }}" style="{{ rainTeStyle }}">తెలుగు</button>
+          <button onClick="{{ rainHindi }}" style="{{ rainHiStyle }}">हिन्दी</button>
+        </div>
+        <div style="display:flex;gap:5px">
+          <button onClick="{{ rainVowels }}" style="{{ rainVowelStyle }}">Vowels</button>
+          <button onClick="{{ rainConsonants }}" style="{{ rainConsStyle }}">Cons.</button>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px;color:#5d5870;font:800 13px Figtree,sans-serif">
+        Tap this letter
+        <strong style="display:grid;place-items:center;width:42px;height:42px;border-radius:13px;color:#fff;background:#6d5ce8;font-size:24px;font-family:'Noto Sans Telugu','Noto Sans Devanagari',sans-serif">{{ rainTarget }}</strong>
+        <span style="color:#8b8598;font-size:11px">“{{ rainRoman }}”</span>
+      </div>
+      <div style="position:relative;height:300px;overflow:hidden;border:2px solid #fff;border-radius:22px;background:linear-gradient(#dff5ff,#fff 75%)">
+        <sc-for list="{{ rainDrops }}" as="d" hint-placeholder-count="5">
+          <button onClick="{{ d.tap }}" style="{{ d.style }}">{{ d.letter }}</button>
+        </sc-for>
+        <i style="position:absolute;right:0;bottom:0;left:0;height:22px;background:linear-gradient(135deg,#b9e6a5,#78c98e)"></i>
+      </div>
+      <div style="min-height:20px;margin:10px 0 8px;text-align:center;font:800 11px Figtree,sans-serif;color:{{ rainFeedbackColor }}">{{ rainFeedback }}</div>
+      <button onClick="{{ rainNext }}" style="display:block;width:100%;padding:12px;border:1px solid #d8d2e8;border-radius:14px;color:#5143bb;background:#fff;font:800 11.5px Figtree,sans-serif;cursor:pointer">Next letter →</button>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ isMemory }}" hint-placeholder-val="{{ false }}">
+    <div>
+      <div style="display:flex;gap:6px;margin-bottom:10px">
+        <sc-for list="{{ memThemeTabs }}" as="t" hint-placeholder-count="3">
+          <button onClick="{{ t.pick }}" style="{{ t.style }}">{{ t.label }}</button>
+        </sc-for>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:12px">
+        <b style="flex:1;padding:8px;border-radius:12px;text-align:center;color:#625b70;background:#fff;font:800 10.5px Figtree,sans-serif">Moves {{ memMoves }}</b>
+        <b style="flex:1;padding:8px;border-radius:12px;text-align:center;color:#5143bb;background:#eeeafd;font:800 10.5px Figtree,sans-serif">{{ memPairs }} / 10 pairs</b>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+        <sc-for list="{{ memCards }}" as="c" hint-placeholder-count="20">
+          <button onClick="{{ c.flip }}" style="{{ c.style }}">{{ c.face }}</button>
+        </sc-for>
+      </div>
+      <div style="min-height:18px;margin:14px 0 10px;text-align:center;font:800 11px Figtree,sans-serif;color:#6d768b">{{ memStatus }}</div>
+      <button onClick="{{ memMix }}" style="display:block;width:100%;padding:12px;border:1px solid #d8d2e8;border-radius:14px;color:#5143bb;background:#fff;font:800 11.5px Figtree,sans-serif;cursor:pointer">Mix again ↻</button>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ isVocab }}" hint-placeholder-val="{{ false }}">
+    <div>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px">
+        <div style="display:flex;gap:6px">
+          <button onClick="{{ vocabVeg }}" style="{{ vocabVegStyle }}">🥕 కూరగాయలు</button>
+          <button onClick="{{ vocabFruit }}" style="{{ vocabFruitStyle }}">🍎 పండ్లు</button>
+        </div>
+        <small style="color:#8d93a2;font:800 10px Figtree,sans-serif;white-space:nowrap">{{ vocabRoundLabel }}</small>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">
+        <sc-for list="{{ vocabPics }}" as="p" hint-placeholder-count="4">
+          <button onClick="{{ p.pick }}" style="{{ p.style }}">
+            <span>{{ p.emoji }}</span>
+            <b style="font-size:9px;color:#6d768b">{{ p.english }}</b>
+          </button>
+        </sc-for>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:9px">
+        <sc-for list="{{ vocabWords }}" as="w" hint-placeholder-count="4">
+          <button onClick="{{ w.tap }}" style="{{ w.style }}">
+            <b>{{ w.telugu }}</b>
+            <i style="font-size:20px;font-style:normal">{{ w.emoji }}</i>
+          </button>
+        </sc-for>
+      </div>
+      <div style="min-height:18px;margin:14px 0 10px;text-align:center;font:800 11px Figtree,sans-serif;color:{{ vocabMsgColor }}">{{ vocabMsg }}</div>
+      <button onClick="{{ vocabNew }}" style="display:block;width:100%;padding:12px;border:1px solid #d8d2e8;border-radius:14px;color:#5143bb;background:#fff;font:800 11.5px Figtree,sans-serif;cursor:pointer">New round →</button>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ isEco }}" hint-placeholder-val="{{ false }}">
+    <div>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px">
+        <div style="display:flex;gap:6px">
+          <button onClick="{{ ecoSetTe }}" style="{{ ecoTeStyle }}">తెలుగు</button>
+          <button onClick="{{ ecoSetHi }}" style="{{ ecoHiStyle }}">हिन्दी</button>
+        </div>
+        <b style="display:flex;align-items:center;gap:6px;padding:8px 11px;border-radius:999px;color:#166b52;background:#eefaf1;font:800 10.5px 'Noto Sans Telugu','Noto Sans Devanagari',Figtree,sans-serif;white-space:nowrap"><span style="font-size:14px">{{ ecoTree }}</span>{{ ecoScoreLabel }}</b>
+      </div>
+
+      <sc-if value="{{ ecoPlay }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <div style="margin-bottom:10px;color:#8d93a2;font:900 10px 'Noto Sans Telugu','Noto Sans Devanagari',Figtree,sans-serif;letter-spacing:.08em;text-transform:uppercase">{{ ecoProgress }}</div>
+        <div style="{{ ecoCardStyle }}">
+          <span style="font-size:52px">{{ ecoEmoji }}</span>
+          <b style="font:700 18px 'Noto Sans Telugu','Noto Sans Devanagari',Figtree,sans-serif">{{ ecoName }}</b>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:14px">
+          <sc-for list="{{ ecoBinCards }}" as="b" hint-placeholder-count="3">
+            <button onClick="{{ b.pick }}" style="{{ b.style }}">
+              <span style="font-size:26px">{{ b.emoji }}</span>
+              <b>{{ b.label }}</b>
+            </button>
+          </sc-for>
+        </div>
+        <div style="min-height:20px;margin-top:12px;text-align:center;font:800 11.5px 'Noto Sans Telugu','Noto Sans Devanagari',Figtree,sans-serif;color:{{ ecoFbColor }}">{{ ecoFb }}</div>
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ ecoFactPhase }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:24px 18px;border-radius:22px;text-align:center;background:#fff;border:2px solid #d8ecdd">
+        <b style="color:#166b52;font:800 12.5px 'Noto Sans Telugu','Noto Sans Devanagari',Figtree,sans-serif">{{ ecoFactTitle }}</b>
+        <span style="font-size:36px">🌳</span>
+        <p style="margin:0;color:#3e4a44;font:600 13.5px 'Noto Sans Telugu','Noto Sans Devanagari',Figtree,sans-serif;line-height:1.6">{{ ecoFactText }}</p>
+        <button onClick="{{ ecoContinue }}" style="margin-top:4px;padding:11px 20px;border:0;border-radius:999px;background:#159887;color:#fff;font:800 12px 'Noto Sans Telugu','Noto Sans Devanagari',Figtree,sans-serif;cursor:pointer">{{ ecoNextLabel }}</button>
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ ecoEnd }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:24px 18px;border-radius:22px;text-align:center;background:#fff;border:2px solid #d8ecdd">
+        <span style="font-size:46px">{{ ecoEndTree }}</span>
+        <div style="font-size:19px;letter-spacing:.08em">{{ ecoStars }}</div>
+        <b style="font:800 15px 'Noto Sans Telugu','Noto Sans Devanagari',Figtree,sans-serif">{{ ecoEndScore }}</b>
+        <p style="margin:0;color:#3e4a44;font:600 13px 'Noto Sans Telugu','Noto Sans Devanagari',Figtree,sans-serif">{{ ecoEndLine }}</p>
+        <i style="color:#6d768b;font:600 12.5px 'Noto Sans Telugu','Noto Sans Devanagari',Figtree,sans-serif;line-height:1.6">{{ ecoQuote }}</i>
+        <button onClick="{{ ecoRestart }}" style="margin-top:6px;padding:11px 20px;border:0;border-radius:999px;background:#159887;color:#fff;font:800 12px 'Noto Sans Telugu','Noto Sans Devanagari',Figtree,sans-serif;cursor:pointer">{{ ecoAgain }}</button>
+      </div>
+      </sc-if>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ isColoring }}" hint-placeholder-val="{{ false }}">
+    <div>
+      <p style="margin:0 0 12px;color:#6d768b;font-size:12px;line-height:1.5">Pick a picture, choose a color, then tap inside the lines to fill it in.</p>
+      <div class="bk-scroll" style="display:flex;gap:8px;overflow-x:auto;padding:2px 2px 12px">
+        <sc-for list="{{ coloringThumbs }}" as="t" hint-placeholder-count="6">
+          <button onClick="{{ t.pick }}" style="{{ t.style }}">
+            <div style="{{ t.artStyle }}"></div>
+            <span style="font-size:8.5px;font-weight:800;line-height:1.2;text-align:center;color:#6d768b">{{ t.label }}</span>
+          </button>
+        </sc-for>
+      </div>
+      <div style="position:relative;display:grid;place-items:center;min-height:300px;padding:10px;border:2px dashed #ded7ef;border-radius:20px;background:#fff">
+        <div style="position:absolute;z-index:2;top:10px;right:10px;display:flex;gap:8px">
+          <button onClick="{{ colorUndoOne }}" aria-label="Undo" style="width:44px;height:44px;display:grid;place-items:center;border:0;border-radius:50%;color:#5143bb;background:#fff;box-shadow:0 6px 16px #3c315d26;cursor:pointer;font-size:16px">↺</button>
+          <button onClick="{{ colorReset }}" aria-label="Start again" style="width:44px;height:44px;display:grid;place-items:center;border:0;border-radius:50%;color:#5143bb;background:#fff;box-shadow:0 6px 16px #3c315d26;cursor:pointer;font-size:16px">✕</button>
+        </div>
+        <canvas ref="{{ colorRef }}" onClick="{{ colorTap }}" style="display:block;max-width:100%;border-radius:10px;cursor:crosshair;touch-action:manipulation;background:#fff"></canvas>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;justify-items:center;margin-top:14px">
+        <sc-for list="{{ crayonSwatches }}" as="c" hint-placeholder-count="10">
+          <button onClick="{{ c.pick }}" aria-label="{{ c.hex }}" style="{{ c.style }}"></button>
+        </sc-for>
+      </div>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ isFindIt }}" hint-placeholder-val="{{ false }}">
+    <div style="height:560px;border-radius:22px;overflow:hidden;border:1px solid #d7e7f2;background:#bfefff">
+      <iframe src="../public/find-it-for-mithu.html" title="Find It for Mithu" style="width:100%;height:100%;border:0;display:block"></iframe>
+    </div>
+    </sc-if>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ isGames }}" hint-placeholder-val="{{ false }}">
+  <div style="padding:16px 18px 26px;animation:bkSlide .25s ease both">
+    <p style="margin:0 0 14px;color:#6d768b;font-size:12.5px;line-height:1.6">Nine games, grouped the way they are grouped in the app today. Six are playable here — tap one with ▶.</p>
+    <sc-for list="{{ gameGroups }}" as="g" hint-placeholder-count="4">
+      <div style="margin-bottom:18px">
+        <b style="display:block;margin:0 0 9px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#8d93a2">{{ g.category }}</b>
+        <div style="display:flex;flex-direction:column;gap:9px">
+          <sc-for list="{{ g.games }}" as="x" hint-placeholder-count="3">
+            <button onClick="{{ x.play }}" style="width:100%;padding:13px;display:grid;grid-template-columns:48px 1fr auto;align-items:center;gap:12px;border:1px solid #e7e4ed;border-radius:20px;background:#fff;text-align:left;cursor:pointer">
+              <span style="{{ x.iconStyle }}">{{ x.icon }}</span>
+              <div style="min-width:0"><b style="display:block;font-size:13.5px">{{ x.title }}</b><small style="display:block;margin-top:3px;color:#6d768b;font-size:10.5px;line-height:1.45">{{ x.description }}</small></div>
+              <span style="{{ x.arrowStyle }}">{{ x.arrow }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ isRewards }}" hint-placeholder-val="{{ false }}">
+  <div style="padding:16px 18px 26px;animation:bkSlide .25s ease both">
+    <div style="padding:22px;border-radius:28px;background:linear-gradient(135deg,#f6bd4b,#ffd98a);text-align:center;box-shadow:0 16px 30px #64460f2e">
+      <b style="display:block;font-size:46px;line-height:1">⭐</b>
+      <strong style="display:block;margin-top:10px;font-size:30px;letter-spacing:-.03em">{{ totalStars }} stars</strong>
+      <small style="display:block;margin-top:4px;color:#7a5a12;font-size:12px;font-weight:800">{{ streak }}-day streak · {{ tracedCount }} letters traced</small>
+    </div>
+    <b style="display:block;margin:22px 2px 10px;font-size:15px">Sticker shelf</b>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+      <sc-for list="{{ badges }}" as="b" hint-placeholder-count="6">
+        <div style="{{ b.style }}"><span style="font-size:30px">{{ b.icon }}</span><small style="display:block;margin-top:8px;font-size:10px;font-weight:800;line-height:1.3">{{ b.label }}</small></div>
+      </sc-for>
+    </div>
+    <b style="display:block;margin:22px 2px 10px;font-size:15px">This week</b>
+    <div style="display:flex;align-items:flex-end;gap:8px;height:120px;padding:14px;border-radius:22px;background:#fff;border:1px solid #e7e4ed">
+      <sc-for list="{{ weekBars }}" as="w" hint-placeholder-count="7">
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end"><i style="{{ w.style }}"></i><small style="font-size:9px;font-weight:800;color:#8d93a2">{{ w.day }}</small></div>
+      </sc-for>
+    </div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ isParent }}" hint-placeholder-val="{{ false }}">
+  <div style="padding:16px 18px 26px;background:#f7f5fb;min-height:100%;animation:bkSlide .25s ease both">
+    <div style="padding:14px 16px;border-radius:18px;background:#fff;border:1px solid #e7e4ed">
+      <small style="color:#8d93a2;font-size:9px;font-weight:900;letter-spacing:.12em">PARENT AREA</small>
+      <b style="display:block;margin-top:6px;font-size:15px">This week with Bhasha Kids</b>
+      <small style="display:block;margin-top:3px;color:#6d768b;font-size:11.5px">58 minutes · 5 sessions · mostly Telugu letters</small>
+    </div>
+    <b style="display:block;margin:20px 2px 10px;font-size:13px">Progress</b>
+    <div style="display:flex;flex-direction:column;gap:9px">
+      <sc-for list="{{ progressRows }}" as="p" hint-placeholder-count="5">
+        <div style="padding:13px 15px;border-radius:18px;background:#fff;border:1px solid #e7e4ed">
+          <div style="display:flex;align-items:baseline;justify-content:space-between"><b style="font-size:12.5px">{{ p.label }}</b><small style="color:#6d768b;font-size:11px;font-weight:800">{{ p.note }}</small></div>
+          <div style="height:8px;margin-top:9px;border-radius:99px;background:#eee9f5;overflow:hidden"><i style="{{ p.barStyle }}"></i></div>
+        </div>
+      </sc-for>
+    </div>
+    <b style="display:block;margin:20px 2px 10px;font-size:13px">Download for offline</b>
+    <div style="display:flex;flex-direction:column;gap:9px">
+      <sc-for list="{{ downloadRows }}" as="d" hint-placeholder-count="3">
+        <div style="display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;padding:13px 15px;border-radius:18px;background:#fff;border:1px solid #e7e4ed">
+          <div><b style="display:block;font-size:12.5px">{{ d.label }}</b><small style="display:block;margin-top:2px;color:#6d768b;font-size:10.5px;font-weight:700">{{ d.note }}</small></div>
+          <button onClick="{{ d.toggle }}" style="{{ d.btnStyle }}">{{ d.btnLabel }}</button>
+        </div>
+      </sc-for>
+    </div>
+    <b style="display:block;margin:20px 2px 10px;font-size:13px">Settings</b>
+    <div style="display:flex;flex-direction:column;gap:9px">
+      <div style="display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;padding:13px 15px;border-radius:18px;background:#fff;border:1px solid #e7e4ed">
+        <div><b style="display:block;font-size:12.5px">Default language</b><small style="display:block;margin-top:2px;color:#6d768b;font-size:10.5px;font-weight:700">Child can still switch in the header</small></div>
+        <button onClick="{{ toggleLang }}" style="padding:10px 14px;border:1px solid #ddd5e9;border-radius:999px;background:#fff;color:#5143bb;font:800 11.5px Figtree,sans-serif;cursor:pointer">{{ lang }}</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;padding:13px 15px;border-radius:18px;background:#fff;border:1px solid #e7e4ed">
+        <div><b style="display:block;font-size:12.5px">Record your own voice</b><small style="display:block;margin-top:2px;color:#6d768b;font-size:10.5px;font-weight:700">Replaces missing letter audio with yours</small></div>
+        <button onClick="{{ toggleRecord }}" style="{{ recBtnStyle }}">{{ recIcon }}</button>
+      </div>
+    </div>
+    <div style="margin-top:20px;padding:16px;border-radius:20px;background:#fff8ec;border:1px solid #f1dfbf">
+      <small style="color:#b07a2a;font-size:9px;font-weight:900;letter-spacing:.12em">SUPPORT BHASHA KIDS</small>
+      <b style="display:block;margin-top:6px;font-size:15px">Keep Telugu and Hindi free for every child</b>
+      <small style="display:block;margin-top:4px;color:#6d768b;font-size:11.5px;line-height:1.5">Bhasha Kids has no ads. Donations pay for new stories, letters and voice recordings.</small>
+      <sc-if value="{{ donateIdle }}" hint-placeholder-val="{{ true }}">
+        <div style="display:inline-flex;gap:4px;margin-top:12px;padding:4px;border-radius:999px;background:#f5ead6">
+          <button onClick="{{ donateInr }}" style="{{ donateInrStyle }}">₹ INR</button>
+          <button onClick="{{ donateUsd }}" style="{{ donateUsdStyle }}">$ USD</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:10px">
+          <sc-for list="{{ donateAmounts }}" as="a" hint-placeholder-count="4">
+            <button onClick="{{ a.pick }}" style="{{ a.style }}">{{ a.label }}</button>
+          </sc-for>
+        </div>
+        <button onClick="{{ donateGo }}" style="width:100%;min-height:48px;margin-top:12px;border:0;border-radius:999px;background:#e08a2c;color:#fff;font:800 14px Figtree,sans-serif;cursor:pointer;box-shadow:0 4px 0 #b86a17">Donate {{ donateLabel }}</button>
+      </sc-if>
+      <sc-if value="{{ donateDone }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-top:12px;padding:12px 14px;border-radius:14px;background:#eafaf1;color:#1b8c56;font-weight:800;font-size:12.5px">Thank you! Your support helps more children learn their language.</div>
+      </sc-if>
+    </div>
+  </div>
+  </sc-if>
+
+  </div>
+
+  <div style="display:flex;align-items:center;justify-content:space-around;height:78px;padding-bottom:16px;border-top:1px solid #eeeaf0;background:#fffbf4">
+    <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="5">
+      <button onClick="{{ t.open }}" style="{{ t.style }}"><b style="display:block;font-size:19px;line-height:1">{{ t.icon }}</b><small style="display:block;margin-top:4px;font-size:9px;font-weight:800">{{ t.label }}</small></button>
+    </sc-for>
+  </div>
+
+  <sc-if value="{{ celebrate }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;z-index:80;display:grid;place-items:end center;padding:0 16px 96px;background:rgba(37,51,79,.32)">
+      <div style="position:absolute;left:50%;top:44%;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.95),rgba(255,226,122,.55) 45%,rgba(255,226,122,0) 72%);animation:bkBurst .9s ease-out both"></div>
+      <sc-for list="{{ sparks }}" as="s" hint-placeholder-count="12"><i style="{{ s.style }}"></i></sc-for>
+      <div style="position:relative;display:grid;grid-template-columns:92px 1fr;align-items:end;gap:8px;width:100%;padding:12px 16px 0;border:2px solid #fff;border-radius:26px;background:linear-gradient(135deg,#fff,#fff8dc);box-shadow:0 18px 55px rgba(43,37,84,.28);animation:bkPop .4s ease both">
+        <img src="../public/assets/small/vageesh.png" alt="Vageesh" width="92" height="171" loading="lazy" decoding="async" style="width:92px;height:auto;margin-bottom:-4px;filter:drop-shadow(0 10px 10px rgba(43,37,84,.28))">
+        <div style="padding:0 0 14px"><strong style="display:block;font-size:17px;color:#28215e">Beautiful tracing! 🎉</strong><span style="display:block;margin:4px 0 8px;color:#746d8e;font-size:11.5px;font-weight:700">You traced {{ lessonLetter }} so well — keep it up!</span><button onClick="{{ closeCelebrate }}" style="padding:9px 15px;border:0;border-radius:999px;background:#5f49c7;color:#fff;font:800 11.5px Figtree,sans-serif;cursor:pointer">Trace again 🎉</button></div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</sc-if>
+
+</div>
+</x-import>
+</div>
+
+<div class="dv-opt" id="1b">
+<div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a>Home variation — a vertical learning path. One next-step card, everything else on a trail the child climbs.</div>
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:874px;display:flex;flex-direction:column;padding:60px 0 0;background:linear-gradient(180deg,#fffaf1,#f5f1ff 60%,#ebfaf6);font-family:Figtree,'Noto Sans Telugu','Noto Sans Devanagari',sans-serif;color:#25334f;overflow:hidden">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 18px 14px">
+    <div><small style="display:block;color:#8d93a2;font-size:9.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase">Namaskaram</small><strong style="display:block;font-size:17px;letter-spacing:-.03em">Your path today</strong></div>
+    <div style="display:flex;align-items:center;gap:7px"><span style="padding:8px 12px;border-radius:999px;background:#fff;border:1px solid #e7e4ed;font:800 11px Figtree,sans-serif;color:#5143bb">⭐ 18</span><span style="width:38px;height:38px;display:grid;place-items:center;border-radius:999px;background:#fff;border:1px solid #e7e4ed;font-size:15px">🔒</span></div>
+  </div>
+  <div class="bk-scroll" style="flex:1;min-height:0;overflow-y:auto;padding:4px 18px 24px">
+    <div style="padding:18px;border-radius:26px;color:#fff;background:linear-gradient(125deg,#6d5ce8,#8c7bf0);box-shadow:0 16px 30px #6d5ce83a">
+      <small style="font-size:9.5px;font-weight:900;letter-spacing:.14em;opacity:.85">UP NEXT · STEP 4 OF 16</small>
+      <div style="display:grid;grid-template-columns:74px 1fr;align-items:center;gap:14px;margin-top:12px">
+        <b style="height:74px;display:grid;place-items:center;border-radius:24px;background:#ffffff26;font-size:40px;font-family:'Noto Sans Telugu',sans-serif">ఈ</b>
+        <div><strong style="display:block;font-size:19px;font-family:'Noto Sans Telugu',Figtree,sans-serif">ఈ అంటే ఈగ</strong><span style="display:block;margin-top:3px;font-size:12px;opacity:.82">Eega · Fly — listen, then trace</span></div>
+      </div>
+      <button style="width:100%;margin-top:16px;padding:14px;border:0;border-radius:16px;background:#fff;color:#5143bb;font:900 14px Figtree,sans-serif;cursor:pointer">Start this step →</button>
+    </div>
+    <div style="position:relative;margin-top:22px;padding-left:38px">
+      <i style="position:absolute;left:17px;top:6px;bottom:6px;width:4px;border-radius:99px;background:repeating-linear-gradient(180deg,#d9d2f5 0 8px,transparent 8px 16px)"></i>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="position:relative"><i style="position:absolute;left:-30px;top:16px;width:20px;height:20px;border-radius:50%;background:#22b8a6;box-shadow:0 0 0 4px #e8faf6"></i><div style="padding:13px 15px;border-radius:20px;background:#fff;border:1px solid #e7e4ed"><b style="display:block;font-size:13px">Vowels అ ఆ ఇ</b><small style="display:block;margin-top:3px;color:#178f82;font-size:10.5px;font-weight:800">Traced · 3 stars each</small></div></div>
+        <div style="position:relative"><i style="position:absolute;left:-30px;top:16px;width:20px;height:20px;border-radius:50%;background:#6d5ce8;box-shadow:0 0 0 4px #eeeafd"></i><div style="padding:13px 15px;border-radius:20px;background:#fff;border:2px solid #bab0fb"><b style="display:block;font-size:13px">Guninthalu — క + ఆ</b><small style="display:block;margin-top:3px;color:#5143bb;font-size:10.5px;font-weight:800">In progress</small></div></div>
+        <div style="position:relative"><i style="position:absolute;left:-30px;top:16px;width:20px;height:20px;border-radius:50%;background:#fff;border:3px solid #e2dcf8"></i><div style="padding:13px 15px;border-radius:20px;background:#ffffffb8;border:1px solid #e7e4ed"><b style="display:block;font-size:13px">Story · సింహం మరియు ఎలుక</b><small style="display:block;margin-top:3px;color:#8d93a2;font-size:10.5px;font-weight:800">Kindness · 3 min</small></div></div>
+        <div style="position:relative"><i style="position:absolute;left:-30px;top:16px;width:20px;height:20px;border-radius:50%;background:#fff;border:3px solid #e2dcf8"></i><div style="padding:13px 15px;border-radius:20px;background:#ffffffb8;border:1px solid #e7e4ed"><b style="display:block;font-size:13px">Game · Letter Rain</b><small style="display:block;margin-top:3px;color:#8d93a2;font-size:10.5px;font-weight:800">Unlocks after the story</small></div></div>
+        <div style="position:relative"><i style="position:absolute;left:-30px;top:16px;width:20px;height:20px;border-radius:50%;background:#fff;border:3px solid #e2dcf8"></i><div style="padding:13px 15px;border-radius:20px;background:#ffffffb8;border:1px solid #e7e4ed"><b style="display:block;font-size:13px">Math Corner · counting fruit</b><small style="display:block;margin-top:3px;color:#8d93a2;font-size:10.5px;font-weight:800">Add up to 10</small></div></div>
+      </div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;justify-content:space-around;height:78px;padding-bottom:16px;border-top:1px solid #eeeaf0;background:#fffbf4">
+    <span style="text-align:center;color:#6d5ce8"><b style="display:block;font-size:19px">⌂</b><small style="display:block;margin-top:4px;font-size:9px;font-weight:800">Home</small></span>
+    <span style="text-align:center;color:#8c92a1"><b style="display:block;font-size:19px">అ</b><small style="display:block;margin-top:4px;font-size:9px;font-weight:800">Letters</small></span>
+    <span style="text-align:center;color:#8c92a1"><b style="display:block;font-size:19px">📖</b><small style="display:block;margin-top:4px;font-size:9px;font-weight:800">Stories</small></span>
+    <span style="text-align:center;color:#8c92a1"><b style="display:block;font-size:19px">🎮</b><small style="display:block;margin-top:4px;font-size:9px;font-weight:800">Play</small></span>
+    <span style="text-align:center;color:#8c92a1"><b style="display:block;font-size:19px">★</b><small style="display:block;margin-top:4px;font-size:9px;font-weight:800">Rewards</small></span>
+  </div>
+</div>
+</x-import>
+</div>
+
+<div class="dv-opt" id="1c">
+<div class="dv-olabel"><a class="dv-oid" href="#1c">1c</a>Home variation on Android — the buddies lead. Vageesh and Vani hand out the two things to do now; everything else is a quiet strip.</div>
+<x-import component-from-global-scope="AndroidDevice" from="./android-frame.jsx" hint-size="412px,892px">
+<div style="min-height:100%;display:flex;flex-direction:column;background:#fffaf1;font-family:Figtree,'Noto Sans Telugu','Noto Sans Devanagari',sans-serif;color:#25334f">
+  <div style="padding:14px 18px 18px;background:linear-gradient(160deg,#fff7db,#fffaf1)">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:9px;font-weight:900;font-size:16px;letter-spacing:-.03em"><span style="width:36px;height:36px;display:grid;place-items:center;border-radius:14px;background:#6d5ce8;font-size:19px">🦚</span>Bhasha Kids</div>
+      <div style="display:flex;gap:7px"><span style="padding:8px 12px;border-radius:999px;background:#fff;border:1px solid #e7e4ed;font:800 11px Figtree,sans-serif;color:#5143bb">తెలుగు</span><span style="width:36px;height:36px;display:grid;place-items:center;border-radius:999px;background:#fff;border:1px solid #e7e4ed;font-size:14px">🔒</span></div>
+    </div>
+    <div style="display:grid;grid-template-columns:104px 1fr;align-items:end;gap:10px;margin-top:14px">
+      <img src="../public/assets/images/vani.png" alt="Vani" width="104" height="166" loading="lazy" decoding="async" style="width:104px;height:auto;margin-bottom:-18px;filter:drop-shadow(0 12px 14px rgba(43,37,84,.26));animation:bkFloat 3.6s ease-in-out infinite">
+      <div style="padding:14px 16px;border:2px solid #fff;border-radius:22px;background:#fff;box-shadow:0 12px 26px rgba(43,37,84,.12)">
+        <small style="display:block;color:#e64f7f;font-size:9.5px;font-weight:900;letter-spacing:.12em">VANI SAYS</small>
+        <b style="display:block;margin-top:5px;font-size:14px;line-height:1.4">Shall we read సింహం మరియు ఎలుక together?</b>
+        <button style="margin-top:11px;padding:11px 15px;border:0;border-radius:999px;color:#fff;background:#e64f7f;font:800 12px Figtree,sans-serif;cursor:pointer">Read with me →</button>
+      </div>
+    </div>
+  </div>
+  <div style="flex:1;padding:22px 18px 26px">
+    <div style="display:grid;grid-template-columns:1fr 104px;align-items:end;gap:10px">
+      <div style="padding:14px 16px;border:2px solid #fff;border-radius:22px;background:#fff;box-shadow:0 12px 26px rgba(43,37,84,.12)">
+        <small style="display:block;color:#168f91;font-size:9.5px;font-weight:900;letter-spacing:.12em">VAGEESH SAYS</small>
+        <b style="display:block;margin-top:5px;font-size:14px;line-height:1.4">Trace ఈ with me — three stars if you stay on the dots.</b>
+        <button style="margin-top:11px;padding:11px 15px;border:0;border-radius:999px;color:#fff;background:#168f91;font:800 12px Figtree,sans-serif;cursor:pointer">Trace ఈ →</button>
+      </div>
+      <img src="../public/assets/small/vageesh.png" alt="Vageesh" width="104" height="194" loading="lazy" decoding="async" style="width:104px;height:auto;margin-bottom:-4px;filter:drop-shadow(0 12px 14px rgba(43,37,84,.26));animation:bkFloat 3.6s ease-in-out infinite;animation-delay:-1.5s">
+    </div>
+    <b style="display:block;margin:24px 2px 10px;font-size:14px">Everything else</b>
+    <div style="display:flex;flex-direction:column;gap:9px">
+      <div style="display:grid;grid-template-columns:44px 1fr auto;align-items:center;gap:12px;padding:12px 14px;border-radius:18px;background:#fff;border:1px solid #e7e4ed"><span style="width:44px;height:44px;display:grid;place-items:center;border-radius:15px;background:#eeeafd;color:#6d5ce8;font-size:22px;font-family:'Noto Sans Telugu',sans-serif">అ</span><div><b style="display:block;font-size:13px">Letters</b><small style="display:block;color:#6d768b;font-size:10.5px;font-weight:700">16 vowels · 36 consonants</small></div><span style="color:#c3c7d2">→</span></div>
+      <div style="display:grid;grid-template-columns:44px 1fr auto;align-items:center;gap:12px;padding:12px 14px;border-radius:18px;background:#fff;border:1px solid #e7e4ed"><span style="width:44px;height:44px;display:grid;place-items:center;border-radius:15px;background:#e8faf6;font-size:20px;font-family:'Noto Sans Telugu',sans-serif">గు</span><div><b style="display:block;font-size:13px">Guninthalu</b><small style="display:block;color:#6d768b;font-size:10.5px;font-weight:700">Build sounds and words</small></div><span style="color:#c3c7d2">→</span></div>
+      <div style="display:grid;grid-template-columns:44px 1fr auto;align-items:center;gap:12px;padding:12px 14px;border-radius:18px;background:#fff;border:1px solid #e7e4ed"><span style="width:44px;height:44px;display:grid;place-items:center;border-radius:15px;background:#fff7db;font-size:20px">🎮</span><div><b style="display:block;font-size:13px">Games</b><small style="display:block;color:#6d768b;font-size:10.5px;font-weight:700">Nine practice games</small></div><span style="color:#c3c7d2">→</span></div>
+      <div style="display:grid;grid-template-columns:44px 1fr auto;align-items:center;gap:12px;padding:12px 14px;border-radius:18px;background:#fff;border:1px solid #e7e4ed"><span style="width:44px;height:44px;display:grid;place-items:center;border-radius:15px;background:#fff0ec;font-size:20px">➕</span><div><b style="display:block;font-size:13px">Math Corner</b><small style="display:block;color:#6d768b;font-size:10.5px;font-weight:700">Add, take away, compare</small></div><span style="color:#c3c7d2">→</span></div>
+    </div>
+  </div>
+</div>
+</x-import>
+</div>
+
+</div>
+<p class="dv-next">Try next: "make <a class="dv-oid" href="#1a">1a</a>'s home look like <a class="dv-oid" href="#1b">1b</a>" · "add the tablet (iPad) layout" · "design the Letter Rain and Bubble Pop game screens"</p>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1400,&quot;height&quot;:1000}}">
+class Component extends DCLogic {
+  state = {
+    screen: "splash", lang: "Telugu", group: "Vowels", sel: 0,
+    story: 0, page: 0, ci: 0, vi: 1, gScore: 0, challenge: false, gFeedback: "",
+    mathOp: "+", mathPick: null, audio: "idle", rec: "idle",
+    traceResult: null, celebrate: false, traced: {}, stars: 0,
+    downloads: { letters: "done", stories: "idle", games: "idle" },
+    gameId: null,
+    rainLang: "Telugu", rainGroup: "Vowels", rainRoundNo: 0, rainScore: 0, rainFeedback: "", rainOk: null,
+    memTheme: "fruits", memSeed: 1, memOpen: [], memMatched: [], memMoves: 0, memLock: false,
+    vocabCat: "Vegetables", vocabRound: 0, vocabSolved: [], vocabHeld: "", vocabScore: 0, vocabMsg: "", vocabWrong: "",
+    ecoLang: "Telugu", ecoSeed: 1, ecoIdx: 0, ecoScore: 0, ecoPhase: "play", ecoFb: "", ecoFbOk: true, ecoFact: 0,
+  };
+
+  data = {
+    letters: {
+      Telugu: {
+        Vowels: [["అ","A"],["ఆ","Aa"],["ఇ","I"],["ఈ","Ee"],["ఉ","U"],["ఊ","Oo"],["ఋ","Ru"],["ౠ","Roo"],["ఎ","E"],["ఏ","Ae"],["ఐ","Ai"],["ఒ","O"],["ఓ","Oa"],["ఔ","Au"],["అం","Am"],["అః","Aha"]],
+        Consonants: [["క","Ka"],["ఖ","Kha"],["గ","Ga"],["ఘ","Gha"],["ఙ","Nga"],["చ","Cha"],["ఛ","Chha"],["జ","Ja"],["ఝ","Jha"],["ఞ","Nya"],["ట","Ta"],["ఠ","Tha"],["డ","Da"],["ఢ","Dha"],["ణ","Na"],["త","Ta"],["థ","Tha"],["ద","Da"],["ధ","Dha"],["న","Na"],["ప","Pa"],["ఫ","Pha"],["బ","Ba"],["భ","Bha"],["మ","Ma"],["య","Ya"],["ర","Ra"],["ల","La"],["వ","Va"],["శ","Sha"],["ష","Ssa"],["స","Sa"],["హ","Ha"],["ళ","Lla"],["క్ష","Ksha"],["ఱ","Bandi Ra"]],
+      },
+      Hindi: {
+        Vowels: [["अ","A"],["आ","Aa"],["इ","I"],["ई","Ee"],["उ","U"],["ऊ","Oo"],["ऋ","Ri"],["ए","E"],["ऐ","Ai"],["ओ","O"],["औ","Au"],["अं","Am"],["अः","Aha"]],
+        Consonants: [["क","Ka"],["ख","Kha"],["ग","Ga"],["घ","Gha"],["ङ","Nga"],["च","Cha"],["छ","Chha"],["ज","Ja"],["झ","Jha"],["ञ","Nya"],["ट","Ta"],["ठ","Tha"],["ड","Da"],["ढ","Dha"],["ण","Na"],["त","Ta"],["थ","Tha"],["द","Da"],["ध","Dha"],["न","Na"],["प","Pa"],["फ","Pha"],["ब","Ba"],["भ","Bha"],["म","Ma"],["य","Ya"],["र","Ra"],["ल","La"],["व","Va"],["श","Sha"],["ष","Ssa"],["स","Sa"],["ह","Ha"],["क्ष","Ksha"],["त्र","Tra"],["ज्ञ","Gya"]],
+      },
+    },
+    examples: {
+      Telugu: {
+        "అ": ["అమ్మ","Amma","Mother","👩🏽"], "ఆ": ["ఆకులు","Aakulu","Leaves","🌿"], "ఇ": ["ఇల్లు","Illu","Home","🏡"],
+        "ఈ": ["ఈగ","Eega","Fly","🪰"], "ఉ": ["ఉడుత","Udutha","Squirrel","🐿️"], "ఊ": ["ఊయల","Ooyala","Swing","🛝"],
+        "ఋ": ["ఋషి","Rushi","Sage","🧘🏽"], "ౠ": ["రూక","Rooka","Coin","🪙"], "ఎ": ["ఎలుక","Eluka","Mouse","🐭"],
+        "ఏ": ["ఏనుగు","Aenugu","Elephant","🐘"], "ఐ": ["ఐదు","Aidu","Five","5️⃣"], "ఒ": ["ఒంటె","Onte","Camel","🐪"],
+        "ఓ": ["ఓడ","Oada","Boat","⛵"], "ఔ": ["ఔషధం","Aushadham","Medicine","💊"], "అం": ["అంకె","Anke","Number","🔢"],
+        "అః": ["అంతఃపురం","Anthaapuram","Inner palace","🏰"],
+        "క": ["కమలం","Kamalam","Lotus","🪷"], "గ": ["గడియారం","Gadiyaaram","Clock","⏰"], "చ": ["చందమామ","Chandamama","Moon","🌙"],
+        "జ": ["జింక","Jinka","Deer","🦌"], "ట": ["టమాటా","Tamaata","Tomato","🍅"], "ప": ["పాప","Paapa","Child","👧"],
+        "మ": ["మామిడి","Maamidi","Mango","🥭"], "స": ["సీతాకోకచిలుక","Seethakokachiluka","Butterfly","🦋"], "హ": ["హంస","Hamsa","Swan","🦢"],
+        "న": ["నక్క","Nakka","Fox","🦊"], "బ": ["బంతి","Banthi","Ball","⚽"], "ల": ["లడ్డు","Laddu","Sweet","🍬"],
+      },
+      Hindi: {
+        "अ": ["अनार","Anaar","Pomegranate","🌰"], "आ": ["आम","Aam","Mango","🥭"], "इ": ["इमली","Imli","Tamarind","🌿"],
+        "ई": ["ईख","Eekh","Sugarcane","🎋"], "उ": ["उल्लू","Ullu","Owl","🦉"], "ऊ": ["ऊन","Oon","Wool","🧶"],
+        "ऋ": ["ऋषि","Rishi","Sage","🧘🏽"], "ए": ["एक","Ek","One","1️⃣"], "ऐ": ["ऐनक","Ainak","Glasses","👓"],
+        "ओ": ["ओखली","Okhli","Mortar","🥣"], "औ": ["औरत","Aurat","Woman","👩🏽"], "अं": ["अंगूर","Angoor","Grapes","🍇"],
+        "अः": ["नामः","Naamaha","Name","🏷️"],
+        "क": ["कबूतर","Kabootar","Pigeon","🕊️"], "ख": ["खरगोश","Khargosh","Rabbit","🐇"], "ग": ["गमला","Gamla","Flowerpot","🪴"],
+        "म": ["मछली","Machhli","Fish","🐟"], "श": ["शेर","Sher","Lion","🦁"], "स": ["सूरज","Sooraj","Sun","☀️"],
+        "ह": ["हाथी","Haathi","Elephant","🐘"], "त": ["तरबूज","Tarbooz","Watermelon","🍉"], "प": ["पतंग","Patang","Kite","🪁"],
+      },
+    },
+    consonants: {
+      Telugu: ["క","ఖ","గ","ఘ","ఙ","చ","ఛ","జ","ఝ","ఞ","ట","ఠ","డ","ఢ","ణ","త","థ","ద","ధ","న","ప","ఫ","బ","భ","మ","య","ర","ల","వ","శ","ష","స","హ"],
+      Hindi: ["क","ख","ग","घ","ङ","च","छ","ज","झ","ञ","ट","ठ","ड","ढ","ण","त","थ","द","ध","न","प","फ","ब","भ","म","य","र","ल","व","श","ष","स","ह"],
+    },
+    vowelSigns: {
+      Telugu: [["అ","",'a'],["ఆ","ా","aa"],["ఇ","ి","i"],["ఈ","ీ","ee"],["ఉ","ు","u"],["ఊ","ూ","oo"],["ఋ","ృ","ru"],["ౠ","ౄ","roo"],["ఎ","ె","e"],["ఏ","ే","ae"],["ఐ","ై","ai"],["ఒ","ొ","o"],["ఓ","ో","oa"],["ఔ","ౌ","au"],["అం","ం","am"],["అః","ః","aha"]],
+      Hindi: [["अ","","a"],["आ","ा","aa"],["इ","ि","i"],["ई","ी","ee"],["उ","ु","u"],["ऊ","ू","oo"],["ऋ","ृ","ri"],["ए","े","e"],["ऐ","ै","ai"],["ओ","ो","o"],["औ","ौ","au"],["अं","ं","am"],["अः","ः","aha"]],
+    },
+    virama: { Telugu: "్", Hindi: "्" },
+    posters: {
+      "అ":["01","అమ్మ","Amma","Mother"],"ఆ":["02","ఆకులు","Aakulu","Leaves"],"ఇ":["03","ఇల్లు","Illu","Home"],
+      "ఈ":["04","ఈగ","Eega","Fly"],"ఉ":["05","ఉడుత","Udutha","Squirrel"],"ఊ":["06","ఊయల","Ooyala","Swing"],
+      "ఋ":["07","ఋషి","Rushi","Sage"],"ౠ":["08","రూక","Rooka","Coin / money"],"ఎ":["09","ఎలుక","Eluka","Mouse"],
+      "ఏ":["10","ఏనుగు","Aenugu","Elephant"],"ఐ":["11","ఐదు","Aidu","Five"],"ఒ":["12","ఒంటె","Onte","Camel"],
+      "ఓ":["13","ఓడ","Oada","Boat"],"ఔ":["14","ఔషధం","Aushadham","Medicine"],"అం":["15","అంకె","Anke","Number"],
+      "అః":["16","అంతఃపురం","Anthaapuram","Inner palace"],
+      "క":["17","కమలం","Kamalam","Lotus"],"ఖ":["18","ఖడ్గం","Khadgam","Sword"],"గ":["19","గడియారం","Gadiyaaram","Clock"],
+      "ఘ":["20","ఘటం","Ghatam","Pot"],"ఙ":["21","విఙ్ఞానం","Vignaanam","Knowledge"],"చ":["22","చందమామ","Chandamama","Moon"],
+      "ఛ":["23","ఛత్రం","Chhatram","Umbrella"],"జ":["24","జింక","Jinka","Deer"],"ఝ":["25","ఝరి","Jhari","Waterfall"],
+      "ఞ":["26","యజ్ఞము","Yajnamu","Yagnam"],"ట":["27","టమాటా","Tamaata","Tomato"],"ఠ":["28","కంఠము","Kanthamu","Neck"],
+      "డ":["29","డబ్బా","Dabbaa","Box"],"ఢ":["30","ఢంకా","Dhankaa","Drum"],"ణ":["31","వీణ","Veena","Musical instrument"],
+      "త":["32","తల","Tala","Head"],"థ":["33","థర్మామీటర్","Thermometer","Thermometer"],"ద":["34","దానిమ్మ","Daanimma","Pomegranate"],
+      "ధ":["35","ధనుస్సు","Dhanussu","Bow"],"న":["36","నక్క","Nakka","Fox"],"ప":["37","పాప","Paapa","Child"],
+      "ఫ":["38","ఫలం","Phalam","Fruit"],"బ":["39","బంతి","Banthi","Ball"],"భ":["40","భవనం","Bhavanam","Building"],
+      "మ":["41","మామిడి","Maamidi","Mango"],"య":["42","యంత్రం","Yanthram","Machine"],"ర":["43","రథం","Ratham","Chariot"],
+      "ల":["44","లడ్డు","Laddu","Laddu"],"వ":["45","వంకాయ","Vankaaya","Eggplant"],"శ":["46","శంఖం","Shankham","Conch"],
+      "ష":["47","షడ్రుచులు","Shadruchulu","Six tastes"],"స":["48","సీతాకోకచిలుక","Seethakokachiluka","Butterfly"],
+      "హ":["49","హంస","Hamsa","Swan"],"ళ":["50","కళ","Kala","Art"],"క్ష":["51","క్షమ","Kshama","Forgiveness"],
+      "ఱ":["52","గుఱ్ఱము","Gurramu","Horse"],
+    },
+    stories: [
+      { id:"lion-mouse", theme:"Kindness", minutes:3, icon:"🦁", pages:4,
+        Telugu:{ title:"సింహం మరియు ఎలుక", teaser:"ఒక చిన్న సహాయం పెద్ద స్నేహంగా మారింది.", p1:"అడవిలో నిద్రపోతున్న సింహం మీదుగా ఒక చిన్న ఎలుక పరుగెత్తింది. సింహం కోపంగా దానిని తన పెద్ద పంజాలో పట్టుకుంది." },
+        Hindi:{ title:"शेर और चूहा", teaser:"एक छोटी-सी मदद बड़ी दोस्ती बन गई।", p1:"जंगल में सो रहे शेर के ऊपर एक छोटा चूहा दौड़ गया। शेर ने क्रोध में उसे अपने बड़े पंजे में पकड़ लिया।" } },
+      { id:"tortoise-hare", theme:"Perseverance", minutes:3, icon:"🐢", pages:4,
+        Telugu:{ title:"కుందేలు మరియు తాబేలు", teaser:"వేగం కంటే పట్టుదల గెలిచిన పరుగు." },
+        Hindi:{ title:"खरगोश और कछुआ", teaser:"तेज़ी नहीं, लगातार कोशिश ने दौड़ जीती।" } },
+      { id:"fox-grapes", theme:"Honesty", minutes:3, icon:"🍇", pages:4,
+        Telugu:{ title:"నక్క మరియు ద్రాక్ష", teaser:"అందని దానిని తక్కువ చేయడం సరైనదా?" },
+        Hindi:{ title:"लोमड़ी और अंगूर", teaser:"जो न मिले, क्या उसे बुरा कहना ठीक है?" } },
+      { id:"boy-wolf", theme:"Honesty", minutes:4, icon:"🐺", pages:5,
+        Telugu:{ title:"తోడేలు వచ్చిందన్న బాలుడు", teaser:"అబద్ధపు కేక నిజమైన ప్రమాదాన్ని తెచ్చింది." },
+        Hindi:{ title:"भेड़िया आया कहने वाला लड़का", teaser:"झूठी पुकार ने सच्चे संकट को कठिन बना दिया।" } },
+      { id:"ant-grasshopper", theme:"Planning", minutes:4, icon:"🐜", pages:5,
+        Telugu:{ title:"చీమ మరియు మిడత", teaser:"ఈరోజు పని రేపటి కష్టాన్ని తగ్గించింది." },
+        Hindi:{ title:"चींटी और टिड्डा", teaser:"आज की तैयारी ने कल की कठिनाई घटाई।" } },
+      { id:"crow-pitcher", theme:"Problem solving", minutes:3, icon:"🐦‍⬛", pages:4,
+        Telugu:{ title:"కాకి మరియు కుండ", teaser:"చిన్న రాళ్లు ఒక తెలివైన పరిష్కారం అయ్యాయి." },
+        Hindi:{ title:"कौआ और घड़ा", teaser:"छोटे कंकड़ एक समझदार उपाय बने।" } },
+      { id:"dog-reflection", theme:"Contentment", minutes:3, icon:"🐕", pages:4,
+        Telugu:{ title:"కుక్క మరియు దాని ప్రతిబింబం", teaser:"మరో రొట్టె ముక్క కోరగా తనదీ పోయింది." },
+        Hindi:{ title:"कुत्ता और उसकी परछाईं", teaser:"रोटी का दूसरा टुकड़ा चाहा और अपना भी खो दिया।" } },
+      { id:"golden-goose", theme:"Gratitude", minutes:4, icon:"🪿", pages:5,
+        Telugu:{ title:"బంగారు గుడ్డు పెట్టే బాతు", teaser:"ప్రతి రోజు వచ్చిన వరాన్ని అత్యాశ ఆపేసింది." },
+        Hindi:{ title:"सोने का अंडा देने वाली हंस", teaser:"रोज मिलने वाला वरदान लालच ने रोक दिया।" } },
+    ],
+    games: [
+      ["bubble-pop","Parrot Letter Balloon Pop","Pop the balloon that matches the letter you hear or see.","🎈","#e8faf6","Letters & Sounds"],
+      ["letter-rain","Letter Rain","Find and tap the requested letter before it reaches the bottom.","🌧️","#eeeafd","Letters & Sounds"],
+      ["first-letter","Drag the First Letter!","Look at the picture, then drag the letter its name starts with.","🔡","#fff0ec","Letters & Sounds"],
+      ["memory","Happy Match Adventure","Tap two cards and find every matching pair before time runs out.","🃏","#eeeafd","Memory & Sorting"],
+      ["find-it","Find It for Mithu","Mithu asks where an object is in Telugu or Hindi — tap the matching picture.","🔍","#fff7db","Words & Vocabulary"],
+      ["vocabulary","Drag, Match & Learn","Drag each picture card onto the Telugu word it matches.","🥕","#fff0ec","Words & Vocabulary"],
+      ["actions","Quick, Tap the Action!","Read the word before the ring runs out, then tap the matching picture.","⏱️","#e8faf6","Words & Vocabulary"],
+      ["coloring","Vani's Magic Art Studio","Pick a picture, choose a color, then tap inside the lines to fill it in.","🎨","#fff7db","Creativity & Our Earth"],
+      ["eco-sort","Paryavaran Hero","Sort each item into the right bin and help the tree grow.","♻️","#e8faf6","Creativity & Our Earth"],
+    ],
+    compare: {
+      Telugu: { title:"పెద్దదా? చిన్నదా?", subtitle:"Big or Small? — Can you help Vani sort her garden?", oldSubtitle:"ఎక్కువ ఏది? పెద్దది-చిన్నది? సైజు ప్రకారం సర్దండి!", start:"ఆట మొదలుపెట్టండి" },
+      Hindi: { title:"बड़ा या छोटा?", subtitle:"Big or Small? — Can you help Vani sort her garden?", start:"खेल शुरू करें" },
+    },
+    headers: {
+      home:["Namaskaram","What shall we learn?"], letters:["Letters come alive","Pick a letter"],
+      lesson:["Letters come alive","Letter lesson"], trace:["Letters come alive","Practice tracing"],
+      stories:["Story Garden","20 bilingual stories"], reader:["Story Garden","Reading together"],
+      guninthalu:["Guninthalu","Build a sound"], math:["Math Corner","Patterns, sorting & numbers"],
+      games:["Games","Nine ways to practice"], rewards:["Rewards","Your sticker shelf"],
+      parent:["For grown-ups","Parent dashboard"],
+    },
+  };
+
+  traceRef = React.createRef();
+  introRef = React.createRef();
+  colorRef = React.createRef();
+  colorUndo = [];
+  coloringPages = [
+    ["bees","Dancing Bees"],["flower","Friendly Flower"],["squirrel","Squirrel & Acorn"],["rainy_days","Rainy Day Puddles"],
+    ["parade","Musical Parade"],["monkey","Playful Monkey"],["frog","Frog on a Lily Pad"],["owl","Owl at Night"],
+    ["seahorse","Seahorse"],["dino_flower","Dino with a Flower"],["snake","Spotty Snake"],["jellyfish","Jellyfish Reef"],
+    ["shark","Friendly Shark"],["sloth","Sleepy Sloth"],["turtle_family","Turtle Family"],["tiger","Tiger Cub"],
+    ["giraffe","Baby Giraffe"],["cow","Baby Cow"],
+  ];
+  crayons = ["#E24B4A","#EF9F27","#F6BD4B","#56B93E","#22B8A6","#3499E8","#6D5CE8","#EC5683","#8A5A2B","#2C2C2A"];
+  hindiCard = {
+    "इ":"i.jpg","ई":"ee.jpg","उ":"u.jpg","ऊ":"oo.jpg","ऋ":"ri.jpg","ऐ":"ai.jpg","अः":"aha.jpg",
+    "ख":"kha.jpg","ठ":"tha.jpg","द":"da.jpg","न":"na.jpg","प":"pa.jpg","ब":"ba.jpg","म":"ma.jpg",
+    "स":"sa.jpg","ह":"ha.jpg","क्ष":"ksha.jpg","त्र":"tra.jpg","ज्ञ":"gya.jpg",
+  };
+  hindiPoster = {
+    "अ":"34","आ":"41","ए":"15","ओ":"20","औ":"14","अं":"15",
+    "क":"17","ग":"20","घ":"19","ङ":"15","च":"22","छ":"23","ज":"13","झ":"25","ञ":"21",
+    "ट":"27","ड":"29","ढ":"30","ण":"35","त":"18","थ":"33","ध":"35","फ":"38","भ":"40",
+    "य":"42","र":"43","ल":"44","व":"31","श":"46","ष":"47",
+  };
+  posterInfo() {
+    const lang = this.state.lang, letter = this.lessonPair()[0];
+    if (lang === "Hindi") {
+      const card = this.hindiCard[letter];
+      if (card) return { url: "../public/assets/images/hindi-posters/" + card, overlay: false };
+      const num = this.hindiPoster[letter];
+      return num ? { url: "../public/assets/images/telugu-posters/" + num + ".webp", overlay: true } : null;
+    }
+    const p = this.data.posters[letter];
+    if (!p) return null;
+    return { url: "../public/assets/images/telugu-posters/" + p[0] + ".webp", overlay: !("అ ఆ ఇ ఈ ఉ ఊ ఋ ఎ ఏ ఐ".split(" ").indexOf(letter) >= 0 || Number(p[0]) <= 10 || p[0] === "28") };
+  }
+  ensureIntro() {
+    const v = this.introRef.current;
+    if (this.state.screen !== "intro" || !v || v === this.introStarted) return;
+    this.introStarted = v;
+    v.muted = false; v.volume = 1;
+    const p = v.play();
+    if (p && p.catch) p.catch(() => { v.muted = true; v.play().catch(() => {}); this.setState({ introMuted: true }); });
+  }
+  loadColoringPage() {
+    const canvas = this.colorRef.current; if (!canvas) return;
+    const page = this.coloringPages[this.state.colorPage || 0][0];
+    const img = new Image();
+    img.onload = () => {
+      const c = this.colorRef.current; if (!c) return;
+      const scale = Math.min(1, 340 / img.width, 400 / img.height);
+      c.width = Math.round(img.width * scale); c.height = Math.round(img.height * scale);
+      const ctx = c.getContext("2d");
+      ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, c.width, c.height);
+      ctx.drawImage(img, 0, 0, c.width, c.height);
+      this.colorUndo = [];
+      this.colorLoaded = page;
+    };
+    img.src = "../public/assets/coloring/original/" + page + ".png";
+  }
+  ensureColoring() {
+    if (this.state.gameId !== "coloring") { this.colorLoaded = null; return; }
+    const page = this.coloringPages[this.state.colorPage || 0][0];
+    if (this.colorLoaded === page) return;
+    if (!this.colorRef.current) { window.requestAnimationFrame(() => this.ensureColoring()); return; }
+    this.colorLoaded = page;
+    this.loadColoringPage();
+  }
+  fillAt(e) {
+    const c = this.colorRef.current; if (!c) return;
+    const rect = c.getBoundingClientRect();
+    const x = Math.round((e.clientX - rect.left) * (c.width / rect.width));
+    const y = Math.round((e.clientY - rect.top) * (c.height / rect.height));
+    if (x < 0 || y < 0 || x >= c.width || y >= c.height) return;
+    const ctx = c.getContext("2d", { willReadFrequently: true });
+    const img = ctx.getImageData(0, 0, c.width, c.height), d = img.data;
+    const w = c.width, h = c.height, i0 = (y * w + x) * 4;
+    const t = [d[i0], d[i0 + 1], d[i0 + 2]];
+    if (t[0] + t[1] + t[2] < 210) return;
+    const hex = this.state.colorHex || this.crayons[0];
+    const fill = [parseInt(hex.slice(1, 3), 16), parseInt(hex.slice(3, 5), 16), parseInt(hex.slice(5, 7), 16)];
+    if (Math.abs(t[0] - fill[0]) < 8 && Math.abs(t[1] - fill[1]) < 8 && Math.abs(t[2] - fill[2]) < 8) return;
+    if (this.colorUndo.length > 5) this.colorUndo.shift();
+    this.colorUndo.push(ctx.getImageData(0, 0, w, h));
+    const near = (i) => Math.abs(d[i] - t[0]) < 40 && Math.abs(d[i + 1] - t[1]) < 40 && Math.abs(d[i + 2] - t[2]) < 40;
+    const stack = [x, y];
+    while (stack.length) {
+      const cy = stack.pop(), cx = stack.pop(), i = (cy * w + cx) * 4;
+      if (!near(i)) continue;
+      d[i] = fill[0]; d[i + 1] = fill[1]; d[i + 2] = fill[2]; d[i + 3] = 255;
+      if (cx > 0) stack.push(cx - 1, cy);
+      if (cx < w - 1) stack.push(cx + 1, cy);
+      if (cy > 0) stack.push(cx, cy - 1);
+      if (cy < h - 1) stack.push(cx, cy + 1);
+    }
+    ctx.putImageData(img, 0, 0);
+    this.forceUpdate();
+  }
+  drawing = false;
+  mask = null;
+  swipeX = 0;
+
+  componentDidMount() {
+    if (this.state.screen === "trace") this.paintGuide();
+    this.onFrameMsg = (e) => { if (e.data && e.data.bhashaKids === "back") this.go("home"); };
+    window.addEventListener("message", this.onFrameMsg);
+    this.splashTimer = window.setTimeout(() => {
+      if (this.state.screen === "splash") this.setState({ screen: "intro" });
+    }, 4600);
+  }
+  componentWillUnmount() { window.removeEventListener("message", this.onFrameMsg); window.clearTimeout(this.splashTimer); }
+  componentDidUpdate(_p, prev) {
+    this.ensureIntro(); this.ensureColoring();
+    if (this.state.screen === "trace" && (prev.screen !== "trace" || prev.sel !== this.state.sel || prev.lang !== this.state.lang || prev.group !== this.state.group)) this.paintGuide();
+  }
+
+  lessonSet() { return this.data.letters[this.state.lang][this.state.group]; }
+  lessonPair() { const s = this.lessonSet(); return s[this.state.sel] || s[0]; }
+  example() {
+    const [letter, roman] = this.lessonPair();
+    const e = this.data.examples[this.state.lang][letter];
+    return e || [letter, roman, roman + " sound", "🔤"];
+  }
+
+  paintGuide() {
+    const canvas = this.traceRef.current; if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const width = Math.max(240, rect.width), height = 280;
+    const ratio = window.devicePixelRatio || 1;
+    canvas.width = width * ratio; canvas.height = height * ratio; canvas.style.height = height + "px";
+    const ctx = canvas.getContext("2d"); if (!ctx) return;
+    ctx.scale(ratio, ratio);
+    ctx.fillStyle = "#fffdf9"; ctx.fillRect(0, 0, width, height);
+    const font = '190px "Noto Sans Telugu","Noto Sans Devanagari",sans-serif';
+    const letter = this.lessonPair()[0];
+    ctx.setLineDash([10, 10]); ctx.lineWidth = 3; ctx.strokeStyle = "#cbc3ef";
+    ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.font = font;
+    ctx.strokeText(letter, width / 2, height / 2 + 6);
+    ctx.setLineDash([]);
+    const m = document.createElement("canvas");
+    m.width = canvas.width; m.height = canvas.height;
+    const mc = m.getContext("2d");
+    mc.scale(ratio, ratio); mc.lineWidth = 30; mc.strokeStyle = "#000";
+    mc.textAlign = "center"; mc.textBaseline = "middle"; mc.font = font;
+    mc.strokeText(letter, width / 2, height / 2 + 6);
+    const d = mc.getImageData(0, 0, m.width, m.height).data;
+    const mask = new Uint8Array(m.width * m.height);
+    for (let i = 0; i < mask.length; i++) mask[i] = d[i * 4 + 3] > 10 ? 1 : 0;
+    this.mask = mask;
+    this.setState({ traceResult: null, celebrate: false });
+  }
+
+  point(e) {
+    const c = this.traceRef.current; const r = c.getBoundingClientRect();
+    return { x: e.clientX - r.left, y: e.clientY - r.top };
+  }
+
+  scoreTrace() {
+    const canvas = this.traceRef.current, mask = this.mask;
+    if (!canvas || !mask) return null;
+    const ctx = canvas.getContext("2d");
+    const w = canvas.width, h = canvas.height;
+    const data = ctx.getImageData(0, 0, w, h).data;
+    const cell = 10, gw = Math.ceil(w / cell), gh = Math.ceil(h / cell);
+    const guide = new Uint8Array(gw * gh), user = new Uint8Array(gw * gh);
+    let userTotal = 0, onGuide = 0;
+    const near = (r, g, b) => Math.hypot(r - 109, g - 92, b - 232);
+    for (let y = 0; y < h; y += 2) {
+      const gy = (y / cell) | 0;
+      for (let x = 0; x < w; x += 2) {
+        const i = y * w + x, gi = gy * gw + ((x / cell) | 0), o = i * 4;
+        if (mask[i]) guide[gi] = 1;
+        const r = data[o], g = data[o + 1], b = data[o + 2];
+        if (near(r, g, b) < 70) { user[gi] = 1; userTotal++; if (mask[i]) onGuide++; }
+      }
+    }
+    if (userTotal < 40) return { stars: 0, message: "Trace over the dotted letter, then tap Check my trace." };
+    let gt = 0, gc = 0;
+    for (let gy = 0; gy < gh; gy++) for (let gx = 0; gx < gw; gx++) {
+      const gi = gy * gw + gx; if (!guide[gi]) continue; gt++;
+      let touched = false;
+      for (let ny = -1; ny <= 1 && !touched; ny++) for (let nx = -1; nx <= 1 && !touched; nx++) {
+        const yy = gy + ny, xx = gx + nx;
+        if (yy < 0 || yy >= gh || xx < 0 || xx >= gw) continue;
+        if (user[yy * gw + xx]) touched = true;
+      }
+      if (touched) gc++;
+    }
+    const coverage = gt ? gc / gt : 0, accuracy = userTotal ? onGuide / userTotal : 0;
+    if (coverage >= 0.8 && accuracy >= 0.55) return { stars: 3, message: "Beautiful tracing — every part of the letter!" };
+    if (coverage >= 0.55 && accuracy >= 0.4) return { stars: 2, message: "Nice work! Try to keep the lines closer to the dots." };
+    if (coverage >= 0.25) return { stars: 1, message: "Good start — trace the whole letter, from top to bottom." };
+    return { stars: 0, message: "Give it another go — follow the dotted shape closely." };
+  }
+
+  rainData = {
+    letters: {
+      Telugu: {
+        Vowels: ["అ","ఆ","ఇ","ఈ","ఉ","ఊ","ఋ","ఎ","ఏ","ఐ","ఒ","ఓ","ఔ","అం","అః"],
+        Consonants: ["క","ఖ","గ","ఘ","చ","ఛ","జ","ఝ","ట","ఠ","డ","ఢ","త","థ","ద","ధ","న","ప","ఫ","బ","భ","మ","య","ర","ల","వ","శ","ష","స","హ"],
+      },
+      Hindi: {
+        Vowels: ["अ","आ","इ","ई","उ","ऊ","ऋ","ए","ऐ","ओ","औ","अं","अः"],
+        Consonants: ["क","ख","ग","घ","च","छ","ज","झ","ट","ठ","ड","ढ","त","थ","द","ध","न","प","फ","ब","भ","म","य","र","ल","व","श","ष","स","ह"],
+      },
+    },
+    roman: {
+      Telugu: { Vowels: ["a","aa","i","ee","u","oo","ru","e","ae","ai","o","oa","au","am","aha"] },
+      Hindi: { Vowels: ["a","aa","i","ee","u","oo","ri","e","ai","o","au","am","aha"] },
+    },
+    consonantRoman: ["k","kh","g","gh","ch","chh","j","jh","tt","tth","dd","ddh","t","th","d","dh","n","p","ph","b","bh","m","y","r","l","v","sh","shh","s","h"],
+  };
+
+  memThemes = {
+    fruits: ["🍎 Fruits", ["🍎","🍌","🍇","🍊","🍓","🥑","🍍","🍒","🍑","🍐"]],
+    animals: ["🦁 Animals", ["🐶","🐱","🦁","🐷","🦊","🐼","🐯","🦒","🦓","🐘"]],
+    space: ["🚀 Space", ["🚀","🛸","🪐","👨‍🚀","👾","🛰️","☄️","🌌","🔭","🌍"]],
+  };
+
+  foodCards = {
+    Vegetables: [
+      ["Potato","algadda","ఆల్గడ్డ","🥔"],["Tindora","donadakaaya","దొండకాయ","🥒"],["Drumstick","munagakaaya","మునగకాయ","🌿"],
+      ["Corn","makkajonna","మక్కజొన్న","🌽"],["Onion","ulligadda","ఉల్లిగడ్డ","🧅"],["Okra","bendakaaya","బెండకాయ","🌱"],
+      ["Pumpkin","gummadikaaya","గుమ్మడికాయ","🎃"],["Cabbage","kyaabej","క్యాబేజీ","🥬"],["Chilli pepper","mirapakaaya","మిరపకాయ","🌶️"],
+      ["Eggplant","vankaaya","వంకాయ","🍆"],
+    ],
+    Fruits: [
+      ["Apple","apple pandu","ఆపిల్ పండు","🍎"],["Banana","arati pandu","అరటి పండు","🍌"],["Orange","naranja","నారింజ","🍊"],
+      ["Mango","maamidi pandu","మామిడి పండు","🥭"],["Grapes","draksha pallu","ద్రాక్ష పళ్ళు","🍇"],["Lemon","nimma kaaya","నిమ్మకాయ","🍋"],
+      ["Tomato","tamata","టమాటా","🍅"],["Guava","jaama kaaya","జామకాయ","🍐"],["Coconut","kobbari kaaya","కొబ్బరికాయ","🥥"],
+      ["Watermelon","pucchakaaya","పుచ్చకాయ","🍉"],
+    ],
+  };
+
+  ecoItems = [
+    ["banana-peel","🍌","అరటి తొక్క","केले का छिलका","compost"],
+    ["veggie-peels","🥕","కూరగాయల తొక్కలు","सब्जी के छिलके","compost"],
+    ["leftover-rice","🍚","మిగిలిన అన్నం","बचा हुआ खाना","compost"],
+    ["egg-shell","🥚","గుడ్డు పెంకు","अंडे का छिलका","compost"],
+    ["plastic-bottle","🧴","ప్లాస్టిక్ సీసా","प्लास्टिक की बोतल","recycle"],
+    ["newspaper","📰","వార్తాపత్రిక","अखबार","recycle"],
+    ["glass-bottle","🍾","గాజు సీసా","कांच की बोतल","recycle"],
+    ["cardboard-box","📦","అట్ట పెట్టె","गत्ते का डिब्बा","recycle"],
+    ["plastic-bag","🛍️","ప్లాస్టిక్ సంచి","प्लास्टिक की थैली","trash"],
+    ["styrofoam-cup","🥤","థర్మాకోల్ కప్పు","थर्माकोल कप","trash"],
+    ["chocolate-wrapper","🍫","చాక్లెట్ ర్యాపర్","चॉकलेट रैपर","trash"],
+    ["used-tissue","🧻","వాడిన టిష్యూ పేపర్","इस्तेमाल किया हुआ टिशू पेपर","trash"],
+  ];
+
+  ecoBins = [
+    ["compost","🍃","కంపోస్ట్","कम्पोस्ट","#e9f7ec"],
+    ["recycle","♻️","రీసైకిల్","रीसायकल","#e8f2ff"],
+    ["trash","🗑️","సాధారణ చెత్త","सामान्य कचरा","#f5f1ec"],
+  ];
+
+  ecoFacts = [
+    ["ఒక ప్లాస్టిక్ సీసా మట్టిలో కలిసిపోవడానికి 450 సంవత్సరాలు పడుతుంది!","एक प्लास्टिक की बोतल को मिट्टी में मिलने में 450 साल लगते हैं!"],
+    ["తడి చెత్తతో మంచి ఎరువు (కంపోస్ట్) తయారు చేయవచ్చు!","गीले कचरे से अच्छी खाद (कम्पोस्ट) बनाई जा सकती है!"],
+  ];
+
+  ecoQuotes = [
+    ["వ్యర్థం నుండి విలువైనది పుడుతుంది — కంపోస్ట్ చేద్దాం!","कचरे से भी कुछ कीमती बनता है — चलो कम्पोस्ट करें!"],
+    ["ఒక్క పేపర్ రీసైకిల్ చేస్తే ఒక్క చెట్టుకు ప్రాణం పోసినట్టే!","एक कागज़ रीसायकल करना, एक पेड़ को जीवन देने जैसा है!"],
+    ["చెత్త వేరు చేయడం చిన్న పని, భూమికి పెద్ద సాయం!","कचरा अलग करना छोटा काम है, पर पृथ्वी की बड़ी मदद है!"],
+  ];
+
+  seeded(list, seed) {
+    const copy = list.slice();
+    let s = seed * 9301 + 49297;
+    for (let i = copy.length - 1; i > 0; i--) {
+      s = (s * 9301 + 49297) % 233280;
+      const j = Math.floor((s / 233280) * (i + 1));
+      const t = copy[i]; copy[i] = copy[j]; copy[j] = t;
+    }
+    return copy;
+  }
+
+  rainRound() {
+    const S = this.state;
+    const lang = S.rainLang || "Telugu", group = S.rainGroup || "Vowels", r = S.rainRoundNo || 0;
+    const source = this.rainData.letters[lang][group];
+    const romans = group === "Consonants" ? this.rainData.consonantRoman : this.rainData.roman[lang][group];
+    const ti = (r * 5 + 2) % source.length;
+    const target = source[ti], targetRoman = romans[ti] || "";
+    const slot = (r * 3 + 1) % 5;
+    const drops = [];
+    let step = 1;
+    for (let i = 0; i < 5; i++) {
+      if (i === slot) { drops.push(target); continue; }
+      let letter = target;
+      while (letter === target || drops.indexOf(letter) >= 0) {
+        letter = source[(ti + 3 + step * 4 + r) % source.length];
+        step += 1;
+        if (step > source.length * 2) break;
+      }
+      drops.push(letter);
+    }
+    return { target, targetRoman, drops };
+  }
+
+  tapDrop(letter, round) {
+    if (letter === round.target) {
+      this.setState(s => ({
+        rainScore: (s.rainScore || 0) + 10, rainRoundNo: (s.rainRoundNo || 0) + 1, stars: s.stars + 1,
+        rainFeedback: "Correct! " + letter + " · " + round.targetRoman, rainOk: true,
+      }));
+    } else {
+      this.setState({ rainFeedback: "That was " + letter + " — keep looking for " + round.target + ".", rainOk: false });
+    }
+  }
+
+  memDeck() {
+    const items = this.memThemes[this.state.memTheme][1];
+    return this.seeded(items.concat(items).map((icon, i) => ({ icon, key: i })), this.state.memSeed);
+  }
+
+  memFlip(i) {
+    const S = this.state;
+    if (S.memLock || S.memOpen.indexOf(i) >= 0 || S.memMatched.indexOf(i) >= 0) return;
+    const next = S.memOpen.concat([i]);
+    if (next.length < 2) { this.setState({ memOpen: next }); return; }
+    const deck = this.memDeck();
+    const hit = deck[next[0]].icon === deck[next[1]].icon;
+    this.setState({ memOpen: next, memLock: true, memMoves: S.memMoves + 1 });
+    window.setTimeout(() => {
+      this.setState(s => ({
+        memOpen: [], memLock: false,
+        memMatched: hit ? s.memMatched.concat(next) : s.memMatched,
+        stars: hit ? s.stars + 1 : s.stars,
+      }));
+    }, hit ? 420 : 820);
+  }
+
+  memReset(theme) {
+    this.setState(s => ({ memTheme: theme || s.memTheme, memSeed: s.memSeed + 1, memOpen: [], memMatched: [], memMoves: 0, memLock: false }));
+  }
+
+  vocabItems() {
+    const source = this.foodCards[this.state.vocabCat];
+    const picked = [];
+    for (let step = 0; picked.length < 4 && step < source.length * 2; step++) {
+      const c = source[(this.state.vocabRound * 5 + step * 7) % source.length];
+      if (picked.indexOf(c) < 0) picked.push(c);
+    }
+    return picked;
+  }
+
+  vocabTapWord(word) {
+    const S = this.state;
+    if (S.vocabSolved.indexOf(word) >= 0) return;
+    if (!S.vocabHeld) { this.setState({ vocabMsg: "Tap a picture first, then its word." }); return; }
+    if (S.vocabHeld === word) {
+      this.setState(s => {
+        const solved = s.vocabSolved.concat([word]);
+        return { vocabSolved: solved, vocabScore: s.vocabScore + 1, vocabHeld: "", vocabWrong: "", stars: s.stars + 1,
+          vocabMsg: solved.length === 4 ? "✨ All matched! Great reading." : "✓ Yes — that is the right word." };
+      });
+    } else {
+      this.setState({ vocabWrong: word, vocabMsg: "Not that word — look at the picture again." });
+      window.setTimeout(() => this.setState({ vocabWrong: "" }), 500);
+    }
+  }
+
+  vocabNewRound() {
+    this.setState(s => ({ vocabRound: s.vocabRound + 1, vocabSolved: [], vocabHeld: "", vocabMsg: "", vocabWrong: "" }));
+  }
+
+  ecoOrder() { return this.seeded(this.ecoItems, this.state.ecoSeed); }
+
+  ecoPick(type) {
+    const S = this.state;
+    if (S.ecoPhase !== "play" || this.ecoLocked) return;
+    this.ecoLocked = true;
+    const te = S.ecoLang === "Telugu";
+    const current = this.ecoOrder()[S.ecoIdx];
+    const ok = current[4] === type;
+    if (ok) this.setState(s => ({ ecoScore: s.ecoScore + 1, stars: s.stars + 1, ecoFb: te ? "సరైనది! 🎉" : "सही! 🎉", ecoFbOk: true }));
+    else {
+      const bin = this.ecoBins.filter(b => b[0] === current[4])[0];
+      this.setState({ ecoFb: (te ? "ఓహో! సరైన సమాధానం: " : "ओह! सही उत्तर है: ") + (te ? bin[2] : bin[3]), ecoFbOk: false });
+    }
+    window.setTimeout(() => {
+      this.ecoLocked = false;
+      const next = S.ecoIdx + 1;
+      if (next === 4 || next === 8) this.setState({ ecoFb: "", ecoIdx: next, ecoPhase: "fact", ecoFact: next === 4 ? 0 : 1 });
+      else if (next >= this.ecoItems.length) this.setState({ ecoFb: "", ecoIdx: next, ecoPhase: "end" });
+      else this.setState({ ecoFb: "", ecoIdx: next });
+    }, 950);
+  }
+
+  ecoRestart() {
+    this.ecoLocked = false;
+    this.setState(s => ({ ecoSeed: s.ecoSeed + 1, ecoIdx: 0, ecoScore: 0, ecoPhase: "play", ecoFb: "" }));
+  }
+
+  openGame(id) {
+    this.setState({ gameId: id, rainRoundNo: 0, rainScore: 0, rainFeedback: "", memOpen: [], memMatched: [], memMoves: 0, memLock: false, vocabSolved: [], vocabHeld: "", vocabMsg: "", vocabWrong: "" });
+  }
+
+  go(screen) { this.setState({ screen }); }
+
+  tabStyle(active) {
+    return "display:block;padding:4px 10px;border:0;background:none;text-align:center;cursor:pointer;color:" + (active ? "#6d5ce8" : "#8c92a1");
+  }
+
+  pill(active) {
+    return "padding:8px 12px;border-radius:999px;cursor:pointer;font:800 10.5px Figtree,sans-serif;border:1px solid " +
+      (active ? "#6d5ce8" : "#d8d2e8") + ";background:" + (active ? "#6d5ce8" : "#fff") + ";color:" + (active ? "#fff" : "#5143bb");
+  }
+
+  renderVals() {
+    const S = this.state, D = this.data, lang = S.lang;
+    const rain = this.rainRound();
+    const set = this.lessonSet(), pair = this.lessonPair(), ex = this.example(), poster = this.posterInfo();
+    const header = D.headers[S.screen] || D.headers.home;
+    const vowels = D.vowelSigns[lang], cons = D.consonants[lang];
+    const vowel = vowels[Math.min(S.vi, vowels.length - 1)];
+    const consonant = cons[Math.min(S.ci, cons.length - 1)];
+    const dead = consonant + D.virama[lang];
+    const built = consonant + vowel[1];
+    const targetIndex = (S.ci * 3 + S.gScore + 5) % vowels.length;
+    const target = vowels[targetIndex];
+    const story = D.stories[S.story], sl = story[lang];
+    const tracedCount = Object.keys(S.traced).length;
+
+    const mathOpsData = [["+","Add"],["−","Take away"],["×","Times"],["÷","Share"]];
+    const mathPairs = { "+": [3, 2, 5], "−": [5, 2, 3], "×": [3, 2, 6], "÷": [6, 2, 3] };
+    const mp = mathPairs[S.mathOp];
+    const answer = mp[2];
+    const choices = [answer - 2, answer, answer + 1, answer + 3].map(v => (v < 1 ? v + 4 : v));
+    const correct = S.mathPick === answer;
+
+    const rep = (n, icon) => new Array(Math.max(1, n)).fill(icon).join("");
+
+    return {
+      isSplash: S.screen === "splash",
+      skipSplash: () => this.setState({ screen: "intro" }),
+      isIntro: S.screen === "intro",
+      introRef: this.introRef,
+      introMuted: !!S.introMuted,
+      unmuteIntro: () => { const v = this.introRef.current; if (v) { v.muted = false; v.volume = 1; v.currentTime = 0; v.play().catch(() => {}); } this.setState({ introMuted: false }); },
+      endIntro: () => { if (this.state.screen === "intro") this.setState({ screen: "welcome" }); },
+      isWelcome: S.screen === "welcome",
+      isApp: S.screen !== "welcome" && S.screen !== "splash" && S.screen !== "intro",
+      hasPoster: !!poster, noPoster: !poster, posterOverlay: !!(poster && poster.overlay),
+      posterAlt: pair[0] + " — " + ex[2] + ". Tap to trace.",
+      posterImgStyle: poster ? "position:absolute;inset:0;background:#fff7db center top/cover no-repeat;background-image:url(" + poster.url + ")" : "display:none",
+
+      isColoring: S.gameId === "coloring",
+      colorRef: this.colorRef,
+      colorTap: (e) => this.fillAt(e),
+      colorUndoOne: () => { const c = this.colorRef.current; if (!c || !this.colorUndo.length) return; c.getContext("2d").putImageData(this.colorUndo.pop(), 0, 0); this.forceUpdate(); },
+      colorReset: () => { this.colorUndo = []; this.loadColoringPage(); },
+      coloringThumbs: this.coloringPages.map(([id, label], i) => ({
+        label,
+        pick: () => { this.colorLoaded = null; this.setState({ colorPage: i }); },
+        style: "flex:none;width:76px;display:flex;flex-direction:column;align-items:center;gap:5px;padding:6px;border-radius:16px;cursor:pointer;border:2px solid " + ((S.colorPage || 0) === i ? "#6d5ce8" : "transparent") + ";background:" + ((S.colorPage || 0) === i ? "#f1edff" : "#faf8ff"),
+        artStyle: "width:56px;height:56px;border-radius:12px;background:#fff center/contain no-repeat;background-image:url(../public/assets/coloring/original/" + id + ".png)",
+      })),
+      crayonSwatches: this.crayons.map(hex => ({
+        hex,
+        pick: () => this.setState({ colorHex: hex }),
+        style: "width:44px;height:44px;border:4px solid #fff;border-radius:50%;cursor:pointer;background:" + hex + ";box-shadow:0 0 0 " + ((S.colorHex || this.crayons[0]) === hex ? "3px #25334f" : "1px #cbc4d8") + ";transform:scale(" + ((S.colorHex || this.crayons[0]) === hex ? 1.1 : 1) + ")",
+      })),
+
+      donateIdle: !S.donated, donateDone: !!S.donated,
+      donateLabel: (S.donateCur === "USD" ? "$" : "₹") + (S.donateAmt || (S.donateCur === "USD" ? 10 : 250)),
+      donateInr: () => this.setState({ donateCur: "INR", donateAmt: 250 }),
+      donateUsd: () => this.setState({ donateCur: "USD", donateAmt: 10 }),
+      donateInrStyle: "padding:8px 14px;border:0;border-radius:999px;cursor:pointer;font:800 12px Figtree,sans-serif;background:" + (S.donateCur !== "USD" ? "#fff;color:#b86a17;box-shadow:0 1px 3px rgba(120,80,20,.15)" : "transparent;color:#8d7a5a"),
+      donateUsdStyle: "padding:8px 14px;border:0;border-radius:999px;cursor:pointer;font:800 12px Figtree,sans-serif;background:" + (S.donateCur === "USD" ? "#fff;color:#b86a17;box-shadow:0 1px 3px rgba(120,80,20,.15)" : "transparent;color:#8d7a5a"),
+      donateAmounts: (S.donateCur === "USD" ? [5, 10, 25, 50] : [100, 250, 500, 1000]).map(v => ({
+        label: (S.donateCur === "USD" ? "$" : "₹") + v,
+        pick: () => this.setState({ donateAmt: v }),
+        style: "min-height:44px;padding:0 6px;border-radius:999px;cursor:pointer;font:800 12.5px Figtree,sans-serif;border:" + ((S.donateAmt || (S.donateCur === "USD" ? 10 : 250)) === v ? "2px solid #e08a2c;background:#fff;color:#b86a17" : "1px solid #ecdcc0;background:#fffdf8;color:#6d768b"),
+      })),
+      donateGo: () => this.setState({ donated: true }),
+      isHome: S.screen === "home", isLetters: S.screen === "letters", isLesson: S.screen === "lesson",
+      isTrace: S.screen === "trace", isStories: S.screen === "stories", isReader: S.screen === "reader",
+      isGuninthalu: S.screen === "guninthalu", isMath: S.screen === "math", isGames: S.screen === "games" && !S.gameId,
+      isRewards: S.screen === "rewards", isParent: S.screen === "parent",
+
+      teluguPickStyle: "flex:1;padding:18px 14px;border-radius:26px;cursor:pointer;text-align:center;border:" + (lang === "Telugu" ? "3px solid #6d5ce8" : "1px solid #e7e4ed") + ";background:" + (lang === "Telugu" ? "#eeeafd" : "#fff") + ";color:" + (lang === "Telugu" ? "#5143bb" : "#25334f"),
+      hindiPickStyle: "flex:1;padding:18px 14px;border-radius:26px;cursor:pointer;text-align:center;border:" + (lang === "Hindi" ? "3px solid #eb9e2d" : "1px solid #e7e4ed") + ";background:" + (lang === "Hindi" ? "#fff7db" : "#fff") + ";color:" + (lang === "Hindi" ? "#9c741f" : "#25334f"),
+      pickTelugu: () => this.setState({ lang: "Telugu", sel: 0, ci: 0, vi: 1 }),
+      pickHindi: () => this.setState({ lang: "Hindi", sel: 0, ci: 0, vi: 1 }),
+      begin: () => this.go("home"),
+
+      headerKicker: header[0], headerTitle: header[1],
+      langShort: lang === "Telugu" ? "తెలుగు" : "हिन्दी", lang,
+      toggleLang: () => this.setState({ lang: lang === "Telugu" ? "Hindi" : "Telugu", sel: 0, ci: 0, vi: 1 }),
+      goParent: () => this.go("parent"),
+      backBtnStyle: "width:38px;height:38px;border:1px solid #e7e4ed;border-radius:999px;background:#fff;color:#5143bb;font:800 15px Figtree,sans-serif;cursor:pointer;visibility:" + (S.screen === "home" ? "hidden" : "visible"),
+      goBack: () => {
+        if (S.gameId) { this.setState({ gameId: null }); return; }
+        const back = { letters: "home", lesson: "letters", trace: "lesson", stories: "home", reader: "stories", guninthalu: "home", math: "home", games: "home", rewards: "home", parent: "home" };
+        this.go(back[S.screen] || "home");
+      },
+
+      streak: 4, storyOfDay: D.stories[0][lang].title,
+      todayLetters: D.letters[lang].Vowels.slice(0, 3).map(([letter, roman], i) => {
+        const e = D.examples[lang][letter];
+        return {
+          letter, word: e ? e[0] : roman,
+          style: "min-height:96px;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:18px;cursor:pointer;border:1px solid " + (i === 0 ? "#ffd5cc" : "#eeeaf1") + ";background:" + (i === 0 ? "#fff0ec" : "#fff") + ";color:" + (i === 0 ? "#ff7c69" : "#25334f"),
+          open: () => this.setState({ sel: i, group: "Vowels", screen: "lesson" }),
+        };
+      }),
+      destinations: [
+        ["Letters", "Tap, hear and trace", "అ", "#eeeafd", "letters"],
+        ["Story Garden", "Read together", "📖", "#fff0ec", "stories"],
+        ["Guninthalu", "Build sounds", "గు", "#e8faf6", "guninthalu"],
+        ["Math Corner", "Patterns & sorting", "🔢", "#fff7db", "math"],
+        ["Games", "Nine games", "🎮", "#eeeafd", "games"],
+        ["Rewards", "Stars and stickers", "⭐", "#fff7db", "rewards"],
+      ].map(([title, sub, icon, tint, screen]) => ({
+        title, sub, icon,
+        style: "padding:16px;border:1px solid #e7e4ed;border-radius:24px;background:#fff;text-align:left;cursor:pointer",
+        iconStyle: "width:50px;height:50px;display:grid;place-items:center;border-radius:18px;font-size:24px;font-family:'Noto Sans Telugu','Noto Sans Devanagari',Figtree,sans-serif;background:" + tint,
+        open: () => this.go(screen),
+      })),
+      goLetters: () => this.go("letters"), goStories: () => this.go("stories"),
+
+      group: S.group,
+      vowelsSub: lang === "Telugu" ? "అచ్చులు · Acchulu" : "स्वर · Swar",
+      consSub: lang === "Telugu" ? "హల్లులు · Hallulu" : "व्यंजन · Vyanjan",
+      vowelsTabStyle: "padding:14px;border-radius:20px;text-align:left;cursor:pointer;border:" + (S.group === "Vowels" ? "2px solid #a99cf7" : "1px solid #e4dfdc") + ";background:" + (S.group === "Vowels" ? "#f1edff" : "#ffffffb8"),
+      consTabStyle: "padding:14px;border-radius:20px;text-align:left;cursor:pointer;border:" + (S.group === "Consonants" ? "2px solid #a99cf7" : "1px solid #e4dfdc") + ";background:" + (S.group === "Consonants" ? "#f1edff" : "#ffffffb8"),
+      pickVowels: () => this.setState({ group: "Vowels", sel: 0 }),
+      pickConsonants: () => this.setState({ group: "Consonants", sel: 0 }),
+      rangeNote: lang + " · " + set[0][0] + " to " + set[set.length - 1][0],
+      letterCount: set.length,
+      letterTiles: set.map(([letter, roman], i) => ({
+        letter, roman,
+        style: "aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;border-radius:16px;cursor:pointer;border:1px solid " + (S.sel === i ? "#6d5ce8" : "#e4dfdc") + ";background:" + (S.sel === i ? "#6d5ce8" : "#ffffffc7") + ";color:" + (S.sel === i ? "#fff" : "#25334f"),
+        dotStyle: "position:absolute;right:7px;top:7px;width:7px;height:7px;border-radius:50%;background:#22b8a6;display:" + (S.traced[lang + letter] ? "block" : "none"),
+        open: () => this.setState({ sel: i, screen: "lesson" }),
+      })),
+
+      lessonLetter: pair[0], lessonRoman: pair[1].toUpperCase(), lessonIcon: ex[3],
+      lessonHeadline: lang === "Telugu" ? pair[0] + " అంటే " + ex[0] : pair[0] + " से " + ex[0],
+      lessonSub: ex[1] + " · " + ex[2],
+      audioLabel: S.audio === "playing" ? "◼ Playing audio…" : "🔊 Hear " + ex[1],
+      audioBtnStyle: "min-width:170px;margin-top:16px;padding:13px 16px;border:0;border-radius:14px;color:#fff;cursor:pointer;font:800 12.5px Figtree,sans-serif;background:" + (S.audio === "playing" ? "#ff7c69" : "#6d5ce8"),
+      playAudio: () => { this.setState({ audio: "playing" }); window.setTimeout(() => this.setState({ audio: "idle" }), 1400); },
+      waveBars: [8, 14, 21, 14, 21, 14, 8].map((h, i) => ({
+        style: "width:3px;height:" + h + "px;border-radius:3px;background:#b9b0f1;animation:bkWave 1.2s ease-in-out infinite;animation-delay:" + (i * 0.1) + "s;opacity:" + (S.audio === "playing" ? 1 : 0.4),
+      })),
+      goTrace: () => this.go("trace"),
+      prevLetter: () => this.setState({ sel: (S.sel - 1 + set.length) % set.length }),
+      nextLetter: () => this.setState({ sel: (S.sel + 1) % set.length }),
+
+      recIcon: S.rec === "recording" ? "◼" : S.rec === "saved" ? "▶" : "🎙",
+      recTitle: S.rec === "recording" ? "Recording…" : S.rec === "saved" ? "Your voice is saved" : "Record this word",
+      recSub: S.rec === "recording" ? "Say the word clearly, then tap to stop" : S.rec === "saved" ? "Plays instead of the missing clip" : "Many letters have no audio yet",
+      recBtnStyle: "width:46px;height:46px;flex:none;border:0;border-radius:50%;color:#fff;font-size:17px;cursor:pointer;background:" + (S.rec === "recording" ? "#ff7c69" : S.rec === "saved" ? "#22b8a6" : "#6d5ce8"),
+      toggleRecord: () => {
+        if (S.rec === "idle") { this.setState({ rec: "recording" }); window.setTimeout(() => this.setState({ rec: "saved" }), 2200); }
+        else this.setState({ rec: "idle" });
+      },
+
+      traceRef: this.traceRef,
+      traceDown: (e) => {
+        const c = this.traceRef.current; const ctx = c.getContext("2d");
+        this.drawing = true; c.setPointerCapture(e.pointerId);
+        const p = this.point(e); ctx.beginPath(); ctx.moveTo(p.x, p.y);
+      },
+      traceMove: (e) => {
+        if (!this.drawing) return;
+        const ctx = this.traceRef.current.getContext("2d");
+        const p = this.point(e);
+        ctx.lineWidth = 11; ctx.lineCap = "round"; ctx.lineJoin = "round"; ctx.strokeStyle = "#6d5ce8";
+        ctx.lineTo(p.x, p.y); ctx.stroke();
+      },
+      traceUp: () => { this.drawing = false; },
+      checkTrace: () => {
+        const r = this.scoreTrace(); if (!r) return;
+        const key = lang + pair[0];
+        const traced = Object.assign({}, S.traced);
+        if (r.stars >= 2) traced[key] = r.stars;
+        this.setState({ traceResult: r, celebrate: r.stars === 3, traced, stars: S.stars + r.stars });
+      },
+      clearTrace: () => this.paintGuide(),
+      traceResult: !!S.traceResult,
+      traceStars: S.traceResult ? "⭐".repeat(S.traceResult.stars) + "☆".repeat(3 - S.traceResult.stars) : "",
+      traceMessage: S.traceResult ? S.traceResult.message : "",
+      traceFeedbackStyle: "display:flex;align-items:center;gap:12px;margin-top:14px;padding:13px 16px;border-radius:16px;font-size:12px;font-weight:800;line-height:1.4;" + (S.traceResult && S.traceResult.stars >= 2 ? "background:#eafaf5;color:#118779" : "background:#fff4ec;color:#b5573a"),
+      celebrate: S.celebrate,
+      closeCelebrate: () => { this.setState({ celebrate: false }); this.paintGuide(); },
+      sparks: new Array(12).fill(0).map((_, i) => {
+        const a = (360 / 12) * i, d = 78 + (i % 4) * 14;
+        return { style: "position:absolute;left:50%;top:44%;width:10px;height:10px;border-radius:50%;background:radial-gradient(circle,#fff,#ffe27a 45%,rgba(255,226,122,0) 70%);--dx:" + Math.round(Math.cos(a * Math.PI / 180) * d) + "px;--dy:" + Math.round(Math.sin(a * Math.PI / 180) * d) + "px;animation:bkSpark 1s ease-out both;animation-delay:" + (i * 0.03) + "s" };
+      }),
+
+      storyCards: D.stories.map((s, i) => ({
+        icon: s.icon, coverStyle: "flex:none;width:58px;height:58px;border-radius:18px;background:#fff7db center/cover no-repeat;background-image:url(../public/assets/images/stories/" + s.id + ".jpg)", title: s[lang].title, teaser: s[lang].teaser, theme: s.theme, minutes: s.minutes,
+        iconStyle: "width:52px;height:52px;display:grid;place-items:center;border-radius:18px;background:" + (i % 2 ? "#e8faf6" : "#fff7db") + ";font-size:26px",
+        open: () => this.setState({ story: i, page: 0, screen: "reader" }),
+      })),
+      readerTitle: sl.title, readerTheme: story.theme.toUpperCase(), readerIcon: story.icon, readerCoverStyle: "width:100%;aspect-ratio:1;border-radius:22px;background:#fff7db center/cover no-repeat;background-image:url(../public/assets/images/stories/" + story.id + ".jpg)",
+      pageNo: S.page + 1, pageTotal: story.pages,
+      readerText: S.page === 0 && sl.p1 ? sl.p1 : sl.teaser,
+      readerPlaceholder: !(S.page === 0 && sl.p1),
+      pageDots: new Array(story.pages).fill(0).map((_, i) => ({
+        style: "width:" + (i === S.page ? 22 : 8) + "px;height:8px;border-radius:99px;background:" + (i === S.page ? "#6d5ce8" : "#e2dcf8"),
+      })),
+      prevPage: () => this.setState({ page: Math.max(0, S.page - 1) }),
+      nextPage: () => this.setState({ page: Math.min(story.pages - 1, S.page + 1) }),
+      readAloudLabel: S.audio === "playing" ? "◼ Reading…" : "🔊 Read aloud",
+      readAloud: () => { this.setState({ audio: "playing" }); window.setTimeout(() => this.setState({ audio: "idle" }), 1800); },
+      swipeDown: (e) => { this.swipeX = e.clientX; },
+      swipeUp: (e) => {
+        const dx = e.clientX - this.swipeX;
+        if (dx < -40) this.setState({ page: Math.min(story.pages - 1, S.page + 1) });
+        else if (dx > 40) this.setState({ page: Math.max(0, S.page - 1) });
+      },
+
+      consonantChips: cons.map((letter, i) => ({
+        letter,
+        pick: () => this.setState({ ci: i, gFeedback: "", challenge: false }),
+        style: "flex:none;width:52px;height:52px;border-radius:16px;cursor:pointer;font-size:24px;font-family:'Noto Sans Telugu','Noto Sans Devanagari',sans-serif;border:1px solid " + (S.ci === i ? "#6d5ce8" : "#e4dfdc") + ";background:" + (S.ci === i ? "#6d5ce8" : "#fff") + ";color:" + (S.ci === i ? "#fff" : "#25334f"),
+      })),
+      vowelChips: vowels.map((v, i) => ({
+        letter: v[0], sign: v[1] || "—",
+        pick: () => this.applyVowel(i),
+        drag: (e) => { e.dataTransfer.setData("text/plain", String(i)); this.dragIndex = i; },
+        style: "padding:8px 2px;border-radius:14px;cursor:grab;border:1px solid " + (S.vi === i ? "#a99cf7" : "#e4dfdc") + ";background:" + (S.vi === i ? "#f1edff" : "#fff") + ";color:#25334f",
+      })),
+      allowDrop: (e) => e.preventDefault(),
+      dropVowel: (e) => {
+        e.preventDefault();
+        const raw = e.dataTransfer ? e.dataTransfer.getData("text/plain") : "";
+        const i = raw === "" ? this.dragIndex : parseInt(raw, 10);
+        if (!isNaN(i)) this.applyVowel(i);
+      },
+      dropZoneStyle: "display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:16px;padding:16px 14px;border:2px dashed #cbc3ef;border-radius:24px;background:#fffdf9",
+      deadConsonant: dead, vowelLetter: vowel[0], builtSyllable: built, builtKey: S.ci + "-" + S.vi,
+      soundLabel: "NEW SOUND · " + vowel[2].toUpperCase(),
+      gScore: S.gScore,
+      challengePrompt: S.challenge ? "Which vowel builds " + (consonant + target[1]) + "?" : "You built " + built + "!",
+      challengeFeedback: S.gFeedback || "Drag a vowel onto the slot to explore every combination.",
+      challengeBtn: S.challenge ? "Challenge on" : "Play a challenge →",
+      startChallenge: () => this.setState({ challenge: true, gFeedback: "" }),
+
+      mathOps: mathOpsData.map(([symbol, label]) => ({
+        symbol, label,
+        pick: () => this.setState({ mathOp: symbol, mathPick: null }),
+        style: "padding:12px 4px;border-radius:18px;cursor:pointer;border:1px solid " + (S.mathOp === symbol ? "#6d5ce8" : "#e7e4ed") + ";background:" + (S.mathOp === symbol ? "#eeeafd" : "#fff") + ";color:" + (S.mathOp === symbol ? "#5143bb" : "#25334f"),
+      })),
+      mathSymbol: S.mathOp,
+      mathLeftIcons: rep(mp[0], "🍎"), mathRightIcons: rep(mp[1], "🍌"),
+      mathAnswerShown: S.mathPick === null ? "?" : S.mathPick,
+      mathQuestionLabel: "How many altogether? Tap your answer.",
+      mathChoices: choices.map(v => ({
+        value: v,
+        pick: () => this.setState({ mathPick: v }),
+        style: "padding:14px 0;border-radius:16px;cursor:pointer;font:900 17px Figtree,sans-serif;border:1px solid " + (S.mathPick === v ? (v === answer ? "#22b8a6" : "#ff7c69") : "#e7e4ed") + ";background:" + (S.mathPick === v ? (v === answer ? "#e8faf6" : "#fff0ec") : "#fff") + ";color:#25334f",
+      })),
+      mathFeedback: S.mathPick === null ? "" : correct ? "Correct! ⭐ Well counted." : "Not quite — count the fruit again.",
+      compareTitle: D.compare[lang].title, compareSubtitle: D.compare[lang].subtitle, compareStart: D.compare[lang].start,
+      sortOpen: !!S.sortOpen, sortClosed: !S.sortOpen,
+      gardenSortSrc: "../public/garden-sort.html?portrait=1&lang=" + (lang === "Hindi" ? "hi" : "te"),
+      openGardenSort: () => this.setState({ sortOpen: true }),
+      closeGardenSort: () => this.setState({ sortOpen: false }),
+      noop: () => {},
+
+      gameGroups: ["Letters & Sounds", "Memory & Sorting", "Words & Vocabulary", "Creativity & Our Earth"].map(category => ({
+        category,
+        games: D.games.filter(g => g[5] === category).map(g => {
+          const playable = ["letter-rain", "memory", "find-it", "vocabulary", "eco-sort", "coloring"].indexOf(g[0]) >= 0;
+          return {
+            title: g[1], description: g[2], icon: g[3],
+            iconStyle: "width:48px;height:48px;display:grid;place-items:center;border-radius:16px;font-size:22px;background:" + g[4],
+            arrow: playable ? "▶" : "→",
+            arrowStyle: "font-size:13px;color:" + (playable ? "#5143bb" : "#c3c7d2"),
+            play: () => { if (playable) this.openGame(g[0]); },
+          };
+        }),
+      })),
+
+      inGame: !!S.gameId,
+      gameTitle: { memory: "Happy Match Adventure", vocabulary: "Drag, Match & Learn", "find-it": "Find It for Mithu", "eco-sort": "Paryavaran Hero", "letter-rain": "Letter Rain", coloring: "Vani's Magic Art Studio" }[S.gameId] || "",
+      gameScore: S.gameId === "memory" ? S.memMatched.length / 2 : S.gameId === "vocabulary" ? S.vocabScore : S.gameId === "eco-sort" ? S.ecoScore : S.gameId === "letter-rain" ? S.rainScore : S.gameId === "coloring" ? this.coloringPages.length : 0,
+      exitGame: () => this.setState({ gameId: null }),
+
+      isRain: S.gameId === "letter-rain",
+      rainTarget: rain.target, rainRoman: rain.targetRoman,
+      rainFeedback: S.rainFeedback, rainFeedbackColor: S.rainOk === false ? "#d25e4e" : "#148e7e",
+      rainTeStyle: this.pill(S.rainLang === "Telugu"), rainHiStyle: this.pill(S.rainLang === "Hindi"),
+      rainVowelStyle: this.pill(S.rainGroup === "Vowels"), rainConsStyle: this.pill(S.rainGroup === "Consonants"),
+      rainTelugu: () => this.setState({ rainLang: "Telugu", rainRoundNo: 0, rainFeedback: "", rainOk: null }),
+      rainHindi: () => this.setState({ rainLang: "Hindi", rainRoundNo: 0, rainFeedback: "", rainOk: null }),
+      rainVowels: () => this.setState({ rainGroup: "Vowels", rainRoundNo: 0, rainFeedback: "", rainOk: null }),
+      rainConsonants: () => this.setState({ rainGroup: "Consonants", rainRoundNo: 0, rainFeedback: "", rainOk: null }),
+      rainNext: () => this.setState(s => ({ rainRoundNo: (s.rainRoundNo || 0) + 1, rainFeedback: "", rainOk: null })),
+      rainDrops: rain.drops.map((letter, i) => ({
+        letter,
+        tap: () => this.tapDrop(letter, rain),
+        style: "position:absolute;top:-56px;left:" + (4 + i * 19) + "%;z-index:1;width:46px;height:46px;border:2px solid #fff;border-radius:50%;color:#273652;background:#fff8cf;cursor:pointer;box-shadow:0 6px 14px #3b315e1f;font-size:23px;font-weight:800;font-family:'Noto Sans Telugu','Noto Sans Devanagari',sans-serif;animation:bkLetterFall " + (7 + (i % 3) * 1.8) + "s linear " + (i * 0.5) + "s forwards",
+      })),
+
+      isMemory: S.gameId === "memory",
+      memCards: this.memDeck().map((card, i) => {
+        const shown = S.memOpen.indexOf(i) >= 0 || S.memMatched.indexOf(i) >= 0;
+        const done = S.memMatched.indexOf(i) >= 0;
+        return {
+          face: shown ? card.icon : "⭐",
+          flip: () => this.memFlip(i),
+          style: "aspect-ratio:1;display:grid;place-items:center;border-radius:14px;cursor:pointer;font-size:" + (shown ? "26px" : "17px") +
+            ";border:2px solid " + (done ? "#b9e3c9" : shown ? "#cfc6f5" : "#fff") +
+            ";background:" + (done ? "#eefaf1" : shown ? "#fff" : "linear-gradient(150deg,#7b6bf0,#5143bb)") +
+            ";color:" + (shown ? "#2c2c2a" : "#ffe9a8") + ";opacity:" + (done ? 0.75 : 1) + ";box-shadow:0 5px 12px #3b315e14",
+        };
+      }),
+      memThemeTabs: Object.keys(this.memThemes).map(key => ({
+        label: this.memThemes[key][0],
+        pick: () => this.memReset(key),
+        style: this.pill(S.memTheme === key),
+      })),
+      memMoves: S.memMoves,
+      memPairs: S.memMatched.length / 2,
+      memStatus: S.memMatched.length === 20 ? "🎉 Every pair found in " + S.memMoves + " moves!" : "Tap two cards and find the matching pictures.",
+      memMix: () => this.memReset(),
+
+      isVocab: S.gameId === "vocabulary",
+      vocabScore: S.vocabScore,
+      vocabRoundLabel: "Round " + (S.vocabRound + 1),
+      vocabVegStyle: this.pill(S.vocabCat === "Vegetables"),
+      vocabFruitStyle: this.pill(S.vocabCat === "Fruits"),
+      vocabVeg: () => this.setState({ vocabCat: "Vegetables", vocabSolved: [], vocabHeld: "", vocabMsg: "", vocabWrong: "" }),
+      vocabFruit: () => this.setState({ vocabCat: "Fruits", vocabSolved: [], vocabHeld: "", vocabMsg: "", vocabWrong: "" }),
+      vocabPics: this.vocabItems().map(item => ({
+        emoji: item[3], english: item[0],
+        pick: () => this.setState({ vocabHeld: item[0], vocabMsg: "Now tap its Telugu word." }),
+        style: "display:" + (S.vocabSolved.indexOf(item[0]) >= 0 ? "none" : "flex") +
+          ";flex-direction:column;align-items:center;gap:3px;padding:11px 6px;border-radius:18px;cursor:pointer;font-size:30px;text-align:center;box-shadow:0 7px 16px #42375f14;border:2px solid " +
+          (S.vocabHeld === item[0] ? "#6d5ce8" : "#fff") + ";background:" + (S.vocabHeld === item[0] ? "#f3f0ff" : "#fff"),
+      })),
+      vocabWords: this.seeded(this.vocabItems(), S.vocabRound + 5).map(item => {
+        const solved = S.vocabSolved.indexOf(item[0]) >= 0;
+        return {
+          telugu: item[2], emoji: solved ? item[3] : "",
+          tap: () => this.vocabTapWord(item[0]),
+          style: "display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;padding:12px 14px;border-radius:16px;cursor:pointer;text-align:left;font:700 16px 'Noto Sans Telugu',Figtree,sans-serif;border:2px dashed " +
+            (solved ? "#8ecfa8" : S.vocabWrong === item[0] ? "#e6897a" : "#ded7ef") +
+            ";background:" + (solved ? "#eefaf1" : S.vocabWrong === item[0] ? "#fdeeea" : "#fff") + ";color:#2c2c2a",
+        };
+      }),
+      vocabMsg: S.vocabMsg || "Tap a picture, then tap its Telugu word.",
+      vocabMsgColor: S.vocabMsg.indexOf("Not") === 0 ? "#d25e4e" : S.vocabMsg.indexOf("✓") === 0 || S.vocabMsg.indexOf("✨") === 0 ? "#148e7e" : "#817b88",
+      vocabNew: () => this.vocabNewRound(),
+
+      isFindIt: S.gameId === "find-it",
+
+      isEco: S.gameId === "eco-sort",
+      ecoPlay: S.gameId === "eco-sort" && S.ecoPhase === "play",
+      ecoFactPhase: S.gameId === "eco-sort" && S.ecoPhase === "fact",
+      ecoEnd: S.gameId === "eco-sort" && S.ecoPhase === "end",
+      ecoTeStyle: this.pill(S.ecoLang === "Telugu"), ecoHiStyle: this.pill(S.ecoLang === "Hindi"),
+      ecoSetTe: () => this.setState({ ecoLang: "Telugu" }),
+      ecoSetHi: () => this.setState({ ecoLang: "Hindi" }),
+      ecoTree: S.ecoScore <= 4 ? "🌱" : S.ecoScore <= 8 ? "🌿" : "🌳",
+      ecoScoreLabel: (S.ecoLang === "Telugu" ? "స్కోరు" : "स्कोर") + ": " + S.ecoScore + "/" + this.ecoItems.length,
+      ecoProgress: (S.ecoLang === "Telugu" ? "అంశం" : "विषय") + " " + Math.min(S.ecoIdx + 1, this.ecoItems.length) + "/" + this.ecoItems.length,
+      ecoEmoji: (this.ecoOrder()[Math.min(S.ecoIdx, this.ecoItems.length - 1)] || [])[1],
+      ecoName: (() => { const it = this.ecoOrder()[Math.min(S.ecoIdx, this.ecoItems.length - 1)] || []; return S.ecoLang === "Telugu" ? it[2] : it[3]; })(),
+      ecoCardStyle: "display:flex;flex-direction:column;align-items:center;gap:8px;padding:20px;border-radius:22px;text-align:center;border:2px solid " +
+        (S.ecoFb ? (S.ecoFbOk ? "#8ecfa8" : "#e6897a") : "#fff") + ";background:" + (S.ecoFb ? (S.ecoFbOk ? "#eefaf1" : "#fdeeea") : "#fff") + ";box-shadow:0 10px 22px #3b315e14",
+      ecoBinCards: this.ecoBins.map(bin => ({
+        emoji: bin[1], label: S.ecoLang === "Telugu" ? bin[2] : bin[3],
+        pick: () => this.ecoPick(bin[0]),
+        style: "display:flex;flex-direction:column;align-items:center;gap:5px;padding:13px 6px;border:1px solid #e0dbd2;border-radius:18px;cursor:pointer;font:800 10.5px 'Noto Sans Telugu','Noto Sans Devanagari',Figtree,sans-serif;color:#2c2c2a;background:" + bin[4],
+      })),
+      ecoFb: S.ecoFb,
+      ecoFbColor: S.ecoFbOk ? "#148e7e" : "#d25e4e",
+      ecoFactTitle: S.ecoLang === "Telugu" ? "మీకు తెలుసా?" : "क्या आप जानते हैं?",
+      ecoFactText: (this.ecoFacts[S.ecoFact] || [])[S.ecoLang === "Telugu" ? 0 : 1],
+      ecoNextLabel: S.ecoLang === "Telugu" ? "తర్వాత" : "आगे",
+      ecoContinue: () => this.setState(s => ({ ecoPhase: s.ecoIdx >= this.ecoItems.length ? "end" : "play" })),
+      ecoEndTree: S.ecoScore >= 9 ? "🌳" : S.ecoScore >= 5 ? "🌿" : "🌱",
+      ecoStars: S.ecoScore >= 10 ? "⭐⭐⭐" : S.ecoScore >= 6 ? "⭐⭐☆" : "⭐☆☆",
+      ecoEndScore: (S.ecoLang === "Telugu" ? "మీ స్కోరు: " : "आपका स्कोर: ") + S.ecoScore + "/" + this.ecoItems.length,
+      ecoEndLine: S.ecoLang === "Telugu" ? "మీరు ఒక చెట్టును పెంచారు! 🌳" : "आपने एक पेड़ उगाया! 🌳",
+      ecoQuote: "“" + this.ecoQuotes[S.ecoSeed % this.ecoQuotes.length][S.ecoLang === "Telugu" ? 0 : 1] + "”",
+      ecoAgain: S.ecoLang === "Telugu" ? "మళ్ళీ ఆడండి" : "फिर से खेलें",
+      ecoRestart: () => this.ecoRestart(),
+
+      totalStars: S.stars + 12, tracedCount: tracedCount + 3,
+      badges: [["🌟","First 3 stars",true],["📖","Story finished",true],["గు","Built a gunintham",true],["🎈","Popped 20 balloons",false],["♻️","Paryavaran Hero",false],["🔥","7-day streak",false]].map(([icon, label, earned]) => ({
+        icon, label,
+        style: "padding:14px 10px;border-radius:20px;text-align:center;border:1px solid #e7e4ed;background:" + (earned ? "#fff" : "#f4f1ec") + ";opacity:" + (earned ? 1 : 0.5),
+      })),
+      weekBars: [["M",40],["T",70],["W",30],["T",85],["F",55],["S",95],["S",20]].map(([day, h]) => ({
+        day, style: "width:100%;height:" + h + "%;border-radius:8px;background:" + (h > 80 ? "#6d5ce8" : "#c9c0f3"),
+      })),
+
+      progressRows: [["Letters", tracedCount + 3 + " of 16 vowels", 0.42],["Story Garden", "3 of 20 stories", 0.15],["Guninthalu", S.gScore + " syllables built", 0.3],["Math Corner", "Finishing patterns", 0.6],["Games", "5 of 9 played", 0.55]].map(([label, note, v]) => ({
+        label, note, barStyle: "display:block;height:100%;width:" + Math.round(v * 100) + "%;border-radius:99px;background:#6d5ce8",
+      })),
+      downloadRows: [["letters", "Letters + audio", "48 MB"],["stories", "All 20 stories", "126 MB"],["games", "Games pack", "84 MB"]].map(([key, label, note]) => {
+        const st = S.downloads[key];
+        return {
+          label, note: st === "done" ? "Available offline · " + note : note,
+          btnLabel: st === "done" ? "✓ Saved" : st === "busy" ? "…" : "Download",
+          btnStyle: "padding:10px 14px;border-radius:999px;cursor:pointer;font:800 11.5px Figtree,sans-serif;border:1px solid " + (st === "done" ? "#22b8a6" : "#ddd5e9") + ";background:" + (st === "done" ? "#e8faf6" : "#fff") + ";color:" + (st === "done" ? "#118779" : "#5143bb"),
+          toggle: () => {
+            const next = Object.assign({}, S.downloads);
+            if (next[key] === "done") next[key] = "idle";
+            else { next[key] = "busy"; window.setTimeout(() => { const d = Object.assign({}, this.state.downloads); d[key] = "done"; this.setState({ downloads: d }); }, 900); }
+            this.setState({ downloads: next });
+          },
+        };
+      }),
+
+      tabs: [["⌂","Home","home"],["అ","Letters","letters"],["📖","Stories","stories"],["🎮","Play","games"],["★","Rewards","rewards"]].map(([icon, label, screen]) => {
+        const active = S.screen === screen || (screen === "letters" && (S.screen === "lesson" || S.screen === "trace")) || (screen === "stories" && S.screen === "reader");
+        return { icon, label, style: this.tabStyle(active), open: () => this.go(screen) };
+      }),
+    };
+  }
+
+  applyVowel(i) {
+    const S = this.state, vowels = this.data.vowelSigns[S.lang];
+    const targetIndex = (S.ci * 3 + S.gScore + 5) % vowels.length;
+    const consonant = this.data.consonants[S.lang][S.ci];
+    if (S.challenge) {
+      if (i === targetIndex) {
+        this.setState({ vi: i, gScore: S.gScore + 1, challenge: false, gFeedback: "Wonderful! " + consonant + this.data.virama[S.lang] + " + " + vowels[i][0] + " = " + (consonant + vowels[i][1]) });
+        return;
+      }
+      this.setState({ vi: i, gFeedback: "Try another vowel sign" });
+      return;
+    }
+    this.setState({ vi: i, gFeedback: "" });
+  }
+}
+</script>
+</body>
+</html>
